@@ -1,0 +1,30 @@
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    margin: 0;
+    background-repeat: no-repeat;
+    background: linear-gradient(#EB3349, #F45C43);
+}
+
+/* General Container Properties */
+div.container{
+    /* margin: 20;
+    background: white;
+    width: 80%;
+    height: auto; */
+}
+
+div.game-area{
+    
+}
+
+div.dice-area{
+    
+}
+
+div.rules{
+    background: #FFFFFF;
+}
+
