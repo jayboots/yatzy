@@ -1,0 +1,6 @@
+# Personal testing items that do not need to appear in the repo
+
+# Julia's testing items
+test.html
+test.css
+test.js
