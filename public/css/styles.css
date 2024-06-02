@@ -17,14 +17,36 @@ div.container{
 }
 
 div.game-area{
-    
+    border: black solid 5px;
+    background: pink;
+    padding: 5px;
 }
 
 div.dice-area{
-    
+    display: flex;
+    /* padding: 5px; */
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    background: yellow;
 }
 
-div.rules{
+div.die{
+    width: 4rem;
+    height: 4rem;
+    padding: 0.5rem;
+}
+
+div.button-container{
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem;
+    background: #FFFFFF;
+}
+
+div.rules-container{
+    justify-content: center;
+    padding: 0.5rem;
     background: #FFFFFF;
 }
 
