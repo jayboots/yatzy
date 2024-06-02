@@ -12,7 +12,7 @@
     <script src="js/main.js" defer></script>
     <title>Yatzy - Assignment 2 Group 55</title>
   </head>
-  <body>
+  <body onload="initializeGame()">
     <!-- Maybe at top left, some sort of "how to play" button that shows the rules in a lightbox or something -->
     <div class="container">
         <p>Hello, dice game world.</p>
@@ -20,17 +20,48 @@
             <div class="dice-container">
                 <!-- The dice can go here -->
                 <div class="dice-area">
-                  <div class="die"><img src="assets/d1.svg" id="d1"></div>
-                  <div class="die"><img src="assets/d2.svg" id="d2"></div>
-                  <div class="die"><img src="assets/d3.svg"  id="d3"></div>
-                  <div class="die"><img src="assets/d4.svg" id="d4"></div>
-                  <div class="die"><img src="assets/d5.svg" id="d5"></div>
+
+                  <div class="die-container">
+                    <div class="die" id="d_0">0</div>
+                    <div class="lock-container">
+                      <button id="l_0" onclick="toggleLock(this.id)">🔓</button>
+                    </div>
+                  </div>
+
+                  <div class="die-container">
+                    <div class="die" id="d_1">0</div>
+                    <div class="lock-container">
+                      <button id="l_1" onclick="toggleLock(this.id)">🔓</button>
+                    </div>
+                  </div>
+
+                  <div class="die-container">
+                    <div class="die" id="d_2">0</div>
+                    <div class="lock-container">
+                      <button id="l_2" onclick="toggleLock(this.id)">🔓</button>
+                    </div>
+                  </div>
+
+                  <div class="die-container">
+                    <div class="die" id="d_3">0</div>
+                    <div class="lock-container">
+                      <button id="l_3" onclick="toggleLock(this.id)">🔓</button>
+                    </div>
+                  </div>
+
+                  <div class="die-container">
+                    <div class="die" id="d_4">0</div>
+                    <div class="lock-container">
+                      <button id="l_4" onclick="toggleLock(this.id)">🔓</button>
+                    </div>
+                  </div>
+                
                 </div>
             </div>
             <div class="button-container">
                 <!-- The button to roll the dice, and maybe rules and results can go here... -->
                 <!-- Button should play a sound when clicked -->
-                <button type="button" class="button" id="rollbtn">Let's Roll</button>
+                <button type="button" class="button" id="rollbtn" onclick="rollDice()">Roll the Dice!</button>
             </div>
             <div class="rules-container">
               <!-- How to play, or maybe score area -->

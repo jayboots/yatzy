@@ -2,22 +2,65 @@
 
 // Default set the "roll" hand to impossible values when no roll
 // This could hold the values of the hand but we need a way to keep an expanding array of turns : outcomes to display in a table
-let results = [0,0,0,0,0]
 
-document.getElementById("rollbtn").onclick = function(){
-    // console.log("Hello World")
-    let d1 = Math.floor(Math.random() * 6) + 1;
-    let d2 = Math.floor(Math.random() * 6) + 1;
-    let d3 = Math.floor(Math.random() * 6) + 1;
-    let d4 = Math.floor(Math.random() * 6) + 1;
-    let d5 = Math.floor(Math.random() * 6) + 1;
+// Will use to check if a die is locked or not
+let lockedDice = [0,0,0,0,0];
+// Initialize dice with non-usable values
+let activeHand = [-1,-1,-1,-1,-1];
 
-    //The values, can do something with them
-    console.log([d1, d2, d3, d4, d5])
+dicePrefix = "d_"
+lockPrefix = "l_"
 
-    document.getElementById("d1").src="assets/d"+ d1+".svg"
-    document.getElementById("d2").src="assets/d"+ d2+".svg"
-    document.getElementById("d3").src="assets/d"+ d3+".svg"
-    document.getElementById("d4").src="assets/d"+ d4+".svg"
-    document.getElementById("d5").src="assets/d"+ d5+".svg"
+// Runs on page load
+function initializeGame(){
+    for (let i = 0; i < activeHand.length; i++) {
+        // document.getElementById("d"+i).innerText = randomValue()
+        document.getElementById(dicePrefix+i).innerText = "?"
+      }
 }
+
+function randomValue(){
+    let roll = Math.floor(Math.random() * 6) + 1;
+    return roll;
+}
+
+function toggleLock(lockID){
+    let ID = lockID.split("_")[1];
+    // console.log("Clicked lock " + ID)
+    // Check lock status then invert it
+    if (lockedDice[ID] == 0){
+         // If unlocked, lock
+        lockedDice[ID] = 1;
+        console.log("Locking die " + (1 + parseInt(ID)))
+        document.getElementById(lockPrefix+ID).innerText = "🔒";
+    }
+    else {
+        // If locked, unlock
+        lockedDice[ID] = 0;
+        console.log("Unlocking die " + (1 +  parseInt(ID)))
+        document.getElementById(lockPrefix+ID).innerText = "🔓"
+    }
+    console.log("Lock roster: " + lockedDice)
+
+    // Change the innter text accordingly
+}
+
+function rollDice(){
+    for (let i = 0; i < lockedDice.length; i++) {
+        // If the die is locked, don't change the value
+        if (lockedDice[i] == 0) {
+            // console.log("Die # " + (i + 1) + " is free. Rerolling value." );
+            let roll = randomValue();
+            activeHand[i] = roll;
+            document.getElementById(dicePrefix+i).innerText = roll;
+        } else {
+            console.log("Die # " + (i + 1) + " is locked." )
+        }
+    }
+
+    console.log("Active hand: " + activeHand)
+
+    // Lock buttons should be hidden on first roll of any given turn. On subsequent turns, lock buttons should become unhidden to allow dice locking.
+
+}
+

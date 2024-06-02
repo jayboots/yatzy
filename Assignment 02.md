@@ -1,4 +1,4 @@
-# Assignment 2: Yatze Game (JavaScript)
+# Assignment 2: Yatzy Game (JavaScript)
 
 ## Objectives
 

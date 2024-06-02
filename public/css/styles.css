@@ -9,13 +9,6 @@ body {
 }
 
 /* General Container Properties */
-div.container{
-    /* margin: 20;
-    background: white;
-    width: 80%;
-    height: auto; */
-}
-
 div.game-area{
     border: black solid 5px;
     background: pink;
@@ -31,10 +24,37 @@ div.dice-area{
     background: yellow;
 }
 
-div.die{
-    width: 4rem;
-    height: 4rem;
+div.die-container{
+    border: black solid 5px;
     padding: 0.5rem;
+}
+
+/* variables */
+:root {
+    --dsize: 50px;
+  }
+
+div.die{
+    border: black solid 1px;
+    border-radius: 5px;
+    background: white;
+    width: var(--dsize);
+    height: var(--dsize);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12;
+}
+
+div.lock-container{
+    border: black solid 1px;
+    background: green;
+    width: var(--dsize);
+    height: var(--dsize);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12;
 }
 
 div.button-container{
