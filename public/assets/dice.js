@@ -15,13 +15,10 @@ export function getRollValue(){
  * returns these values as a numeric array, and
  * writes these outcomes to the console
  *
- * @return {Number[]} activeHand - The outcomes for a set of five dice
+ * @return {Number[]} newHand - The outcomes for a set of five dice
  */
-export function rollDice(){
-    let activeHand = new Array(null,null,null,null,null);
-    for (let i = 0; i < activeHand.length; i++) {
-        activeHand[i] = getRollValue();
-    }
-    console.log("Active hand: " + activeHand);
-    return activeHand;
+export function getNewHand(){
+    let newHand = new Array(getRollValue(), getRollValue(), getRollValue(), getRollValue(), getRollValue());
+    console.log("New hand: " + newHand);
+    return newHand;
 }
