@@ -1,11 +1,7 @@
 # Personal testing items that do not need to appear in the repo
 
 # Julia's testing items
-test.*
-*/test/*.*
+scraps/*.*
 
 #Remove graphics generator files and colour references from repo
 *.afdesign
-test/a2c4441cce2a46010a6a9c988509aa1f.png
-test/flat-design-color-palettes.jpg
-test/minimalist-line-icons-large.png

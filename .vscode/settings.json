@@ -1,5 +1,6 @@
 {
     "conventionalCommits.scopes": [
-        "Yacht Dice"
+        "Yacht Dice",
+        "Lab 04 Exercises"
     ]
 }

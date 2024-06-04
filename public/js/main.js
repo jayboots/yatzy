@@ -8,8 +8,10 @@ let lockedDice = [0,0,0,0,0];
 // Initialize dice with non-usable values
 let activeHand = [-1,-1,-1,-1,-1];
 
-dicePrefix = "d_"
-lockPrefix = "l_"
+let dicePrefix = "d_";
+let lockPrefix = "l_";
+
+let chances = 3;
 
 // Runs on page load
 function initializeGame(){
@@ -19,11 +21,25 @@ function initializeGame(){
       }
 }
 
+// Makes all locks visible or not visible. Also active / non-active.
+function toggleLockAvailability(){
+    var locksBar = document.getElementsByClassName("lock-container");
+    // if (locksBar.style.display == "flex") { 
+    //     locksBar.style.display = "none"; 
+    // } else { 
+    //     locksBar.style.display = "flex"; 
+    // }
+
+    console.log(locksBar)
+}
+
+// Returns a random value between 1 and 6
 function randomValue(){
     let roll = Math.floor(Math.random() * 6) + 1;
     return roll;
 }
 
+// Handles locking and unlocking a given lock on click
 function toggleLock(lockID){
     let ID = lockID.split("_")[1];
     // console.log("Clicked lock " + ID)
@@ -57,6 +73,8 @@ function rollDice(){
             console.log("Die # " + (i + 1) + " is locked." )
         }
     }
+
+    toggleLockAvailability()
 
     console.log("Active hand: " + activeHand)
 
