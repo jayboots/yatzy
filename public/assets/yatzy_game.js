@@ -1,3 +1,5 @@
+//TODO: Just need to OOP-ify this, write some getters and setters, etc.
+
 import {
     getNewHand
 } from "./dice.js";
@@ -235,7 +237,6 @@ function endTurn(){
         }
     }
 }
-
 
 /**
  * Updates the active hand with new values,
