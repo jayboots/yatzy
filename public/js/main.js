@@ -11,7 +11,7 @@ let activeHand = [-1,-1,-1,-1,-1];
 let dicePrefix = "d_";
 let lockPrefix = "l_";
 
-let chances = 3;
+let chances = 2;
 
 // Runs on page load
 function initializeGame(){
