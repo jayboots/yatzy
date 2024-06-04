@@ -98,24 +98,25 @@ function resetGame(){
     currentRound = roundStart;
     isPlayerOne = Boolean(true);
     activeHand = new Array(null, null, null, null, null);
-    // Reset the locks
-    resetLocks()
+    // Reset the dice and locks
+    resetDice()
     getGameStatusUpdate()
 }
-
 
 /**
  * Resets all lock states to unlocked
  * And updates visuals (for now)
  */
-function resetLocks(){
+function resetDice(){
     console.log("Resetting all locked dice.")
     lockedDice = new Array(0,0,0,0,0);
+    activeHand = new Array(null,null,null,null,null);
 
     //TODO: Move this to a separate function for updating visuals
     for (let i =0; i < lockedDice.length; i++) {
         // console.log(lockPrefix+i)
         document.getElementById(lockPrefix+i).innerText = "🔓"
+        document.getElementById(dicePrefix+i).innerText = "0"
      }
 }
 
@@ -178,7 +179,7 @@ function switchPlayer(){
     isPlayerOne = !isPlayerOne;
     console.log(">>> The player has been switched.")
     //When a player switches, we reset unlock all dice
-    resetLocks()
+    resetDice()
     getGameStatusUpdate()
 }
 
@@ -202,7 +203,7 @@ function endTurn(){
                 rollsLeft = maxRolls
                 currentRound += 1;
                 //When the round ends, we unlock all dice
-                resetLocks()
+                resetDice()
                 getGameStatusUpdate()
             }
         }
