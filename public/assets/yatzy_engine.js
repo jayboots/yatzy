@@ -73,11 +73,13 @@ function getGameState(){
 function resetGame(){
     console.log("Creating new game.")
     game = new YatzyGame();
+    // game = new YatzyGame(3, 3) //For testing
     console.log(game)
     canRoll = true;
     gameOver = false;
     rollBtn.disabled = !canRoll;
     drawDice(game.activeHand)
+    drawLocks(game.lockRoster)
     getGameState()
 }
 
@@ -117,7 +119,7 @@ function endRound(){
 
     if (game != null){
         game.incrementRound()
-        if (game.currentRound == (game.maxRounds + 1)){
+        if (game.currentRound == (game.maxRounds)){
             gameOver = true;
             //TODO: Endgame logic, view score, try again, new game, etc.
             rollBtn.disabled = true; //Can't roll dice if the game is over.
@@ -127,7 +129,7 @@ function endRound(){
             game.resetDice() //new round = new dice, new rolls, no locks
             canRoll = true;
             drawDice(game.activeHand) //draw the reset
-            //draw the locks here, when implemented
+            drawLocks(game.lockRoster) //draw the locks here, when implemented
             rollBtn.disabled = false; //We're startin g a new round so we need to be able to roll
         }
     }
@@ -166,29 +168,53 @@ function drawDice(activeHand){
     }
 }
 
+
+/**
+ * Handles the interaction between the UI lock interface(s) and the YatzyGame lockRoster
+ */
 function toggleLock(){
-    console.log("Clicked lock.")
-    // let ID = this.id.split("_")[1];
-    // // console.log("Clicked lock " + ID)
-    // // Check lock status then invert it
-    // if (lockedDice[ID] == 0){
-    //      // If unlocked, lock
-    //     lockedDice[ID] = 1;
-    //     console.log("Locking die " + (1 + parseInt(ID)))
-    //     document.getElementById(lockPrefix+ID).innerText = "🔒";
-    // }
-    // else {
-    //     // If locked, unlock
-    //     lockedDice[ID] = 0;
-    //     console.log("Unlocking die " + (1 +  parseInt(ID)))
-    //     document.getElementById(lockPrefix+ID).innerText = "🔓"
-    // }
-    // console.log("Lock roster: " + lockedDice)
+    let ID = this.id.split("_")[1];
+    console.log("Clicked lock " + ID)
+    // Check lock status then invert it, provided there is a game and no null values in the turn
+    if ((game != null) && (!game.activeHand.includes(null))){
+        if (game.lockRoster[ID] == 0){
+            // If unlocked, lock
+            game.lockRoster[ID] = 1;
+            console.log("Locking die " + (1 + parseInt(ID)))
+       }
+       else {
+           // If locked, unlock
+            game.lockRoster[ID] = 0;
+            console.log("Unlocking die " + (1 +  parseInt(ID)))
+       }
+       drawLocks(game.lockRoster)
+       console.log("Lock roster: " + game.lockRoster)
+    }
+    else{
+        //TODO: Disable the locks in the GUI when they can't be used.
+        console.log("...but the locks can't be used right now.")
+    }
 
 }
 
 
-// TODO: Adapt to our current OOP setup
+/**
+ * Given a roster of numbers, draws the corresponding lock states to the GUI
+ *
+ * @param {number[]} lockRoster
+ */
+function drawLocks(lockRoster){
+    for (let i = 0; i < lockRoster.length; i++) {
+        if (lockRoster[i] == 0){
+            document.getElementById(lockPrefix+i).innerText = "🔓"
+        }
+        else {
+            document.getElementById(lockPrefix+i).innerText = "🔒";
+        }
+    }
+}
+
+// TODO: Adapt to our current OOP setup. Thanks Tori.
 
 // //index 0-5 => upper section, index 6-14 => lower section
 // var combinations = new Array("ones", "twos", "threes", "fours", "fives", "sixes", 

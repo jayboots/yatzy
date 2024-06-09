@@ -16,15 +16,14 @@ export class YatzyGame {
      * @param {number} [_maxRounds=13] - The number of rounds in the game
      * @param {number} [_numPlayers=1] - The number of players
      */
-    constructor(_maxRolls=3, _maxRounds=13, _numPlayers=1) {
+    constructor(_maxRolls=3, _maxRounds=13) {
 
         // console.log("Creating Instance of YatzyGame")
 
         //INSTANCE VARIABLES
         this.maxRolls = _maxRolls;
         this.maxRounds = _maxRounds;
-        this.numPlayers = _numPlayers;
-        this.roundStart = 1;
+        this.roundStart = 0;
         this.score = 0;
         
         //Instantiate empty hand and no locked dice when creating a new game
@@ -66,9 +65,9 @@ export class YatzyGame {
             }
             else {
                 // Controls of game should make it impossible to reach this state. There should be at least 1 roll before ending a round, and if there has been at least 1 roll there should be no null values i.e. unrolled dice in the active hand.
-                let oldRound = this.currentRound;
+                // let oldRound = this.currentRound;
                 this.currentRound += 1;
-                console.log("Changing round from " + oldRound + " to " + this.currentRound);
+                // console.log("Changing round from " + oldRound + " to " + this.currentRound);
                 this.resetDice(); // ability to do this at the start of a round
                                   // is why we don't use a setter for the lockRoster
                 return true;
