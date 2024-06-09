@@ -1,3 +1,6 @@
+
+import { YatzyGame } from "./yatzy_game.js";
+
 //index 0-5 => upper section, index 6-14 => lower section
 var combinations = new Array("ones", "twos", "threes", "fours", "fives", "sixes", 
                                 "one pair", "two pairs", "three of a kind", "four of a kind", "small straight", "large straight", "full house", "chance", "yatzy");

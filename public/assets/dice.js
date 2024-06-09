@@ -5,7 +5,7 @@
  *
  * @return {Number} rollValue
  */
-export function getRollValue(){
+function getRollValue(){
     let rollValue = Math.floor(Math.random() * 6) + 1;
     return rollValue;
 }
@@ -17,8 +17,10 @@ export function getRollValue(){
  *
  * @return {Number[]} newHand - The outcomes for a set of five dice
  */
-export function getNewHand(){
+function getNewHand(){
     let newHand = new Array(getRollValue(), getRollValue(), getRollValue(), getRollValue(), getRollValue());
     console.log("New hand: " + newHand);
     return newHand;
 }
+
+export { getRollValue, getNewHand }
