@@ -6,7 +6,7 @@ import { getNewHand } from "./dice.js";
  * @class YatzyGame
  * @typedef {YatzyGame}
  */
-class YatzyGame {
+export class YatzyGame {
     
     /**
      * Creates an instance of YatzyGame.
@@ -25,6 +25,7 @@ class YatzyGame {
         this.maxRounds = _maxRounds;
         this.numPlayers = _numPlayers;
         this.roundStart = 1;
+        this.score = 0;
         
         //Instantiate empty hand and no locked dice when creating a new game
         this.activeHand = new Array(null, null, null, null, null);
@@ -60,36 +61,41 @@ class YatzyGame {
     incrementRound(){
         if (this.currentRound < this.maxRounds){
             if ((this.rollsLeft == this.maxRolls) || (this.activeHand.includes(null))){
-                let oldRound = this.currentRound;
-                this.currentRound += 1;
-                console.log("Changing round from " + oldRound + " to " + this.currentRound)
-                this.resetDice()// ability to do this at the start of a round
-                                // is why we don't use a setter for the lockRoster
+                console.log("Need to roll the dice at least once before a round can end.")
+                return false;
             }
             else {
                 // Controls of game should make it impossible to reach this state. There should be at least 1 roll before ending a round, and if there has been at least 1 roll there should be no null values i.e. unrolled dice in the active hand.
-                console.log("Need to roll the dice at least once before a round can end.")
+                let oldRound = this.currentRound;
+                this.currentRound += 1;
+                console.log("Changing round from " + oldRound + " to " + this.currentRound);
+                this.resetDice(); // ability to do this at the start of a round
+                                  // is why we don't use a setter for the lockRoster
+                return true;
+
             }
         }
         else{
             // i.e. the game is over...
             console.log("The current round cannot exceed the maximum number of rounds")
+            return false;
         }
     }
     
     /**
-     * Sets the values of all dice to null and unlocks all dice.
+     * Sets the values of all dice to null and unlocks all dice. Also resets the rolls available to the max amount per turn.
      */
     resetDice(){
-        console.log("Resetting all dice and lock states.")
+        console.log("Resetting all dice, rolls, and lock states.")
         this.activeHand = new Array(null, null, null, null, null);
         this.lockRoster = new Array(0,0,0,0,0);
+        this.rollsLeft = this.maxRolls;
     }
 
     /**
      * Decreases the value of rollsLeft by 1, provided the state of the game logically allows for this to occur.
      */
-    decrementRoll(){
+    decrementRolls(){
         if (this.rollsLeft > 0){
             this.rollsLeft -= 1;
             console.log("You have " + this.rollsLeft + " re-rolls left")
@@ -107,10 +113,10 @@ class YatzyGame {
         this.rollsLeft = this.maxRolls;
     }
 
-
-    
     /**
      * Simulates a user rolling the dice, under the constraints of the game logic.
+     *
+     * @returns {boolean} - returns True if the dice were rolled, false otherwise.
      */
     rollDice(){
         if (this.rollsLeft > 0){
@@ -122,21 +128,21 @@ class YatzyGame {
             // Check the lockRoster to see which of these values we accept or not.
             for (let i = 0; i < this.lockRoster.length; i++) {
                 // If the die is unlocked, re-write the old value with the new value
-                if (lockRoster[i] == 0) {
-                    activeHand[i] = newSet[i];
+                if (this.lockRoster[i] == 0) {
+                    this.activeHand[i] = newSet[i];
                 } else {
                     // If the die is locked, don't change the value
                     console.log("Die # " + (i + 1) + " is locked." )
                 }
             }
             //Spend a roll
-            decrementRolls()
+            this.decrementRolls();
+            return true;
         }
         else{
             //This state should be made unreachable by the interface disabling the user's ability to try and roll the dice when there are no rolls left.
             console.log("Cannot roll dice. No more rolls left.")
+            return false;
         }
     }
 }
-
-export default YatzyGame

@@ -11,47 +11,47 @@
     <link rel="stylesheet" href="css/styles.css" >
     <script type="module" src="assets/dice.js" defer></script>
     <script type="module" src="assets/yatzy_game.js" defer></script>
-    <!-- <script type="text/javascript" src="assets/yatzy_engine.js"></script> -->
+    <script type="module" src="assets/yatzy_engine.js" defer></script>
     <title>Yatzy - Assignment 2 Group 55</title>
   </head>
   <body>
     <div class="container">
-      <p>Hello, dice game world.</p>
+      <p>Yatzy Development Interface</p>
       <div class="game-area">
           <div class="dice-container">
               <!-- The dice can go here -->
               <div class="dice-area">
 
                 <div class="die-container">
-                  <div class="die" id="d_0">0</div>
+                  <div class="die" id="d_0">?</div>
                   <div class="lock-container">
                     <button id="l_0">🔓</button>
                   </div>
                 </div>
 
                 <div class="die-container">
-                  <div class="die" id="d_1">0</div>
+                  <div class="die" id="d_1">?</div>
                   <div class="lock-container">
                     <button id="l_1">🔓</button>
                   </div>
                 </div>
 
                 <div class="die-container">
-                  <div class="die" id="d_2">0</div>
+                  <div class="die" id="d_2">?</div>
                   <div class="lock-container">
                     <button id="l_2">🔓</button>
                   </div>
                 </div>
 
                 <div class="die-container">
-                  <div class="die" id="d_3">0</div>
+                  <div class="die" id="d_3">?</div>
                   <div class="lock-container">
                     <button id="l_3">🔓</button>
                   </div>
                 </div>
 
                 <div class="die-container">
-                  <div class="die" id="d_4">0</div>
+                  <div class="die" id="d_4">?</div>
                   <div class="lock-container">
                     <button id="l_4">🔓</button>
                   </div>
@@ -66,11 +66,11 @@
           </div>
           <div class="rules-container">
             <!-- How to play, or maybe score area -->
-            <button type="button" class="button" id="endTurnBtn">Finish Turn</button>
-            <button type="button" class="button" id="resetBtn">RESET GAME</button>
-            <label class="switch">
-              <input type="checkbox" id="twoPlayerBtn" checked> Toggle Two Player Game (Will Reset Game)
-            </label>
+            <button type="button" class="button" id="endRoundBtn">Finish Turn</button>
+            <button type="button" class="button" id="stateBtn">Game State Info</button>
+            <button type="button" class="button" id="resetBtn">**NEW GAME**</button>
+            <p>Dev note: You need to make a new game before you can do anything with this temporary UI</p>
+            <p>This is to accomodate a future "start screen" interface...</p>
           </div>
       </div>
   </div>
