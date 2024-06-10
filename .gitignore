@@ -1,7 +1,7 @@
 # Personal testing items that do not need to appear in the repo
 
 # Julia's testing items
-scraps/*.*
+scraps/*
 
 #Remove graphics generator files and colour references from repo
 *.afdesign
