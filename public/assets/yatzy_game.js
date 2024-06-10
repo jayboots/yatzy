@@ -106,13 +106,6 @@ export class YatzyGame {
     }
 
     /**
-     * Resets the number of rolls available to the player to the maximum allowable amount established by the game session.
-     */
-    resetRolls(){
-        this.rollsLeft = this.maxRolls;
-    }
-
-    /**
      * Simulates a user rolling the dice, under the constraints of the game logic.
      *
      * @returns {boolean} - returns True if the dice were rolled, false otherwise.
