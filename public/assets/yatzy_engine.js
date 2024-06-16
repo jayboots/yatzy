@@ -111,6 +111,7 @@ function resetGame(){
     rollBtn.disabled = !canRoll;
     drawDice(game.activeHand)
     drawLocks(game.lockRoster)
+    deselectDice()
     getGameState()
 }
 
@@ -122,12 +123,13 @@ function rollDice(){
     console.log("Attempting to roll the dice...")
     if (canRoll){
         game.rollDice();
+        deselectDice(); //reset all selected dice when rolling
         var activeHand = game.activeHand;
         console.log(activeHand)
         drawDice(activeHand)
 
         //Do something with the scorecard here
-        parseScores(activeHand)
+        // parseScores(activeHand)
 
         if (game.rollsLeft == 0){
             canRoll = false;
@@ -245,27 +247,6 @@ function drawLocks(lockRoster){
     }
 }
 
-/**
- * To calculate player's score choices after they roll.
- * Re-call this function after each roll 
- * @returns an array of all possible scores with the given combination of dice
- */
-function parseScores(_activeHand){
-    //sort dice for easier checking
-    var dice = _activeHand.sort().join("");
-    console.log("sorted dice: " + dice);
-
-    onePair(dice)
-    twoPairs(dice)
-    threeKind(dice)
-    fourKind(dice)
-    smallStraight(dice)
-    largeStraight(dice)
-    fullHouse(dice)
-    chance(dice)
-    yatzy(dice)
-}
-
 // Two dice showing the same number. Score: Sum of those two dice
 function onePair(_dice){
     let pattern = /(\d)\1/g
@@ -329,28 +310,57 @@ function yatzy(_dice){
 
 // Toggle which dice are selected
 function toggleDie(){
-    let ID = this.id.split("_")[1];
-    let die = document.getElementById(this.id);
-    console.log("Clicked die " + ID);
-    selectRoster[ID] = ! selectRoster[ID];
-    if (selectRoster[ID]){
-        die.style.backgroundColor = dieActive;
+    if (game != null && !game.activeHand.includes(null)){
+        let ID = this.id.split("_")[1];
+        let die = document.getElementById(this.id);
+        console.log("Clicked die " + ID);
+        selectRoster[ID] = ! selectRoster[ID];
+        if (selectRoster[ID]){
+            die.style.backgroundColor = dieActive;
+        }
+        else{
+            die.style.backgroundColor = dieInactive;
+        }
+    
+        let selectedHand = [];
+        for (let i = 0; i < 5; i++) {
+            if (selectRoster[i]){
+                selectedHand.push(game.activeHand[i]) ;
+            }
+        }
+        console.log("Selected hand: " + selectedHand);
+        console.log("Active dice: " + selectRoster);
     }
-    else{
-        die.style.backgroundColor = dieInactive;
-    }
-    console.log("Active dice: " + selectRoster);
 }
 
+/**
+ * Deselects all dice and returns the colour to the default.
+ */
+function deselectDice(){
+    console.log("Deselecting dice")
+    let dice = document.getElementsByClassName("die");
+    for (let i = 0; i < dice.length; i++) {
+        let ID = dice[i].id
+        document.getElementById(ID).style.backgroundColor = dieInactive;
+    }
+    selectRoster = [false, false, false, false, false]
+    console.log("Select roster: " + selectRoster)
+}
+
+// Takes a selected hand and calculates the potential score of that hand, given the rules
 function calculateScore(selectedHand){
-    switch(expression) {
-        case x:
-          // code block
-          break;
-        case y:
-          // code block
-          break;
-        default:
-          // code block
-      } 
+
+    var dice = selectedHand.sort().join("");
+    console.log("sorted dice: " + dice);
+
+    // switch(selectedHand) {
+    //     case x:
+    //       // code block
+    //       break;
+    //     case y:
+    //       // code block
+    //       break;
+    //     default:
+    //       // code block
+    // } 
 }
