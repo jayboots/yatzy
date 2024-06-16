@@ -7,6 +7,31 @@ var gameOver = true; //TODO: implement, also maybe change to state\
 const dicePrefix = "d_";
 const lockPrefix = "l_";
 
+const dieInactive = "white"
+const dieActive = "lightblue"
+
+// Handles which dice are "selected" for score calculation
+var selectRoster = [false, false, false, false, false]
+
+// Pseudo-class object Rule: score, used-up status
+var scoreCard = { 
+    "ones":[null,false], 
+    "twos":[null,false], 
+    "threes":[null,false],
+    "fours":[null,false], 
+    "fives":[null,false], 
+    "sixes":[null,false], 
+    "onePair":[null,false], 
+    "twoPairs":[null,false], 
+    "threeKind":[null,false], 
+    "fourKind":[null,false], 
+    "smallStraight":[null,false], 
+    "largeStraight":[null,false], 
+    "fullHouse":[null,false], 
+    "chance":[null,false], 
+    "yatzy":[null,false], 
+};
+
 window.onload=function(){
     console.log("Window loaded")
     const rollBtn = document.getElementById("rollBtn");
@@ -39,6 +64,7 @@ window.onload=function(){
     l3.addEventListener("click", toggleLock, true);
     l4.addEventListener("click", toggleLock, true);
 
+
     // Loading the dice
     // TODO: change to be auto-generated in future by the DOM
     const d0 = document.getElementById("d_0");
@@ -47,6 +73,11 @@ window.onload=function(){
     const d3 = document.getElementById("d_3");
     const d4 = document.getElementById("d_4");
 
+    d0.addEventListener("click", toggleDie, true);
+    d1.addEventListener("click", toggleDie, true);
+    d2.addEventListener("click", toggleDie, true);
+    d3.addEventListener("click", toggleDie, true);
+    d4.addEventListener("click", toggleDie, true);
 }
 
 
@@ -244,7 +275,7 @@ function onePair(_dice){
 
 // Two different pairs of dice. Score: Sum of dice in those two pairs
 function twoPairs(_dice){
-    let pattern = /(?<first>\d)(\g{first})\d?(?<second>\d)(\g{second})/g
+    let pattern = /(?<first>(?<f>\d)(\k<f>)).*?(?!\k<f>)(?<second>(?<s>\d)(\k<s>))/g
     let outcomes = _dice.match(pattern)
     console.log(outcomes)
 }
@@ -279,7 +310,7 @@ function largeStraight(_dice){
 
 // Any set of three combined with a different pair. Score: Sum of all the dice.
 function fullHouse(_dice){
-    let pattern = /(23456)/g //Debugging... false pattern for now
+    let pattern = /(?<first>\d)(\g{first}){1}\d?(?<second>\d)(\g{second}){2}|(?<third>\d)(\g{third}){2}\d?(?<fourth>\d)(\g{fourth}){1}/g //Debugging... false pattern for now
     let outcomes = _dice.match(pattern)
     console.log(outcomes)
 }
@@ -294,4 +325,32 @@ function yatzy(_dice){
     let pattern = /(\d)\1{4}/g
     let outcomes = _dice.match(pattern)
     console.log(outcomes)
+}
+
+// Toggle which dice are selected
+function toggleDie(){
+    let ID = this.id.split("_")[1];
+    let die = document.getElementById(this.id);
+    console.log("Clicked die " + ID);
+    selectRoster[ID] = ! selectRoster[ID];
+    if (selectRoster[ID]){
+        die.style.backgroundColor = dieActive;
+    }
+    else{
+        die.style.backgroundColor = dieInactive;
+    }
+    console.log("Active dice: " + selectRoster);
+}
+
+function calculateScore(selectedHand){
+    switch(expression) {
+        case x:
+          // code block
+          break;
+        case y:
+          // code block
+          break;
+        default:
+          // code block
+      } 
 }
