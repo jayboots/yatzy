@@ -94,6 +94,10 @@ function rollDice(){
         var activeHand = game.activeHand;
         console.log(activeHand)
         drawDice(activeHand)
+
+        //Do something with the scorecard here
+        parseScores(activeHand)
+
         if (game.rollsLeft == 0){
             canRoll = false;
             rollBtn.disabled = !canRoll;
@@ -106,7 +110,6 @@ function rollDice(){
         //Disable the roll button in the DOM here
     }
 }
-
 
 /**
  * Ends a round and determines whether the round ending means the game has finished or not.
@@ -134,7 +137,6 @@ function endRound(){
         }
     }
 }
-
 
 /**
  * Updates the values of the dice visuals based on the values stored in the YatzyGame object
@@ -168,7 +170,6 @@ function drawDice(activeHand){
     }
 }
 
-
 /**
  * Handles the interaction between the UI lock interface(s) and the YatzyGame lockRoster
  */
@@ -197,7 +198,6 @@ function toggleLock(){
 
 }
 
-
 /**
  * Given a roster of numbers, draws the corresponding lock states to the GUI
  *
@@ -214,164 +214,84 @@ function drawLocks(lockRoster){
     }
 }
 
-// TODO: Adapt to our current OOP setup. Thanks Tori.
+/**
+ * To calculate player's score choices after they roll.
+ * Re-call this function after each roll 
+ * @returns an array of all possible scores with the given combination of dice
+ */
+function parseScores(_activeHand){
+    //sort dice for easier checking
+    var dice = _activeHand.sort().join("");
+    console.log("sorted dice: " + dice);
 
-// //index 0-5 => upper section, index 6-14 => lower section
-// var combinations = new Array("ones", "twos", "threes", "fours", "fives", "sixes", 
-//                                 "one pair", "two pairs", "three of a kind", "four of a kind", "small straight", "large straight", "full house", "chance", "yatzy");
+    onePair(dice)
+    twoPairs(dice)
+    threeKind(dice)
+    fourKind(dice)
+    smallStraight(dice)
+    largeStraight(dice)
+    fullHouse(dice)
+    chance(dice)
+    yatzy(dice)
+}
 
-// //possible scores for the round, after player rolls
-// var roundScoreboard = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+// Two dice showing the same number. Score: Sum of those two dice
+function onePair(_dice){
+    let pattern = /(\d)\1/g
+    let outcomes = _dice.match(pattern)
+    console.log(outcomes)
+}
 
-// //final score board after player has confirmed a score to keep; -1 => no value set
-// var finalScoreboard = new Array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1);
+// Two different pairs of dice. Score: Sum of dice in those two pairs
+function twoPairs(_dice){
+    let pattern = /(?<first>\d)(\g{first})\d?(?<second>\d)(\g{second})/g
+    let outcomes = _dice.match(pattern)
+    console.log(outcomes)
+}
 
-// var bonus = 0;
-// var totalScore = 0;
+// Three dice showing the same number. Score: Sum of those three dice
+function threeKind(_dice){
+    let pattern = /(\d)\1{2}/g
+    let outcomes = _dice.match(pattern)
+    console.log(outcomes)
+}
 
-// /**
-//  * To calculate player's score choices after they roll.
-//  * Re-call this function after each roll 
-//  * @returns an array of all possible scores with the given combination of dice
-//  */
-// function getPotentialScores(dice) {
-//     //refresh scoreboard 
-//     roundScoreboard = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+// Four dice with the same number. Score: Sum of those four dice
+function fourKind(_dice){
+    let pattern = /(\d)\1{3}/g
+    let outcomes = _dice.match(pattern)
+    console.log(outcomes)
+}
 
-//     //sort dice for easier checking
-//     dice.sort();
-//     console.log("sorted dice: " + dice);
+// The combination 1-2-3-4-5. Score: 15 points (sum of all the dice)
+function smallStraight(_dice){
+    let pattern = /(12345)/g
+    let outcomes = _dice.match(pattern)
+    console.log(outcomes)
+}
 
-//     var count = new Array(0,0,0,0,0,0);
-//     var smallStraight = true;
-//     var largeStraight = true;
-//     var pairs = new Array();
+// The combination 2-3-4-5-6. Score: 20 points (sum of all the dice).
+function largeStraight(_dice){
+    let pattern = /(23456)/g
+    let outcomes = _dice.match(pattern)
+    console.log(outcomes)
+}
 
-//     for (var i=0; i<dice.length; i++) {
-//         const curIndex = dice[i]-1;
-//         //upper section => update sum of singles
-//         roundScoreboard[curIndex] += dice[i];
+// Any set of three combined with a different pair. Score: Sum of all the dice.
+function fullHouse(_dice){
+    let pattern = /(23456)/g //Debugging... false pattern for now
+    let outcomes = _dice.match(pattern)
+    console.log(outcomes)
+}
 
-//         //lower section  => count duplicates
-//         count[curIndex]++;
+// Any combination of dice. Score: Sum of all the dice.
+function chance(_dice){
+    console.log(_dice)
+}
 
-//         //check for straights
-//         if (smallStraight) {
-//             smallStraight = dice[i] == i+1 ? true:false;
-//         }
-//         if (largeStraight) {
-//             largeStraight = dice[i] == i+2 ? true:false;
-//         }
-        
-//         //calculate chance score 
-//         roundScoreboard[13] += dice[i];
-//     }
-
-//     //update straight scores
-//     if (smallStraight) {roundScoreboard[10] = 15}
-//     if (largeStraight) {roundScoreboard[11] = 20}
-
-//     //update other scores
-//     for (var i=0; i<count.length; i++) {
-//         const diceValue = i+1;
-
-//         //check for pairs
-//         if (count[i] >= 2) {
-//             roundScoreboard[6] = (diceValue)*2;
-//             pairs.push(diceValue);
-//         }
-//         //two pairs
-//         if (pairs.length == 2) {
-//             roundScoreboard[7] = pairs[0]*2 + pairs[1]*2;
-//         }
-
-//         //check for three of a kind
-//         if (count[i] == 3) {
-//             if (pairs.length > 1) { //there is a full house
-//                 roundScoreboard[12] = (pairs[0] != diceValue ? pairs[0]:pairs[1])*2 + diceValue*3;
-//             }
-//             roundScoreboard[8] = diceValue*3;
-//         }
-
-//         //check for four of a kind
-//         else if (count[i] == 4) {
-//             roundScoreboard[9] = diceValue*4;
-//         }
-
-//         //check for five of a kind (yatzy)
-//         else if (count[i] == 5) {
-//             roundScoreboard[14] = diceValue*5;
-//         }
-//     }
-//     return roundScoreboard;
-// }
-
-// /**
-//  * Given player's choice by array index (starting at 0), update their total score.
-//  * Should only be called after getPotentialScores(dice) is called to ensure the final score will be correct
-//  * @returns updated scoreboard along with the total score in an array: {scoreboard array, total score}
-//  */
-// function updateScore(choice) {
-//     //player's score choice is valid => update final scoreboard and add value to total score
-//     if (finalScoreboard[choice] == -1) {
-//         finalScoreboard[choice] = roundScoreboard[choice];
-
-//         //check for bonus
-//         var tempScore = 0;
-//         for (var i=0; i<6; i++) {
-//             tempScore += finalScoreboard[i] != -1 ? finalScoreboard[i]:0;
-//         }
-//         if (bonus==0 && tempScore >= 63) {
-//             bonus = 50;
-//         }
-
-//         //update total score
-//         totalScore += (roundScoreboard[choice] + bonus);
-
-//     } else {
-//         console.log("Already chosen a score for this box");
-//     }
-
-//     return [finalScoreboard, totalScore];
-// }
-
-// /**
-//  * resets all scores: potential/round, final, and total
-//  * used only when game ends
-//  */
-// function resetScore() {
-//     roundScoreboard = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-//     finalScoreboard = new Array(-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1);
-//     bonus = 0;
-//     totalScore = 0;
-// }
-
-
-
-// //for testing-------------------------------------------------------------------------------------------------
-// function showRoundScore() {
-//     for (var i=0; i<combinations.length; i++) {
-//         console.log(combinations[i] + ": " + roundScoreboard[i]);
-//     }
-// } 
-
-// function showFinalScore() {
-//     for (var i=0; i<combinations.length; i++) {
-//         console.log(combinations[i] + ": " + finalScoreboard[i]);
-//     }
-//     console.log("total score: " + totalScore)
-// }
-
-// // //test run
-// // getPotentialScores([1,2,3,4,5]);
-// // showRoundScore();
-// // updateScore(10);
-// // console.log("");
-
-// // getPotentialScores([1,5,5,5,5]);
-// // showRoundScore();
-// // updateScore(9);
-// // console.log("");
-
-// // showFinalScore();
-// // resetScore();
+// All five dice with the same number. Score: 50 points
+function yatzy(_dice){
+    let pattern = /(\d)\1{4}/g
+    let outcomes = _dice.match(pattern)
+    console.log(outcomes)
+}

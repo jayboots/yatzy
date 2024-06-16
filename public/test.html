@@ -1,78 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" >
-    <meta name="viewport" content="width-device-width, initial-scale=1.0" >
-    <meta name="author" content="Julia & Tori" >
-    <meta
-      name="description"
-      content="Julia and Tori - Lab 04 content"
-    >
-    <link rel="stylesheet" href="css/styles.css" >
-    <script type="module" src="assets/dice.js" defer></script>
-    <script type="module" src="assets/yatzy_game.js" defer></script>
-    <script type="module" src="assets/yatzy_engine.js" defer></script>
-    <title>Yatzy - Assignment 2 Group 55</title>
-  </head>
-  <body>
-    <div class="container">
-      <p>Yatzy Development Interface</p>
-      <div class="game-area">
-          <div class="dice-container">
-              <!-- The dice can go here -->
-              <div class="dice-area">
 
-                <div class="die-container">
-                  <div class="die" id="d_0">?</div>
-                  <div class="lock-container">
-                    <button id="l_0">?</button>
-                  </div>
-                </div>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width-device-width, initial-scale=1.0">
+	<meta name="author" content="Julia & Tori">
+	<meta name="description" content="Julia and Tori - Lab 04 content">
+	<link rel="stylesheet" href="css/styles.css">
+	<script type="module" src="assets/dice.js" defer></script>
+	<script type="module" src="assets/yatzy_game.js" defer></script>
+	<script type="module" src="assets/yatzy_engine.js" defer></script>
+	<title>Yatzy - Assignment 2 Group 55</title>
+</head>
 
-                <div class="die-container">
-                  <div class="die" id="d_1">?</div>
-                  <div class="lock-container">
-                    <button id="l_1">?</button>
-                  </div>
-                </div>
+<body>
+	<div class="container">
+		<p>Yatzy Development Interface</p>
+		<button type="button" class="button" id="resetBtn">Start a New Game</button>
+		<div class="game-area">
+			<div class="split-container">
+				<div class="column-container">
 
-                <div class="die-container">
-                  <div class="die" id="d_2">?</div>
-                  <div class="lock-container">
-                    <button id="l_2">?</button>
-                  </div>
-                </div>
+					<div class="die-container">
+						<div class="die" id="d_0">?</div>
+						<div class="lock-container">
+							<button id="l_0">?</button>
+						</div>
+					</div>
 
-                <div class="die-container">
-                  <div class="die" id="d_3">?</div>
-                  <div class="lock-container">
-                    <button id="l_3">?</button>
-                  </div>
-                </div>
+					<div class="die-container">
+						<div class="die" id="d_1">?</div>
+						<div class="lock-container">
+							<button id="l_1">?</button>
+						</div>
+					</div>
 
-                <div class="die-container">
-                  <div class="die" id="d_4">?</div>
-                  <div class="lock-container">
-                    <button id="l_4">?</button>
-                  </div>
-                </div>
-              
-              </div>
-          </div>
-          <div class="button-container">
-              <!-- The button to roll the dice, and maybe rules and results can go here... -->
-              <!-- Button should play a sound when clicked -->
-              <button type="button" class="button" id="rollBtn">Roll the Dice!</button>
-          </div>
-          <div class="rules-container">
-            <!-- How to play, or maybe score area -->
-            <button type="button" class="button" id="endRoundBtn">Finish Turn</button>
-            <button type="button" class="button" id="stateBtn">Game State Info</button>
-            <button type="button" class="button" id="resetBtn">**NEW GAME**</button>
-            <p>Dev note: You need to make a new game before you can do anything with this temporary UI</p>
-            <p>This is to accomodate a future "start screen" interface...</p>
-          </div>
-      </div>
-  </div>
-  </body>
+					<div class="die-container">
+						<div class="die" id="d_2">?</div>
+						<div class="lock-container">
+							<button id="l_2">?</button>
+						</div>
+					</div>
+
+					<div class="die-container">
+						<div class="die" id="d_3">?</div>
+						<div class="lock-container">
+							<button id="l_3">?</button>
+						</div>
+					</div>
+
+					<div class="die-container">
+						<div class="die" id="d_4">?</div>
+						<div class="lock-container">
+							<button id="l_4">?</button>
+						</div>
+					</div>
+
+				</div>
+				<!-- The score card area -->
+				<div class="column-container">
+					<div class="score-area">
+						<table id="score-card">
+						<!-- Headers -->
+							<tr>
+								<th>Description</th>
+								<th>Pts</th>
+							</tr>
+						<!-- Upper Section -->
+							<tr>
+								<td>Ones</td>
+								<td>#</td>
+							</tr>
+							<tr>
+								<td>Twos</td>
+								<td>#</td>
+							</tr>
+							<tr>
+								<td>Threes</td>
+								<td>#</td>
+							</tr>
+							<tr>
+								<td>Fours</td>
+								<td>#</td>
+							</tr>
+							<tr>
+								<td>Fives</td>
+								<td>#</td>
+							</tr>
+							<tr>
+								<td>Sixes</td>
+								<td>#</td>
+							</tr>
+						<!-- Lower Section -->
+							<tr>
+								<td>One Pair</td>
+								<td>#</td>
+							</tr>
+							<tr>
+								<td>Two Pairs</td>
+								<td>#</td>
+							</tr>
+							<tr>
+								<td>Three of a Kind</td>
+								<td>#</td>
+							</tr>
+							<tr>
+								<td>Four of a Kind</td>
+								<td>#</td>
+							</tr>
+							<tr>
+								<td>Small Straight</td>
+								<td>#</td>
+							</tr>
+							<tr>
+								<td>Large Straight</td>
+								<td>#</td>
+							</tr>
+							<tr>
+								<td>Full House</td>
+								<td>#</td>
+							</tr>
+							<tr>
+								<td>Chance</td>
+								<td>#</td>
+							</tr>
+							<tr>
+								<td>Yatzy</td>
+								<td>#</td>
+							</tr>
+						</table> 
+					</div>
+				</div>
+			</div>
+			<div class="button-container">
+				<!-- The button to roll the dice, and maybe rules and results can go here... -->
+				<!-- Button should play a sound when clicked -->
+				<button type="button" class="button" id="rollBtn">Roll the Dice!</button>
+				<button type="button" class="button" id="endRoundBtn">Submit Score</button>
+			</div>
+			<div class="rules-container">
+				<!-- How to play, or maybe score area -->
+				<button type="button" class="button" id="stateBtn">Game State Info</button>
+			</div>
+		</div>
+	</div>
+</body>
+
 </html>
