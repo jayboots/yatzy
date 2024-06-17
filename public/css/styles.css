@@ -1,3 +1,12 @@
+/* variables */
+:root {
+    --dsize: 50px;
+    --neutral: white;
+    --highlight: rgb(217, 229, 248);
+    --selected: yellow;
+    --disabled: rgb(182, 182, 182);
+  }
+
 html {
     height: 100%;
 }
@@ -13,6 +22,28 @@ table, th, td {
     border-collapse: collapse;
     padding: 0.25rem;
     background: white;
+}
+
+/* For the total score area */
+td.total-score {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+td.score-desc {
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+/* Clickable items should have the cursonr */
+#score-card tr.table-row td{
+    cursor: pointer;
+    background-color: var(--neutral);
+}
+
+#score-card tr.table-row:hover td{
+    cursor: pointer;
+    background-color: var(--highlight);
 }
 
 /* General Container Properties */
@@ -47,11 +78,6 @@ div.die-container{
     border: black solid 5px;
     padding: 0.5rem;
 }
-
-/* variables */
-:root {
-    --dsize: 50px;
-  }
 
 div.die{
     border: black solid 1px;
