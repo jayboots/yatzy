@@ -53,5 +53,4 @@ You will be graded on the following criteria.
 Total : 60
 
 ## Submission
-
 Submit a summary of your delivery to BrightSpace before the deadline.

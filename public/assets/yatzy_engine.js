@@ -62,7 +62,6 @@ window.onload=function(){
         let ID = dice[i].id
         document.getElementById(ID).addEventListener("click", toggleDie, true);
     }
-
 }
 
 // function highlightElement(){
@@ -152,12 +151,11 @@ function endRound(){
         updateScoreCard(); //commit the selected score to the scorecard
         targetChoice = null;
         targetPts = null;
-        drawScoreCard(); //redraw the scorecard
 
         if (game.currentRound == (game.maxRounds)){
             gameOver = true;
             //TODO: Endgame logic, view score, try again, new game, etc.
-            scoreCard.calculateBonus();
+            game.score += scoreCard.calculateBonus();
             //TODO: Update the scorecard here to reflect the final score
 
             rollBtn.disabled = true; //Can't roll dice if the game is over.
@@ -170,6 +168,8 @@ function endRound(){
             drawLocks(game.lockRoster) //draw the locks here, when implemented
             rollBtn.disabled = false; //We're starting a new round so we need to be able to roll
         }
+        //redraw the scorecard regardless of if final turn or not.
+        drawScoreCard(); 
     }
 }
 
@@ -476,7 +476,7 @@ function calculateScore(){
                     else{
                         console.log(noMatchMsg)
                     }
-                    console.log(outcomes)
+                    // console.log(outcomes)
                     break;
                 case "largeStraight":
                     // The combination 2-3-4-5-6. Score: 20 points (sum of all the dice).
@@ -489,7 +489,7 @@ function calculateScore(){
                     else{
                         console.log(noMatchMsg)
                     }
-                    console.log(outcomes)
+                    // console.log(outcomes)
                     break;
                 case "fullHouse":
                     if (selectedHand.length == 5){
@@ -583,16 +583,21 @@ function drawScoreCard(){
         scoreArea.innerText = scoreCard.records[document.getElementById(ID).id];
         }
     // TODO: Update the total score area
+    let scoreSum = document.getElementById("total-score");
+    scoreSum.innerText = game.score;
+
     // TODO: Also update an indicator of the bonus in the blank slot next to total, when it triggers.
 }
 
 function updateScoreCard(){
     if ((targetChoice != null) && (targetPts != null) &&(scoreCard.records[targetChoice] == null)){
         scoreCard.records[targetChoice] = targetPts
+        // scoreCard.baseScore += targetPts; //needed?
+        game.score += targetPts;
     }
     else{
         // Shouldn't see this message.
         console.log("Somehow, trying to over-write a pre-filled score box...")
     }
-    console.log(scoreCard.records)
+    // console.log(scoreCard.records)
 }
