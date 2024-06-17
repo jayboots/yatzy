@@ -125,8 +125,6 @@ function rollDice(){
             canRoll = false;
             rollBtn.disabled = !canRoll;
         }
-        console.log("Unlocking the 'Finish Turn' button")
-        endRoundBtn.disabled = false;
     }
     else{
         console.log("Cannot currently roll the dice.") //either game hasn't been created yet, or game logic doesn't allow this.
@@ -541,6 +539,8 @@ function calculateScore(){
 
             if (scoreCard.records[scoreChoice] == null){
                 showScoreChoice(scoreChoice, pts)
+                console.log("Unlocking the 'Finish Turn' button")
+                endRoundBtn.disabled = false;
             }
             else{
                 //TODO: Something
