@@ -1,8 +1,14 @@
 import { YatzyGame } from "./yatzy_game.js";
+import { ScoreCard } from  "./scorecard.js"
 
 var game = null;
+var scoreCard = null;
+var targetChoice = null;
+var targetPts = null;
+
 var canRoll = false;
 var gameOver = true; //TODO: implement, also maybe change to state\
+var roundPts = 0; //TODO: implement
 
 const dicePrefix = "d_";
 const lockPrefix = "l_";
@@ -10,8 +16,8 @@ const lockPrefix = "l_";
 // Colour constants for mouse-over events
 const defaultColour = "white"
 const selectColour = "lightblue"
-const hoverColour = "lightgreen"
-const inactiveColour = "lightgray"
+// const hoverColour = "lightgreen"
+// const inactiveColour = "lightgray"
 
 // Handles which dice are "selected" for score calculation
 var selectRoster = [false, false, false, false, false]
@@ -19,9 +25,9 @@ var selectRoster = [false, false, false, false, false]
 window.onload=function(){
     console.log("Window loaded")
 
-    const scoreCard = document.getElementsByClassName("table-row");
-    for (let i = 0; i < scoreCard.length; i++) {
-        let ID = scoreCard[i].id
+    const scoreTable = document.getElementsByClassName("table-row");
+    for (let i = 0; i < scoreTable.length; i++) {
+        let ID = scoreTable[i].id
         // document.getElementById(ID).addEventListener("mouseover", highlightElement, true)
         document.getElementById(ID).addEventListener("click", calculateScore, true)
     }
@@ -87,7 +93,11 @@ function getGameState(){
 function resetGame(){
     console.log("Creating new game.")
     game = new YatzyGame();
-    // game = new YatzyGame(3, 3) //For testing
+    scoreCard = new ScoreCard();
+    targetChoice = null;
+    targetPts = null;
+    drawScoreCard();
+
     console.log(game)
     canRoll = true;
     gameOver = false;
@@ -110,9 +120,6 @@ function rollDice(){
         var activeHand = game.activeHand;
         console.log(activeHand)
         drawDice(activeHand)
-
-        //Do something with the scorecard here
-        // parseScores(activeHand)
 
         if (game.rollsLeft == 0){
             canRoll = false;
@@ -139,9 +146,19 @@ function endRound(){
     if (game != null){
         game.incrementRound()
         deselectDice() // remove all selections
+
+        //TODO: "Lock in" the scoreboard here
+        updateScoreCard(); //commit the selected score to the scorecard
+        targetChoice = null;
+        targetPts = null;
+        drawScoreCard(); //redraw the scorecard
+
         if (game.currentRound == (game.maxRounds)){
             gameOver = true;
             //TODO: Endgame logic, view score, try again, new game, etc.
+            scoreCard.calculateBonus();
+            //TODO: Update the scorecard here to reflect the final score
+
             rollBtn.disabled = true; //Can't roll dice if the game is over.
             console.log("GAME IS OVER. Can make a new game, if you want.")
         }
@@ -150,7 +167,7 @@ function endRound(){
             canRoll = true;
             drawDice(game.activeHand) //draw the reset
             drawLocks(game.lockRoster) //draw the locks here, when implemented
-            rollBtn.disabled = false; //We're startin g a new round so we need to be able to roll
+            rollBtn.disabled = false; //We're starting a new round so we need to be able to roll
         }
     }
 }
@@ -231,12 +248,6 @@ function drawLocks(lockRoster){
     }
 }
 
-// Any set of three combined with a different pair. Score: Sum of all the dice.
-function fullHouse(_dice){
-    let pattern = /(?<first>\d)(\g{first}){1}\d?(?<second>\d)(\g{second}){2}|(?<third>\d)(\g{third}){2}\d?(?<fourth>\d)(\g{fourth}){1}/g //Debugging... false pattern for now
-    let outcomes = _dice.match(pattern)
-    console.log(outcomes)
-}
 
 /**
  * Handles the interaction between the UI dice selection mechanism and the selected hand of dice variables.
@@ -256,6 +267,8 @@ function toggleDie(){
             die.style.backgroundColor = defaultColour;
         }
         // console.log("Active dice: " + selectRoster);
+        //Refresh the scorecard when we toggle a selection
+        drawScoreCard()
     }
 }
 
@@ -264,7 +277,7 @@ function toggleDie(){
  * Sets the programmatic implementation of the selected dice to the default value (all dice unselected).
  */
 function deselectDice(){
-    console.log("Deselecting dice")
+    // console.log("Deselecting dice")
     let dice = document.getElementsByClassName("die");
     for (let i = 0; i < dice.length; i++) {
         let ID = dice[i].id
@@ -274,27 +287,11 @@ function deselectDice(){
     // console.log("Select roster: " + selectRoster)
 }
 
-// Pseudo-class object Rule: score, used-up status
-// var scoreCard = { 
-//     "ones":[null,false], 
-//     "twos":[null,false], 
-//     "threes":[null,false],
-//     "fours":[null,false], 
-//     "fives":[null,false], 
-//     "sixes":[null,false], 
-//     "onePair":[null,false], 
-//     "twoPairs":[null,false], 
-//     "threeKind":[null,false], 
-//     "fourKind":[null,false], 
-//     "smallStraight":[null,false], 
-//     "largeStraight":[null,false], 
-//     "fullHouse":[null,false], 
-//     "chance":[null,false], 
-//     "yatzy":[null,false], 
-// };
-// TODO ON END GAME: If a player manages to score at least 63 points (an average of three of each number) in the upper section, they are awarded a bonus of 50 points. 
-
 // Takes a selected hand and calculates the potential score of that hand, given the rules
+
+/**
+ * Calculates the score of whichever item is selected.
+ */
 function calculateScore(){
     if (game != null && !game.activeHand.includes(null)){
         if (selectRoster.includes(true)){
@@ -313,7 +310,7 @@ function calculateScore(){
             let pattern = null
             let outcomes = null
 
-            let noMatchMsg = "No match. 0 pts for this one..."
+            let noMatchMsg = "No match. 0 pts for t his one..."
 
             switch(scoreChoice) {
                 case "ones":
@@ -540,6 +537,14 @@ function calculateScore(){
                     break;
                 //Update the turn pts variable then write it to the game when the turn ends
             } 
+
+            if (scoreCard.records[scoreChoice] == null){
+                showScoreChoice(scoreChoice, pts)
+            }
+            else{
+                //TODO: Something
+                console.log("This section is already filled")
+            }
         }
         else{
             console.log("Need to select at least one die!")
@@ -548,4 +553,45 @@ function calculateScore(){
     else {
         console.log("No game or no dice, cannot do anything with the scorecard!")
     }
+}
+
+function showScoreChoice(choice, pts){
+    targetChoice = choice;
+    targetPts = pts;
+    let scoreTable = document.getElementsByClassName("table-row");
+    // console.log(scoreTable)
+    for (let i = 0; i < scoreTable.length; i++) {
+        let ID = scoreTable[i].id
+        let scoreArea = document.getElementById(ID).childNodes[3];
+        if (document.getElementById(ID).id == targetChoice){
+            // console.log("Show the score and highlight")
+            scoreArea.innerText = pts;
+        }
+        else{
+            // console.log("Reset these to saved state on the scorecard")
+            scoreArea.innerText = scoreCard.records[document.getElementById(ID).id];
+        }
+    }
+}
+
+function drawScoreCard(){
+    let scoreTable = document.getElementsByClassName("table-row");
+    for (let i = 0; i < scoreTable.length; i++) {
+        let ID = scoreTable[i].id
+        let scoreArea = document.getElementById(ID).childNodes[3];
+        scoreArea.innerText = scoreCard.records[document.getElementById(ID).id];
+        }
+    // TODO: Update the total score area
+    // TODO: Also update an indicator of the bonus in the blank slot next to total, when it triggers.
+}
+
+function updateScoreCard(){
+    if ((targetChoice != null) && (targetPts != null) &&(scoreCard.records[targetChoice] == null)){
+        scoreCard.records[targetChoice] = targetPts
+    }
+    else{
+        // Shouldn't see this message.
+        console.log("Somehow, trying to over-write a pre-filled score box...")
+    }
+    console.log(scoreCard.records)
 }

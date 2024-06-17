@@ -16,7 +16,7 @@ export class YatzyGame {
      * @param {number} [_maxRounds=13] - The number of rounds in the game
      * @param {number} [_numPlayers=1] - The number of players
      */
-    constructor(_maxRolls=3, _maxRounds=13) {
+    constructor(_maxRolls=3, _maxRounds=15) {
 
         // console.log("Creating Instance of YatzyGame")
 
@@ -33,9 +33,6 @@ export class YatzyGame {
         //Ticker variables
         this.currentRound = this.roundStart;
         this.rollsLeft = this.maxRolls;
-
-        //Since 2P is not being included, commenting this out as we remove this feature from our code base.
-        // this.isPlayerOne = new Boolean(true)
 
     }
     

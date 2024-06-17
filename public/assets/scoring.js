@@ -128,7 +128,6 @@ function resetScore() {
     totalScore = 0;
 }
 
-
 //for testing-------------------------------------------------------------------------------------------------
 function showRoundScore() {
     for (var i=0; i<combinations.length; i++) {
