@@ -39,9 +39,7 @@ Commit these changes and push to [GitHub](https://github.com/).
 
 ### 3. Document Dice
 
-Using the techniques learned in Lab 4, document the
-look and feel of your dice.  Hint: Create a `/docs/assets/design_system/dice.html`
-to help you _document through code_ the design.
+Using the techniques learned in Lab 4, document the look and feel of your dice.  Hint: Create a `/docs/assets/design_system/dice.html` to help you _document through code_ the design.
 
 ### 4. Document Game Components
 

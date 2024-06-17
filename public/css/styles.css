@@ -1,10 +1,16 @@
 /* variables */
 :root {
-    --dsize: 50px;
+    --dsize: 3.5rem;
     --neutral: white;
     --highlight: rgb(217, 229, 248);
     --selected: yellow;
     --disabled: rgb(182, 182, 182);
+    --munsell: #eb3349; 
+    --melon: #e89f9b;
+    --aero: #5db6d7;
+    --airforce: #4a7e92;
+    --white: #ffffff;
+    --misttyrose: #ffe4e1;
   }
 
 html {
@@ -14,7 +20,7 @@ body {
     height: 100%;
     margin: 0;
     background-repeat: no-repeat;
-    background: linear-gradient(#EB3349, #F45C43);
+    background: linear-gradient(var(--munsell), #F45C43);
 }
 
 table, th, td {
@@ -115,3 +121,34 @@ div.rules-container{
     background: #FFFFFF;
 }
 
+
+/* Google Fonts - https://fonts.google.com/selection/embed */
+.poppins-regular {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.poppins-medium {
+font-family: "Poppins", sans-serif;
+font-weight: 500;
+font-style: normal;
+}
+
+.poppins-semibold {
+font-family: "Poppins", sans-serif;
+font-weight: 600;
+font-style: normal;
+}
+
+.poppins-extrabold {
+font-family: "Poppins", sans-serif;
+font-weight: 800;
+font-style: normal;
+}
+
+.poppins-light-italic {
+font-family: "Poppins", sans-serif;
+font-weight: 300;
+font-style: italic;
+}
