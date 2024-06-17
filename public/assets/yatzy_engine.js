@@ -84,6 +84,7 @@ function getGameState(){
     }
     console.log("Can roll dice: " + canRoll)
     console.log("Game Currently Over: " + gameOver)
+    console.log("targetChoice and targetPts: " + targetChoice + ", " + targetPts)
 }
 
 

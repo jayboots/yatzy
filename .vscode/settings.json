@@ -2,6 +2,7 @@
     "conventionalCommits.scopes": [
         "Yacht Dice",
         "Lab 04 Exercises",
-        "Lab 05 Exercises"
+        "Lab 05 Exercises",
+        "bug testing"
     ]
 }
