@@ -45,7 +45,7 @@ export class ScoreCard {
             console.log("First six sum score: " + firstSectionTotal)
             console.log("No bonus...")
         }
-        return this.bonus();
+        return this.bonus;
     }
 
     //Could use this to iterate through the key
