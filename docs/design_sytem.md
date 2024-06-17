@@ -17,7 +17,7 @@ This document outlines the design system for the project.
 
 ## Designing the Dice
 
-Using the techniques learned in Lab 4, document the look and feel of your dice.  Hint: Create a `/docs/assets/design_system/dice.html` to help you _document through code_ the design.
+The design for the dice is documented in [dice.html](assets\design_system\dice.html) via document through code. It shows an example of the dice graphics used and details pertaining to their design/usage in the project.
 
 ## Game Components
 
