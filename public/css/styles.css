@@ -1,4 +1,7 @@
-/* variables */
+/* From Google Fonts - https://fonts.google.com */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Playwrite+PL:wght@100..400&display=swap');
+
+/* root-scope variables */
 :root {
     --dsize: 4rem;
     --dradius: 0.6rem;
@@ -6,8 +9,6 @@
     --spacing-small: 0.2rem;
     --spacing-medium: 0.5rem;
     --spacing-xl: 3rem;
-    --highlight: rgb(217, 229, 248);
-    --disabled: rgb(182, 182, 182);
     --primary-start: #eb3349;       /*munsell*/
     --primary-fade: #F45C43;        /*tomato*/
     --primary-highlight: #e89f9b;   /*melon*/
@@ -21,17 +22,54 @@
   }
 
 html {
-    height: 100%;
+    /* height: 100%; */
 }
 body {
     /* height: 100%; */
     margin: 0;
     background-repeat: no-repeat;
     background: linear-gradient(var(--primary-start), var(--primary-fade));
+
+    /* From Google Fonts - https://fonts.google.com */
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
+
+header {
+    text-align: center;
+    width: 100%;
+    color: var(--white);
+    /* padding: 0.1em; */
+    outline: 5px solid green;
+    margin: 0px;
+}
+
+h1 {
+    font-size: 80px;
+    text-shadow: 2px 2px 1px #ababab;
+    font-family: "Playwrite PL", cursive;
+    font-weight: bold;
+}
+
+footer{
+    background: var(--primary-start);
+    height: 100%;
+    color: var(--primary-shadow);
+    font-style: italic;
+    font-size: smaller;
+    padding: 0.1em;
+    text-align: center;
 }
 
 #score-card{
     width: 100%;
+}
+
+table {
+    box-shadow: 0.25rem 0.25rem 0.25rem var(--primary-shadow);
 }
 
 table, th, td {
@@ -40,6 +78,10 @@ table, th, td {
     padding: 0.33rem;
     background: var(--white);
 }
+
+/* .desc-col{
+    width:
+} */
 
 /* For the total score area */
 td.total-score {
@@ -229,36 +271,4 @@ div.rules-container{
     justify-content: center;
     padding: 0.5rem;
     /* background: #FFFFFF; */
-}
-
-
-/* Google Fonts - https://fonts.google.com/selection/embed */
-.poppins-regular {
-    font-family: "Poppins", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
-
-.poppins-medium {
-font-family: "Poppins", sans-serif;
-font-weight: 500;
-font-style: normal;
-}
-
-.poppins-semibold {
-font-family: "Poppins", sans-serif;
-font-weight: 600;
-font-style: normal;
-}
-
-.poppins-extrabold {
-font-family: "Poppins", sans-serif;
-font-weight: 800;
-font-style: normal;
-}
-
-.poppins-light-italic {
-font-family: "Poppins", sans-serif;
-font-weight: 300;
-font-style: italic;
 }
