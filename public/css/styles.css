@@ -49,7 +49,7 @@ header {
 
 h1 {
     font-size: 80px;
-    text-shadow: 2px 2px 1px #ababab;
+    text-shadow: 0.25rem 0.25rem 1px var(--secondary-shadow);
     font-family: "Playwrite PL", cursive;
     font-weight: bold;
 }
@@ -243,7 +243,8 @@ button.lock {
     color: var(--white);
     font-size: xlarge;
     background-color: transparent;
-    /* background-color: var(--secondary-shadow); */
+    text-shadow: 0.15rem 0.15rem 1px var(--secondary-shadow);
+    -webkit-text-stroke: 1px var(--secondary-shadow);
     margin: 10px;
     /* padding: 30px; */
     /* border-radius: 20px; */
@@ -251,8 +252,10 @@ button.lock {
 }
 
 button.lock:hover{
-    color: var(--secondary-highlight);
-    /* box-shadow: 0.25rem 0.25rem 0 var(--secondary-shadow); */
+    color: var(--white);
+    text-shadow: 0.15rem 0.15rem 1px var(--secondary);
+    -webkit-text-stroke: 0px;
+
 }
 
 div.button-container{
