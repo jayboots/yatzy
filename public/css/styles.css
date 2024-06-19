@@ -43,7 +43,7 @@ header {
     width: 100%;
     color: var(--white);
     /* padding: 0.1em; */
-    outline: 5px solid green;
+    /* outline: 5px solid green; */
     margin: 0px;
 }
 
@@ -52,6 +52,7 @@ h1 {
     text-shadow: 0.25rem 0.25rem 1px var(--secondary-shadow);
     font-family: "Playwrite PL", cursive;
     font-weight: bold;
+    margin: 0px;
 }
 
 footer{
@@ -64,8 +65,14 @@ footer{
     text-align: center;
 }
 
+.score-area{
+    display: flex;
+    justify-content: center;
+}
+
 #score-card{
     width: 100%;
+    max-width: 80%;
 }
 
 table {
@@ -79,9 +86,17 @@ table, th, td {
     background: var(--white);
 }
 
-/* .desc-col{
-    width:
-} */
+.category-col{
+    width: 20%;
+}
+
+.pts-col {
+    width: 5%;
+}
+
+.desc-col{
+    width: 50%;
+}
 
 /* For the total score area */
 td.total-score {
