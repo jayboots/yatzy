@@ -19,7 +19,7 @@
     --white: #ffffff;               /*white*/
     --offwhite: #ffe4e1;            /*misty rose*/
     --black: #000000;
-  }
+}
 
 html {
     /* height: 100%; */
@@ -55,24 +55,31 @@ h1 {
     margin: 0px;
 }
 
+button.btn-function {
+
+}
+
 footer{
     background: var(--primary-start);
     height: 100%;
-    color: var(--primary-shadow);
+    color: var(--white);
+    font-weight: bold;
     font-style: italic;
     font-size: smaller;
     padding: 0.1em;
+    margin-top: 0.25em;
     text-align: center;
 }
 
-.score-area{
+/* .score-area{
     display: flex;
     justify-content: center;
-}
+    outline: 6px dashed blue;
+} */
 
 #score-card{
     width: 100%;
-    max-width: 80%;
+    /* max-width: 80%; */
 }
 
 table {
@@ -84,18 +91,7 @@ table, th, td {
     border-collapse: collapse;
     padding: 0.33rem;
     background: var(--white);
-}
-
-.category-col{
-    width: 20%;
-}
-
-.pts-col {
-    width: 5%;
-}
-
-.desc-col{
-    width: 50%;
+    overflow-x: auto;
 }
 
 /* For the total score area */
@@ -119,7 +115,7 @@ td.score-desc {
     cursor: pointer;
     background-color: var(--secondary);
     color: var(--white);
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
 div {
@@ -130,16 +126,16 @@ div {
 
 /* General Container Properties */
 div.game-area{
-    border: black dotted 5px;
+    /* border: black dotted 5px; */
     /* background: pink; */
     padding: 5px;
 }
 
-/* Splits the play area in half - dice on left, score area on right */
+/* Splits the play area in half - dice on left, score area on right. Also used in header. */
 div.split-container{
     display: flex;
     justify-content: center;
-    /* border: rgb(255, 255, 255) dashed 3px; */
+    border: rgb(255, 255, 255) dashed 3px;
     /* background: rgb(105, 166, 198); */
     /* margin-left: var(--dsize);
     margin-right: var(--dsize); */
@@ -155,8 +151,8 @@ div.column-container{
     flex-wrap: wrap;
     align-content: space-around;
     justify-content: center;
-    /* background: yellow;
-    border: red solid 5px; */
+    background: blueviolet;
+    border: pink dotted 5px;
 }
 
 div.column-container#col-left{
@@ -277,7 +273,7 @@ div.button-container{
     display: flex;
     justify-content: center;
     padding: 0.5rem;
-    background: #84a836;
+    /* background: #84a836; */
 }
 
 .lock{

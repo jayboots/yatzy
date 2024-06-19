@@ -18,14 +18,20 @@
 <body>
 	<!-- Header -->
 	<header>
-		<h1 class="logo">Yatzy</h1>
-		<p>A single-player dice game</p>
+		<div class="split-container" id="header-container">
+			<div class="column-container" id="header-left">
+				<h1 class="logo">Yatzy</h1>
+			</div>
+			<div class="column-container" id="header-right">
+				<p>A single-player dice game</p>
+				<!-- TODO: Click this to expand the section below and start a game... -->
+				<div class="button-container">
+					<button type="button" class="btn-function" id="resetBtn">Start a New Game</button>
+				</div>
+			</div>
+		</div>
 	</header>
 	<div class="container">
-		<div class="start-button-area">
-			<!-- Click this to expand the section below and start a game... -->
-			<button type="button" class="button" id="resetBtn">Start a New Game</button>
-		</div>
 		<!-- Main Content Section -->
 		<div class="game-area">
 			<div class="split-container">
@@ -80,18 +86,30 @@
 						title="Die 5 has no value.">?</div>
 					</div>
 					
+					<div class="button-container">
+						<button type="button" class="btn-function" id="rollBtn">Roll the Dice! </button>
+					</div>
+					<div class="button-container">
+						<button type="button" class="btn-function" id="endRoundBtn">Submit Score</button>
+					</div>
+
 				</div>
 				<!-- The score card area -->
 				<div class="column-container" id="col-right">
-					<div class="score-area">
+					<!-- <div class="score-area"> -->
 						<table id="score-card">
 						<!-- Headers -->
 							<thead>
 								<tr>
+									<th>Category</th>
+									<th>Pts</th>
+									<th>Description</th>
+								</tr>
+								<!-- <tr>
 									<th class="category-col">Category</th>
 									<th class="pts-col">Pts</th>
 									<th class="desc-col">Description</th>
-								</tr>
+								</tr> -->
 							</thead>
 						<!-- Upper Section -->
 							<tbody>
@@ -178,14 +196,8 @@
 								</tr>
 							</tbody>
 						</table> 
-					</div>
+					<!-- </div> -->
 				</div>
-			</div>
-			<div class="button-container">
-				<!-- The button to roll the dice, and maybe rules and results can go here... -->
-				<!-- Button should play a sound when clicked -->
-				<button type="button" class="button" id="rollBtn">Roll the Dice! </button>
-				<button type="button" class="button" id="endRoundBtn">Submit Score</button>
 			</div>
 			<!-- <div class="rules-container"> -->
 				<!-- How to play, or maybe score area -->

@@ -18,8 +18,7 @@ Students can choose the implement another game such as the following
 
 Other games not listed above must be approved by a professor or TA otherwise the student risks receiving a 0 if not appropriate.
 
-You will build a single-player [Yatzy Game](https://en.wikipedia.org/wiki/Yatzy) using HTML/CSS/JavaScript in your `yatzy` GitHub code repository (rename the repo if you
-chose a different game) based on your work during the labs.
+You will build a single-player [Yatzy Game](https://en.wikipedia.org/wiki/Yatzy) using HTML/CSS/JavaScript in your `yatzy` GitHub code repository (rename the repo if you chose a different game) based on your work during the labs.
 
 ## Description
 
