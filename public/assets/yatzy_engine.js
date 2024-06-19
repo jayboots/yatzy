@@ -8,10 +8,19 @@ var targetPts = null;
 
 var canRoll = false;
 var gameOver = true; //TODO: implement, also maybe change to state\
-var roundPts = 0; //TODO: implement
+// var roundPts = 0; //TODO: implement
 
 const dicePrefix = "d_";
 const lockPrefix = "l_";
+
+const dotPositionMatrix = {
+    1: [[50, 50]],
+    2: [[15, 15], [85, 85]],
+    3: [[15, 15],[50, 50],[85, 85]],
+    4: [[15, 15],[15, 85],[85, 15],[85, 85]],
+    5: [[15, 15],[15, 85],[50, 50],[85, 15],[85, 85]],
+    6: [[15, 15],[15, 85],[50, 15],[50, 85],[85, 15],[85, 85]]
+};
 
 // Colour constants for mouse-over events
 const defaultColour = "white"
@@ -57,7 +66,7 @@ window.onload=function(){
     }
 
     // Loading the dice
-    const dice = document.getElementsByClassName("die");
+    const dice = document.getElementsByClassName("die-inactive");
     for (let i = 0; i < dice.length; i++) {
         let ID = dice[i].id
         document.getElementById(ID).addEventListener("click", toggleDie, true);
@@ -172,7 +181,7 @@ function endRound(){
 }
 
 /**
- * Updates the values of the dice visuals based on the values stored in the YatzyGame object
+ * Updates the values of the dice visuals.
  *
  * @param {*} activeHand - the values of the dice to draw
  */
@@ -181,6 +190,8 @@ function drawDice(activeHand){
         if (activeHand.includes(null)){
             for (let i = 0; i < activeHand.length; i++) {
                 document.getElementById(dicePrefix+i).innerText = "?";
+                document.getElementById(dicePrefix+i).className = "die-inactive";
+                document.getElementById(dicePrefix+i).title = "Die " + (i+1) + " has no value.";
             }
         }
         else{
@@ -189,11 +200,24 @@ function drawDice(activeHand){
         
             for (let i = 0; i < lockedDice.length; i++) {
                 // If the die is locked, don't change the value
+                document.getElementById(dicePrefix+i).className = "die-active";
                 if (lockedDice[i] == 0) {
                     // console.log("Die # " + (i + 1) + " is free. Rerolling value." );
-                    document.getElementById(dicePrefix+i).innerText = activeHand[i];
+                    // document.getElementById(dicePrefix+i).innerText = activeHand[i];
+                    document.getElementById(dicePrefix+i).innerText = "";
+                    document.getElementById(dicePrefix+i).title = "Die " + (i+1) + " has a value of " + activeHand[i] + ".";
                 } else {
                     console.log("Die # " + (i + 1) + " is locked." )
+                    //No need to change title on locked dice.
+                }
+                let dotList = dotPositionMatrix[activeHand[i]]
+                for (let j = 0; j < dotList.length; j++) {
+                    let dotCoords = dotList[j]
+                    let dot = document.createElement("div")
+                    dot.style.setProperty("--top", dotCoords[0] + "%")
+                    dot.style.setProperty("--left", dotCoords[1] + "%")
+                    dot.classList.add("dot")
+                    document.getElementById(dicePrefix+i).appendChild(dot)
                 }
             }
         }
@@ -239,10 +263,11 @@ function toggleLock(){
 function drawLocks(lockRoster){
     for (let i = 0; i < lockRoster.length; i++) {
         if (lockRoster[i] == 0){
-            document.getElementById(lockPrefix+i).innerText = "🔓"
+            // document.getElementById(lockPrefix+i).innerText = "🔓"
+            document.getElementById(lockPrefix+i).innerHTML = '<i class="material-icons" style="font-size:3rem;">lock_open</i>'
         }
         else {
-            document.getElementById(lockPrefix+i).innerText = "🔒";
+            document.getElementById(lockPrefix+i).innerHTML = '<i class="material-icons" style="font-size:3rem;">lock</i>';
         }
     }
 }
@@ -256,14 +281,20 @@ function toggleDie(){
         let ID = this.id.split("_")[1];
         let die = document.getElementById(this.id);
         // console.log("Clicked die " + ID);
-
         // Manage the selection roster toggles
         selectRoster[ID] = ! selectRoster[ID];
         if (selectRoster[ID]){
-            die.style.backgroundColor = selectColour;
+            // die.style.backgroundColor = selectColour;
+            die.className = "die-selected";
+            for (var i = 0; i < die.childNodes.length; i += 1) {
+                die.childNodes[i].className = "dot-selected"
+            }
         }
         else{
-            die.style.backgroundColor = defaultColour;
+            die.className = "die-active";
+            for (var i = 0; i < die.childNodes.length; i += 1) {
+                die.childNodes[i].className = "dot"
+            }
         }
         // console.log("Active dice: " + selectRoster);
         //Refresh the scorecard when we toggle a selection
@@ -277,10 +308,15 @@ function toggleDie(){
  */
 function deselectDice(){
     // console.log("Deselecting dice")
-    let dice = document.getElementsByClassName("die");
+    let dice = document.getElementsByClassName("die-active");
     for (let i = 0; i < dice.length; i++) {
         let ID = dice[i].id
-        document.getElementById(ID).style.backgroundColor = defaultColour;
+        // document.getElementById(ID).style.backgroundColor = defaultColour;
+        document.getElementById(ID).className = "die-inactive";
+
+        for (var j = 0; j < document.getElementById(ID).childNodes.length; j += 1) {
+            document.getElementById(ID).childNodes[j].className = "dot"
+        }
     }
     selectRoster = [false, false, false, false, false]
     // console.log("Select roster: " + selectRoster)

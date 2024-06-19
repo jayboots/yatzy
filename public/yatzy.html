@@ -7,9 +7,10 @@
 	<meta name="author" content="Julia & Tori">
 	<meta name="description" content="Julia and Tori - Lab 04 content">
 	<link rel="stylesheet" href="css/styles.css">
-	<style>
+	<!-- <style>
 		@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,800;1,300&display=swap');
-	</style>
+	</style> -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<script type="module" src="assets/dice.js" defer></script>
 	<script type="module" src="assets/yatzy_game.js" defer></script>
 	<script type="module" src="assets/yatzy_engine.js" defer></script>
@@ -23,50 +24,59 @@
 		<div class="game-area">
 			<div class="split-container">
 				<!-- The dice area -->
-				<div class="column-container">
+				<div class="column-container" id="col-left">
 					<!-- First Die -->
 					<div class="die-container">
-						<div class="die" id="d_0">?</div>
 						<div class="lock-container">
-							<button class="lock" id="l_0">?</button>
+							<button class="lock" id="l_0"></button>
 						</div>
+						<div class="die-inactive"
+						id="d_0"
+						title="Die 1 has no value.">?</div>
 					</div>
 					
 					<!-- Second Die -->
 					<div class="die-container">
-						<div class="die" id="d_1">?</div>
 						<div class="lock-container">
-							<button class="lock" id="l_1">?</button>
+							<button class="lock" id="l_1"></button>
 						</div>
+						<div class="die-inactive"
+						id="d_1"
+						title="Die 2 has no value.">?</div>
 					</div>
 
 					<!-- Third Die -->
 					<div class="die-container">
-						<div class="die" id="d_2">?</div>
 						<div class="lock-container">
-							<button class="lock" id="l_2">?</button>
+							<button class="lock" id="l_2"></button>
 						</div>
+						<div class="die-inactive"
+						id="d_2"
+						title="Die 3 has no value.">?</div>
 					</div>
-
 					<!-- Fourth Die -->
 					<div class="die-container">
-						<div class="die" id="d_3">?</div>
 						<div class="lock-container">
-							<button class="lock" id="l_3">?</button>
+							<button class="lock" id="l_3"></button>
 						</div>
+						<div class="die-inactive"
+						id="d_3"
+						title="Die 4 has no value.">?</div>
 					</div>
 
 					<!-- Fifth Die -->
 					<div class="die-container">
-						<div class="die" id="d_4">?</div>
 						<div class="lock-container">
-							<button class="lock" id="l_4">?</button>
+							<button class="lock" id="l_4"></button>
 						</div>
+						<div class="die-inactive"
+						id="d_4"
+						title="Die 5 has no value.">?</div>
 					</div>
 					
 				</div>
 				<!-- The score card area -->
-				<div class="column-container">
+				<div class="column-container" id="col-right">
 					<div class="score-area">
 						<table id="score-card">
 						<!-- Headers -->
@@ -171,10 +181,10 @@
 				<button type="button" class="button" id="rollBtn">Roll the Dice!</button>
 				<button type="button" class="button" id="endRoundBtn">Submit Score</button>
 			</div>
-			<div class="rules-container">
+			<!-- <div class="rules-container"> -->
 				<!-- How to play, or maybe score area -->
-				<button type="button" class="button" id="stateBtn">Game State Info</button>
-			</div>
+				<!--<button type="button" class="button" id="stateBtn">Game State Info</button>-->
+			<!-- </div> -->
 		</div>
 	</div>
 </body>

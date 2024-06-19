@@ -1,33 +1,44 @@
 /* variables */
 :root {
-    --dsize: 3.5rem;
-    --neutral: white;
+    --dsize: 4rem;
+    --dradius: 0.6rem;
+    --dotsize: 0.8rem;
+    --spacing-small: 0.2rem;
+    --spacing-medium: 0.5rem;
+    --spacing-xl: 3rem;
     --highlight: rgb(217, 229, 248);
-    --selected: yellow;
     --disabled: rgb(182, 182, 182);
-    --munsell: #eb3349; 
-    --melon: #e89f9b;
-    --aero: #5db6d7;
-    --airforce: #4a7e92;
-    --white: #ffffff;
-    --misttyrose: #ffe4e1;
+    --primary-start: #eb3349;       /*munsell*/
+    --primary-fade: #F45C43;        /*tomato*/
+    --primary-highlight: #e89f9b;   /*melon*/
+    --primary-shadow: #700000;      /*blood red*/
+    --secondary: #11bae5;           /*aero*/
+    --secondary-highlight: #c4f9ff;
+    --secondary-shadow: #4a7e92;    /*airforce*/
+    --white: #ffffff;               /*white*/
+    --offwhite: #ffe4e1;            /*misty rose*/
+    --black: #000000;
   }
 
 html {
     height: 100%;
 }
 body {
-    height: 100%;
+    /* height: 100%; */
     margin: 0;
     background-repeat: no-repeat;
-    background: linear-gradient(var(--munsell), #F45C43);
+    background: linear-gradient(var(--primary-start), var(--primary-fade));
+}
+
+#score-card{
+    width: 100%;
 }
 
 table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
-    padding: 0.25rem;
-    background: white;
+    padding: 0.33rem;
+    background: var(--white);
 }
 
 /* For the total score area */
@@ -44,27 +55,38 @@ td.score-desc {
 /* Clickable items should have the cursonr */
 #score-card tr.table-row td{
     cursor: pointer;
-    background-color: var(--neutral);
+    background-color: var(--white);
 }
 
 #score-card tr.table-row:hover td{
     cursor: pointer;
-    background-color: var(--highlight);
+    background-color: var(--secondary);
+    color: var(--white);
+    font-weight: bold;
+}
+
+div {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 
 /* General Container Properties */
 div.game-area{
     border: black dotted 5px;
-    background: pink;
+    /* background: pink; */
     padding: 5px;
 }
 
 /* Splits the play area in half - dice on left, score area on right */
 div.split-container{
     display: flex;
-    justify-content: space-evenly;
-    border: rgb(255, 255, 255) dashed 3px;
-    background: rgb(105, 166, 198);
+    justify-content: center;
+    /* border: rgb(255, 255, 255) dashed 3px; */
+    /* background: rgb(105, 166, 198); */
+    /* margin-left: var(--dsize);
+    margin-right: var(--dsize); */
+    /* width: 75%; */
 }
 
 /* items in the split-container */
@@ -74,38 +96,121 @@ div.column-container{
     /* padding: 5px; */
     flex-direction: row;
     flex-wrap: wrap;
+    align-content: space-around;
     justify-content: center;
-    background: yellow;
-    border: red solid 5px;
+    /* background: yellow;
+    border: red solid 5px; */
+}
+
+div.column-container#col-left{
+    padding-right: calc(var(--spacing-xl) * .75);
+}
+
+div.column-container#col-right{
+    min-width: 50%;
 }
 
 div.die-container{
     display: flex;
-    border: black solid 5px;
-    padding: 0.5rem;
+    /* border: black solid 5px; */
+    padding: var(--spacing-small);
 }
 
-div.die{
-    border: black solid 1px;
-    border-radius: 5px;
-    background: white;
+
+div.die-active, div.die-inactive, div.die-selected{
     width: var(--dsize);
     height: var(--dsize);
+    border-radius: var(--dradius);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 12;
+    font-size: xx-large;
+    /* background: var(--secondary); */
+    font-weight: bolder;
+    margin-right: calc(var(--spacing-medium) * 1.5);
+    position: relative;
+}
+
+div.die-active{
+    /* border: black solid 0.15rem; */
+    background: var(--white);
+    border: 1px solid var(--primary-shadow);
+    box-shadow: 0.25rem 0.25rem 0.25rem var(--primary-shadow);
+    cursor: pointer;
+    color: var(--black);
+}
+
+div.die-selected{
+    background: var(--secondary);
+    border: 5px solid var(--white);
+    box-shadow: 0.25rem 0.25rem 0.15rem var(--secondary-shadow);
+    cursor: pointer;
+    color: var(--white);
+}
+
+div.die-inactive{
+    /* background: var(--offwhite); */
+    box-shadow: 0 0 2rem var(--primary-shadow);
+    border: 0.2rem dashed var(--white);
+    cursor: default;
+    color: var(--white);
+}
+
+div.dot, div.dot-selected{
+    /* background-color: var(--primary-shadow); */
+    border-radius: 50%;
+
+    /* Positioning Variables */
+    --top: 0%;
+    --left: 0%;
+
+    /* Positioning */
+    position: absolute;
+    top: var(--top);
+    left: var(--left);
+    transform: translateX(calc(var(--left) * -1)) translateY(calc(var(--top) * -1))
+}
+
+.dot{
+    width: var(--dotsize);
+    height: var(--dotsize);
+    background-color: var(--black);
+}
+
+.dot-selected{
+    width: calc(var(--dotsize) * .90);
+    height: calc(var(--dotsize) * .90);
+    background-color: var(--white);
 }
 
 div.lock-container{
-    border: black solid 1px;
-    background: green;
+    /* border: black solid 1px; */
+    /* background: green; */
     width: var(--dsize);
     height: var(--dsize);
+    margin: var(--spacing-small);
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 12;
+}
+
+button.lock {
+    border:0;
+    cursor: pointer;
+    color: var(--white);
+    font-size: xlarge;
+    background-color: transparent;
+    /* background-color: var(--secondary-shadow); */
+    margin: 10px;
+    /* padding: 30px; */
+    /* border-radius: 20px; */
+
+}
+
+button.lock:hover{
+    color: var(--secondary-highlight);
+    /* box-shadow: 0.25rem 0.25rem 0 var(--secondary-shadow); */
 }
 
 div.button-container{
@@ -115,10 +220,15 @@ div.button-container{
     background: #84a836;
 }
 
+.lock{
+    width: 100%;
+    height: 100%;
+}
+
 div.rules-container{
     justify-content: center;
     padding: 0.5rem;
-    background: #FFFFFF;
+    /* background: #FFFFFF; */
 }
 
 

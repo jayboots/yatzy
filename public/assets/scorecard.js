@@ -1,5 +1,5 @@
 /**
- * Simulates a score card
+ * Simulates a score card. Could in theory be a component of the YatzyGame class, but conceptually the game is a separate entity from a method of tracking scores (one game could have many score cards) and the YatzyGame class isn't meant to know about the "rules" of the game as per the assignment, so for code organization, we have created a separate class in a separate file.
  *
  * @class ScoreCard
  * @typedef {ScoreCard}
@@ -47,12 +47,4 @@ export class ScoreCard {
         }
         return this.bonus;
     }
-
-    //Could use this to iterate through the key
-    // calculateBaseScore(){
-    //     console.log("Hello")
-    //     for (const [key, value] of Object.entries(this.records)) {
-    //         console.log(`${key} ${value}`);
-    //       }
-    // }
 }
