@@ -46,7 +46,7 @@ window.onload=function(){
     const rollBtn = document.getElementById("rollBtn");
     const endRoundBtn = document.getElementById("endRoundBtn");
     const resetBtn = document.getElementById("resetBtn");
-    const stateBtn = document.getElementById("stateBtn");
+    // const stateBtn = document.getElementById("stateBtn");
 
     //TODO: Implement disabled on start until new game created
     endRoundBtn.disabled = true;
@@ -56,7 +56,7 @@ window.onload=function(){
     rollBtn.addEventListener("click", rollDice, true);
     endRoundBtn.addEventListener("click", endRound, true);
     resetBtn.addEventListener("click", resetGame, true);
-    stateBtn.addEventListener("click", getGameState, true);
+    // stateBtn.addEventListener("click", getGameState, true);
 
     // Load the locks
     const locks = document.getElementsByClassName("lock");
