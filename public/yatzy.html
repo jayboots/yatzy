@@ -23,7 +23,7 @@
 				<h1 class="logo">Yatzy</h1>
 			</div>
 			<div class="column-container" id="header-right">
-				<p>A single-player dice game</p>
+				<p><strong>A single-player dice game</strong></p>
 				<!-- TODO: Click this to expand the section below and start a game... -->
 				<div class="button-container">
 					<button type="button" class="btn-function" id="resetBtn">Start a New Game</button>
@@ -31,63 +31,77 @@
 			</div>
 		</div>
 	</header>
-	<div class="container">
 		<!-- Main Content Section -->
-		<div class="game-area">
-			<div class="split-container">
+		<!-- <div class="game-area"> -->
+			<div class="split-container" id="game-container">
 				<!-- The dice area -->
 				<div class="column-container" id="col-left">
 					<!-- First Die -->
 					<div class="die-container">
 						<div class="lock-container">
-							<button class="lock" id="l_0"></button>
+							<button class="lock" id="l_0"><i class="material-icons" style="font-size:3rem;">lock_open</i></button>
 						</div>
-						<div class="die-inactive"
-						id="d_0"
-						title="Die 1 has no value.">?</div>
+
+						<div class="rollContainer" id="s_0">
+							<div class="die-inactive"
+							id="d_0"
+							title="Die 1 has no value.">?</div>
+						</div>
 					</div>
 					
 					<!-- Second Die -->
 					<div class="die-container">
 						<div class="lock-container">
-							<button class="lock" id="l_1"></button>
+							<button class="lock" id="l_1"><i class="material-icons" style="font-size:3rem;">lock_open</i></button>
 						</div>
-						<div class="die-inactive"
-						id="d_1"
-						title="Die 2 has no value.">?</div>
+
+						<div class="rollContainer" id="s_1">
+							<div class="die-inactive"
+							id="d_1"
+							title="Die 2 has no value.">?</div>
+						</div>
 					</div>
 
 					<!-- Third Die -->
 					<div class="die-container">
 						<div class="lock-container">
-							<button class="lock" id="l_2"></button>
+							<button class="lock" id="l_2"><i class="material-icons" style="font-size:3rem;">lock_open</i></button>
 						</div>
-						<div class="die-inactive"
-						id="d_2"
-						title="Die 3 has no value.">?</div>
+
+						<div class="rollContainer" id="s_2">
+							<div class="die-inactive"
+							id="d_2"
+							title="Die 3 has no value.">?</div>
+						</div>
 					</div>
 					<!-- Fourth Die -->
 					<div class="die-container">
 						<div class="lock-container">
-							<button class="lock" id="l_3"></button>
+							<button class="lock" id="l_3"><i class="material-icons" style="font-size:3rem;">lock_open</i></button>
 						</div>
-						<div class="die-inactive"
-						id="d_3"
-						title="Die 4 has no value.">?</div>
+
+						<div class="rollContainer" id="s_3">
+							<div class="die-inactive"
+							id="d_3"
+							title="Die 4 has no value.">?</div>
+						</div>
 					</div>
 
 					<!-- Fifth Die -->
 					<div class="die-container">
 						<div class="lock-container">
-							<button class="lock" id="l_4"></button>
+							<button class="lock" id="l_4"><i class="material-icons" style="font-size:3rem;">lock_open</i></button>
 						</div>
-						<div class="die-inactive"
-						id="d_4"
-						title="Die 5 has no value.">?</div>
+
+						<div class="rollContainer" id="s_4">
+							<div class="die-inactive"
+							id="d_4"
+							title="Die 5 has no value.">?</div>
+						</div>
 					</div>
 					
 					<div class="button-container">
-						<button type="button" class="btn-function" id="rollBtn">Roll the Dice! </button>
+						<button type="button" class="btn-function" id="rollBtn">Roll Dice</button>
 					</div>
 					<div class="button-container">
 						<button type="button" class="btn-function" id="endRoundBtn">Submit Score</button>
@@ -203,8 +217,7 @@
 				<!-- How to play, or maybe score area -->
 				<!--<button type="button" class="button" id="stateBtn">Game State Info</button>-->
 			<!-- </div> -->
-		</div>
-	</div>
+		<!-- </div> -->
 	<!-- Footer -->
 	<footer>
 		<p class="footer-text">Copyright 2024 Group 55 - MIT License</p>

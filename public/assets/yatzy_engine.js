@@ -1,5 +1,5 @@
 import { YatzyGame } from "./yatzy_game.js";
-import { ScoreCard } from  "./scorecard.js"
+import { ScoreCard } from  "./scorecard.js"; // Just to keep the code tidy, it could have been in this script.
 
 var game = null;
 var scoreCard = null;
@@ -7,12 +7,13 @@ var targetChoice = null;
 var targetPts = null;
 
 var canRoll = false;
-var gameOver = true; //TODO: implement, also maybe change to state\
-// var roundPts = 0; //TODO: implement
+var gameOver = true; //TODO: implement, also maybe change to state
 
 const dicePrefix = "d_";
 const lockPrefix = "l_";
+const shakePrefix = "s_";
 
+// For drawing dice
 const dotPositionMatrix = {
     1: [[50, 50]],
     2: [[15, 15], [85, 85]],
@@ -21,12 +22,6 @@ const dotPositionMatrix = {
     5: [[15, 15],[15, 85],[50, 50],[85, 15],[85, 85]],
     6: [[15, 15],[15, 85],[50, 15],[50, 85],[85, 15],[85, 85]]
 };
-
-// Colour constants for mouse-over events
-const defaultColour = "white"
-const selectColour = "lightblue"
-// const hoverColour = "lightgreen"
-// const inactiveColour = "lightgray"
 
 // Handles which dice are "selected" for score calculation
 var selectRoster = [false, false, false, false, false]
@@ -41,14 +36,10 @@ window.onload=function(){
         document.getElementById(ID).addEventListener("click", calculateScore, true)
     }
     
-    const totalScore = document.getElementById("total-score");
-
     const rollBtn = document.getElementById("rollBtn");
     const endRoundBtn = document.getElementById("endRoundBtn");
     const resetBtn = document.getElementById("resetBtn");
-    // const stateBtn = document.getElementById("stateBtn");
 
-    //TODO: Implement disabled on start until new game created
     endRoundBtn.disabled = true;
     rollBtn.disabled = true;
 
@@ -56,7 +47,6 @@ window.onload=function(){
     rollBtn.addEventListener("click", rollDice, true);
     endRoundBtn.addEventListener("click", endRound, true);
     resetBtn.addEventListener("click", resetGame, true);
-    // stateBtn.addEventListener("click", getGameState, true);
 
     // Load the locks
     const locks = document.getElementsByClassName("lock");
@@ -73,10 +63,6 @@ window.onload=function(){
     }
 }
 
-// function highlightElement(){
-//     console.log(this.id)
-//     document.getElementById(this.id).style.backgroundColor = "yellow";
-// }
 
 /**
  * Writes some information about the state of the game to the console.
@@ -203,7 +189,18 @@ function drawDice(activeHand){
                 document.getElementById(dicePrefix+i).className = "die-active";
                 if (lockedDice[i] == 0) {
                     // console.log("Die # " + (i + 1) + " is free. Rerolling value." );
-                    // document.getElementById(dicePrefix+i).innerText = activeHand[i];
+                    //TODO: Shake Dice
+                    let rollContainer = document.getElementById(shakePrefix+i);
+                    if (document.getElementById(dicePrefix+i).className == "die-active"){
+                        rollContainer.style.animationName = "none";
+
+                        requestAnimationFrame(() => {
+                          setTimeout(() => {
+                            rollContainer.style.animationName = ""
+                          }, 0);
+                        });
+                    }
+                    // animation-iteration-count:
                     document.getElementById(dicePrefix+i).innerText = "";
                     document.getElementById(dicePrefix+i).title = "Die " + (i+1) + " has a value of " + activeHand[i] + ".";
                 } else {
@@ -263,7 +260,6 @@ function toggleLock(){
 function drawLocks(lockRoster){
     for (let i = 0; i < lockRoster.length; i++) {
         if (lockRoster[i] == 0){
-            // document.getElementById(lockPrefix+i).innerText = "🔓"
             document.getElementById(lockPrefix+i).innerHTML = '<i class="material-icons" style="font-size:3rem;">lock_open</i>'
         }
         else {
@@ -280,11 +276,11 @@ function toggleDie(){
     if (game != null && !game.activeHand.includes(null)){
         let ID = this.id.split("_")[1];
         let die = document.getElementById(this.id);
-        // console.log("Clicked die " + ID);
+
         // Manage the selection roster toggles
         selectRoster[ID] = ! selectRoster[ID];
         if (selectRoster[ID]){
-            // die.style.backgroundColor = selectColour;
+
             die.className = "die-selected";
             for (var i = 0; i < die.childNodes.length; i += 1) {
                 die.childNodes[i].className = "dot-selected"
@@ -296,7 +292,6 @@ function toggleDie(){
                 die.childNodes[i].className = "dot"
             }
         }
-        // console.log("Active dice: " + selectRoster);
         //Refresh the scorecard when we toggle a selection
         drawScoreCard()
     }
@@ -307,22 +302,21 @@ function toggleDie(){
  * Sets the programmatic implementation of the selected dice to the default value (all dice unselected).
  */
 function deselectDice(){
-    // console.log("Deselecting dice")
     let dice = document.getElementsByClassName("die-active");
+
     for (let i = 0; i < dice.length; i++) {
+
         let ID = dice[i].id
-        // document.getElementById(ID).style.backgroundColor = defaultColour;
         document.getElementById(ID).className = "die-inactive";
 
         for (var j = 0; j < document.getElementById(ID).childNodes.length; j += 1) {
             document.getElementById(ID).childNodes[j].className = "dot"
         }
     }
+
     selectRoster = [false, false, false, false, false]
-    // console.log("Select roster: " + selectRoster)
 }
 
-// Takes a selected hand and calculates the potential score of that hand, given the rules
 
 /**
  * Calculates the score of whichever item is selected.
@@ -592,11 +586,18 @@ function calculateScore(){
     }
 }
 
+
+/**
+ * Shows the potential score of any clicked row from the selected dice, without commiting the selection. Aka enables score preview in the scorecard.
+ *
+ * @param {*} choice - the selected score category
+ * @param {*} pts - the number of points
+ */
 function showScoreChoice(choice, pts){
     targetChoice = choice;
     targetPts = pts;
     let scoreTable = document.getElementsByClassName("table-row");
-    // console.log(scoreTable)
+
     for (let i = 0; i < scoreTable.length; i++) {
         let ID = scoreTable[i].id
         let scoreArea = document.getElementById(ID).childNodes[3];
@@ -611,6 +612,10 @@ function showScoreChoice(choice, pts){
     }
 }
 
+
+/**
+ * Function to draw the score card information to the UI.
+ */
 function drawScoreCard(){
     let scoreTable = document.getElementsByClassName("table-row");
     for (let i = 0; i < scoreTable.length; i++) {
@@ -625,15 +630,17 @@ function drawScoreCard(){
     // TODO: Also update an indicator of the bonus in the blank slot next to total, when it triggers.
 }
 
+
+/**
+ * Updates the programatically-stored score card values, and updates the ongoing total score in the YatzyGame object.
+ */
 function updateScoreCard(){
     if ((targetChoice != null) && (targetPts != null) &&(scoreCard.records[targetChoice] == null)){
         scoreCard.records[targetChoice] = targetPts
-        // scoreCard.baseScore += targetPts; //needed?
         game.score += targetPts;
     }
     else{
         // Shouldn't see this message.
         console.log("Somehow, trying to over-write a pre-filled score box...")
     }
-    // console.log(scoreCard.records)
 }
