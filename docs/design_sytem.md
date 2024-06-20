@@ -4,20 +4,48 @@ This document outlines the design system for the project.
 
 ## Fonts
 
-- **Primary Font:** Poppins (Light Italic, Regular, Medium, Semibold, and Extrabold) sans-serif
+This project uses two web fonts provided for free use by Google.
+
+- **Primary Font:** Open Sans, sans-serif
+- **Logo Font:** Playwrite Polska, cursive
 
 ## Colours
 
 - **Primary Colour:** #eb3349 (Munsell Red)
-- **Primary Accent:** #e89f9b (Melon Pink)
+- **Primary Accent:** #f45c43 (Tomato Red)
+- **Primary Dark:** #700000 (Blood Red)
 - **Secondary Colour:** #5db6d7 (Aero Blue)
-- **Secondary Accent:** #4a7e92 (Air Force Blue)
+- **Secondary Dark:** #4a7e92 (Air Force Blue)
 - **Tertiary Colour:** #ffffff (White)
-- **Tertiary Accent:** #ffe4e1 (Misty Rose)
+- **Tertiary Accent:** #000000 (Black)
 
 ## Designing the Dice
 
-The design for the dice is documented in [dice.html](assets\design_system\dice.html) via document through code. It shows an example of the dice graphics used and details pertaining to their design/usage in the project.
+The original, lab-design for the dice is documented in [dice.html](assets\design_system\dice.html) via document through code. It shows an example of the dice graphics used and details pertaining to their design/usage in the project.
+
+For the final assignment, we changed to CSS-based dice making use of the colours above. Information about the final design of the dice can be found in the README.md file. However, a broad overview of dice states and functions can be found below.
+
+### Default Dice
+
+Dice are div objects with a predefined radius. In this state, dice contain a default presentation using the primary red colour set as an accent, and a hover state utilizing the secondary blue colour set as an accent.
+
+![image](assets\design_system\dice_1.gif)
+
+Dice will display a "wiggle" CSS keyframe animation when they are rolled.
+
+![image](assets\design_system\dice_2.gif)
+
+Dice selected for scoring will change their appearance to use a secondary colour scheme. They will acquire a thick border and their internal dots will shrink to 95% of their original scale.
+
+![image](assets\design_system\dice_3.gif)
+
+Dice will display as "no dice" when they have not yet been rolled. In this instance, the dice have no spots and instead display a "?". They use the primary red colour scheme and gain a white dashed border. This disappears when the dice are rolled and return to their default state.
+
+![image](assets\design_system\dice_4.gif)
+
+Dice which are locked will not display a "wiggle" animation when the hand is re-rolled. This is to assist the user in noticing which dice have retained their values.
+
+![image](assets\design_system\dice_5.gif)
 
 ## Game Components
 
@@ -25,7 +53,7 @@ This section provides documentation of major game components.
 
 ### Starting a new game
 
-To start a new game, users click a button to initialize a new game. This reveals the play area and initializes the game objects (i.e. an instance of *YatzyGame*) and their associated variables.
+To start a new game, users click a button to initialize a new game. This initializes the play area and game objects (i.e. an instance of *YatzyGame*) and their associated variables. The remaining buttons "Roll Dice" and button activates.
 
 ### In-Game Play (Rules and Controls)
 
@@ -38,15 +66,18 @@ Each score slot on the score card has different dice requirements for points. By
 - To roll the dice, players click a button. Clicking the button provides the player with five random dice values on the screen.
 - The player can click the button again to re-roll all five dice up to two times before the button is disabled.
 - The player have the option of locking and unlocking individual dice by clicking on the lock icon next to a die. Locking a die prevents its value from changing when dice are re-rolled.
+- Locked dice will not play a "jiggle" animation when a re-roll occurs, to emphasize that they have not been changed.
 
 #### Scoring Strategy (Decision Phase)
 
 - The player can select which dice they would like to count towards a score choice by clicking on them with the cursor.
-- Players must select at least one die to progress a turn.
+- Players must select at least one die and score category to progress a turn.
 - Dice that have been selected will visually change to show they have been chosen for scoring consideration.
 - Dice can be deselected by clicking on them again.
 
 #### Score Calculation / Turn End
+
+![image](assets\design_system\scoring_1.gif)
 
 - After selecting at least one die, the player clicks on the score category in the score card that they would like to earn points in.
 - Players can only select each category once, and so should consider carefully which dice to submit for each category to maximise their score.
@@ -58,34 +89,53 @@ Each score slot on the score card has different dice requirements for points. By
 
 The interactive scoreboard shows information about the game. It keeps track of the number of points awarded per category, as well as the total number of points earned throughout the game. Each row can be completed only once per game.
 
-Players can click any category row to view the potential points for a choice. The most recently-selected category will be used for scoring when a turn ends.
+The scoreboard is designed as a simple table of columns and rows, to mimic the appearance of a real paper score card.
 
-| **Category** | **Pts** | **Description**                                         |
-|--------------|---------|---------------------------------------------------------|
-| Ones         |         | _The sum of all dice showing the number 1._             |
-| Twos         |         | _The sum of all dice showing the number 1._             |
-| ...          |         |                                                         |
-| Chance       |         | _Any combination of dice. Score: Sum of all the dice._  |
-| Yatzy        |         | _All five dice with the same number. Score: 50 points._ |
-| **Total**    |    0    |                                                         |
+Players can click any category row to view the potential points for a choice. Unlike a paper scorecard, the category row directly under the cursor will change its colour to help the user make a selection.
 
-The name of each score category appears under the **Category** column.
+![image](assets\design_system\scoreboard.jpg)
 
-The number of points earned per category is displayed in the **Pts** column.
-
-The criteria for computing score is provided in the **Description**. This information provides the player with context to help them make strategic scoring choices.
+- The most recently-selected category will be used for scoring when a turn ends.
+- The name of each score category appears under the **Category** column.
+- The number of points earned per category is displayed in the **Pts** column.
+- The criteria for computing score is provided in the **Description**. This information provides the player with context to help them make strategic scoring choices.
 
 ### End of the game
 
 - The game ends when the score card has been completed and all 15 turns. The base score is computed as the sum of all category scores (a.k.a. the Pts rows).
 - If a player has scored 63 or more points in the first six categories, a bonus score of 50 points is added to the total.
 - The player is shown their final total score (base score and bonus score) at the bottom of the score card.
-- A button appears that allows the player to start a new game.
-  - Players can begin a new game by clicking this button. This will erase all game and score information.
-  - To quit the game, players close the browser.
+- The scoreboard will also display a message when the game ends. This message will congratulate the player if the bonus condition has been achieved.
+- The player can begin a new game by clicking the "Start a New Game" button found next to thet logo. This will erase all game and score information.
+- To quit the game, the player closes the browser.
 
-### Additional concepts like header, footer
+### Header
 
-There is no header in this implementation of yatzy.
+The page header displays the primary logo of the game, "Yatzy", alongside a descriptive tag-line and a button to start a new game.
 
-A footer displays the year the game was completed at the bottom of the page.
+![image](assets\design_system\header.jpg)
+
+### Footer
+
+A footer displays the name of our group in the primary colour. A dashed border line separates the main content from the footer.
+
+![image](assets\design_system\footer.jpg)
+
+### Game Buttons
+
+The game buttons utilize a common design of rounded edges, the secondary blue colour set, and a drop shadow. These buttons become disabled under certain game circumstances.
+
+![image](assets\design_system\gameButtons.jpg)
+
+#### Locks
+
+The locks use [Google's material icons font](https://fonts.google.com/icons). Unlocked locks use the outlined icon, while locked locks use the filled icon.
+
+![image](assets\design_system\locks.jpg)
+
+### Cursor
+
+The cursor will change to reflect components that are interactive, or to signify that certain components have become inactive.
+- The **pointer** signifies something can be clicked. This includes buttons, rows, dice, and locks.
+- The **forbidden sign** signifies when buttons are disabled and cannot be clicked.
+- The **default** cursor shows in all other instances.

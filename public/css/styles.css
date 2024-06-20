@@ -11,19 +11,13 @@
     --spacing-xl: 3rem;
     --primary-start: #eb3349;       /*munsell*/
     --primary-fade: #F45C43;        /*tomato*/
-    --primary-highlight: #e89f9b;   /*melon*/
     --primary-shadow: #700000;      /*blood red*/
     --secondary: #11bae5;           /*aero*/
-    --secondary-highlight: #c4f9ff;
     --secondary-shadow: #4a7e92;    /*airforce*/
     --white: #ffffff;               /*white*/
-    --offwhite: #ffe4e1;            /*misty rose*/
     --black: #000000;
 }
 
-html {
-    /* height: 100%; */
-}
 body {
     /* height: 100%; */
     margin: 0;
@@ -45,6 +39,7 @@ header {
     margin: 0px;
 }
 
+/* Yatzy logo font */
 h1 {
     font-size: 80px;
     text-shadow: 0.25rem 0.25rem 1px var(--secondary-shadow);
