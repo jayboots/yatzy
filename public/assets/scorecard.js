@@ -29,6 +29,7 @@ export class ScoreCard {
         }
         // this.baseScore = 0; //redundant with game.score?
         this.bonus = 0;
+        this.bonusThreshold = 63;
     }
 
     calculateBonus(){
@@ -38,7 +39,7 @@ export class ScoreCard {
         + this.records["fours"]
         + this.records["fives"]
         + this.records["sixes"];     
-        if( firstSectionTotal >= 63 && this.bonus == 0){
+        if( firstSectionTotal >= this.bonusThreshold && this.bonus == 0){
             this.bonus = 50;
         }
         else{

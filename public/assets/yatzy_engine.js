@@ -92,6 +92,7 @@ function resetGame(){
     targetChoice = null;
     targetPts = null;
     drawScoreCard();
+    document.getElementById("gameover-msg").innerText = "";
 
     console.log(game)
     canRoll = true;
@@ -147,12 +148,18 @@ function endRound(){
 
         if (game.currentRound == (game.maxRounds)){
             gameOver = true;
-            //TODO: Endgame logic, view score, try again, new game, etc.
-            game.score += scoreCard.calculateBonus();
-            //TODO: Update the scorecard here to reflect the final score
-
+            let bonus = scoreCard.calculateBonus();
+            game.score += bonus;
             rollBtn.disabled = true; //Can't roll dice if the game is over.
-            console.log("GAME IS OVER. Can make a new game, if you want.")
+            // console.log("GAME IS OVER. Can make a new game, if you want.")
+            if (bonus != 0){
+                document.getElementById("gameover-msg").innerText = "Game over! Bonus 50 pts!";
+                document.getElementById("total-score").innerText = game.score;
+            }
+            else{
+                document.getElementById("gameover-msg").innerText = "Game over!";
+            }
+            
         }
         else{
             game.resetDice() //new round = new dice, new rolls, no locks
@@ -193,7 +200,6 @@ function drawDice(activeHand){
                     let rollContainer = document.getElementById(shakePrefix+i);
                     if (document.getElementById(dicePrefix+i).className == "die-active"){
                         rollContainer.style.animationName = "none";
-
                         requestAnimationFrame(() => {
                           setTimeout(() => {
                             rollContainer.style.animationName = ""
@@ -623,11 +629,8 @@ function drawScoreCard(){
         let scoreArea = document.getElementById(ID).childNodes[3];
         scoreArea.innerText = scoreCard.records[document.getElementById(ID).id];
         }
-    // TODO: Update the total score area
     let scoreSum = document.getElementById("total-score");
     scoreSum.innerText = game.score;
-
-    // TODO: Also update an indicator of the bonus in the blank slot next to total, when it triggers.
 }
 
 
