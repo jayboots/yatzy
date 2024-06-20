@@ -2,7 +2,7 @@
 
 ## About the Game
 
-This implementation of Yatzy is a single-player five dice game. To read about the design choices made while developing this implementation, please see our [Design System](docs\design_sytem.md) markdown file.
+This implementation of Yatzy is a single-player five dice game. To read about the design choices made while developing this implementation, please see our [Design System](docs/design_sytem.md) markdown file.
 
 ## How to Play
 
