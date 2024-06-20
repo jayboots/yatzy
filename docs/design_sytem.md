@@ -21,7 +21,7 @@ This project uses two web fonts provided for free use by Google.
 
 ## Designing the Dice
 
-The original, lab-design for the dice is documented in [dice.html](assets\design_system\dice.html) via document through code. It shows an example of the dice graphics used and details pertaining to their design/usage in the project.
+The original, lab-design for the dice is documented in [dice.html](assets/design_system/dice.html) via document through code. It shows an example of the dice graphics used and details pertaining to their design/usage in the project.
 
 For the final assignment, we changed to CSS-based dice making use of the colours above. Information about the final design of the dice can be found in the README.md file. However, a broad overview of dice states and functions can be found below.
 
@@ -29,23 +29,23 @@ For the final assignment, we changed to CSS-based dice making use of the colours
 
 Dice are div objects with a predefined radius. In this state, dice contain a default presentation using the primary red colour set as an accent, and a hover state utilizing the secondary blue colour set as an accent.
 
-![image](assets\design_system\dice_1.gif)
+![image](assets/design_system/dice_1.gif)
 
 Dice will display a "wiggle" CSS keyframe animation when they are rolled.
 
-![image](assets\design_system\dice_2.gif)
+![image](assets/design_system/dice_2.gif)
 
 Dice selected for scoring will change their appearance to use a secondary colour scheme. They will acquire a thick border and their internal dots will shrink to 95% of their original scale.
 
-![image](assets\design_system\dice_3.gif)
+![image](assets/design_system/dice_3.gif)
 
 Dice will display as "no dice" when they have not yet been rolled. In this instance, the dice have no spots and instead display a "?". They use the primary red colour scheme and gain a white dashed border. This disappears when the dice are rolled and return to their default state.
 
-![image](assets\design_system\dice_4.gif)
+![image](assets/design_system/dice_4.gif)
 
 Dice which are locked will not display a "wiggle" animation when the hand is re-rolled. This is to assist the user in noticing which dice have retained their values.
 
-![image](assets\design_system\dice_5.gif)
+![image](assets/design_system/dice_5.gif)
 
 ## Game Components
 
@@ -77,7 +77,7 @@ Each score slot on the score card has different dice requirements for points. By
 
 #### Score Calculation / Turn End
 
-![image](assets\design_system\scoring_1.gif)
+![image](assets/design_system/scoring_1.gif)
 
 - After selecting at least one die, the player clicks on the score category in the score card that they would like to earn points in.
 - Players can only select each category once, and so should consider carefully which dice to submit for each category to maximise their score.
@@ -93,7 +93,7 @@ The scoreboard is designed as a simple table of columns and rows, to mimic the a
 
 Players can click any category row to view the potential points for a choice. Unlike a paper scorecard, the category row directly under the cursor will change its colour to help the user make a selection.
 
-![image](assets\design_system\scoreboard.jpg)
+![image](assets/design_system/scoreboard.jpg)
 
 - The most recently-selected category will be used for scoring when a turn ends.
 - The name of each score category appears under the **Category** column.
@@ -113,25 +113,25 @@ Players can click any category row to view the potential points for a choice. Un
 
 The page header displays the primary logo of the game, "Yatzy", alongside a descriptive tag-line and a button to start a new game.
 
-![image](assets\design_system\header.jpg)
+![image](assets/design_system/header.jpg)
 
 ### Footer
 
 A footer displays the name of our group in the primary colour. A dashed border line separates the main content from the footer.
 
-![image](assets\design_system\footer.jpg)
+![image](assets/design_system/footer.jpg)
 
 ### Game Buttons
 
 The game buttons utilize a common design of rounded edges, the secondary blue colour set, and a drop shadow. These buttons become disabled under certain game circumstances.
 
-![image](assets\design_system\gameButtons.jpg)
+![image](assets/design_system/gameButtons.jpg)
 
 #### Locks
 
 The locks use [Google's material icons font](https://fonts.google.com/icons). Unlocked locks use the outlined icon, while locked locks use the filled icon.
 
-![image](assets\design_system\locks.jpg)
+![image](assets/design_system/locks.jpg)
 
 ### Cursor
 

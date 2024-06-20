@@ -20,7 +20,7 @@ This implementation of Yatzy is a single-player five dice game. To read about th
 
 The game has the following layout.
 
-![image](docs\assets\design_system\entiregame.jpg)
+![image](docs/assets/design_system/entiregame.jpg)
 
 - The **Start a New Game** button initializes a new game when clicked, erasing any previous data.
 - The **scoreboard** (large table) allows the user to keep track of their scores by filling in the **Pts** column each turn.
@@ -33,33 +33,33 @@ The game has the following layout.
 
 Click on the **Start a New Game** button.
 
-![image](docs\assets\design_system\game_1.gif)
+![image](docs/assets/design_system/game_1.gif)
 
 Click the **Roll Dice** button after it activates
 
-![image](docs\assets\design_system\game_2.gif)
+![image](docs/assets/design_system/game_2.gif)
 
 Consider which dice you would like to keep in order to maximize your score. Note: It may be of use to consult the **scoreboard** for its explanations of how points are calculated for each category.
 
 If the values are underwhelming, use the **lock roster** to choose which values to keep, and then click the **Roll Dice** button up to two extra times.
 
-![image](docs\assets\design_system\dice_5.gif)
+![image](docs/assets/design_system/dice_5.gif)
 
 If the values are desirable (or when out of re-rolls), click the dice to select them for scoring.
 
-![image](docs\assets\design_system\dice_3.gif)
+![image](docs/assets/design_system/dice_3.gif)
 
 Select a category on the **scoreboard** by **clicking** with the cursor after **selecting at least one die **to view a preview of how many points the hand will earn.
 
-![image](docs\assets\design_system\scoring_1.gif)
+![image](docs/assets/design_system/scoring_1.gif)
 
 Continue this process and complete the scoreboard, aiming for the maximum number of points.
 
-![image](docs\assets\design_system\scoring_2.gif)
+![image](docs/assets/design_system/scoring_2.gif)
 
 When the scorecard has been filled, a message will appear next to the score total at the **bottom of the scorecard** to signify the game is over, and notify the user if a bonus has been awarded.
 
-![image](docs\assets\design_system\gameover.jpg)
+![image](docs/assets/design_system/gameover.jpg)
 
 ## Scoring Mechanics
 
