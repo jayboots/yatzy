@@ -2,6 +2,8 @@
 
 $GLOBALS["appDir"] = resolve_path("app");
 
+echo "This is config.php\n";
+
 function resolve_path($name)
 {
     if ($name == ".")

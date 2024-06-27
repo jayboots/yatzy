@@ -1,5 +1,8 @@
 <?php
-require_once "dice.php";
+namespace Yatzy;
+require "dice.php";
+
+use Yatzy\Dice;
 
 class YatzyGame {
     private $maxRolls;
