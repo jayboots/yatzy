@@ -6,14 +6,19 @@ require 'app\models\YatzyEngine.php';
 
 use Yatzy\Dice;
 use Yatzy\YatzyGame;
-use Yatzy\YatzyEngine;
+// use Yatzy\YatzyEngine;
 
 // Testing the DICE class
 
 // Roll a die
-$d = new Dice();
+$d = new Dice(2, 10);
 for ($i=1; $i<=5; $i++) {
   echo "ROLL {$i}: {$d->roll()}<br>\n" ;
+}
+
+$d2 = new Dice();
+for ($i=1; $i<=5; $i++) {
+  echo "ROLL {$i}: {$d2->roll()}<br>\n" ;
 }
 
 // Get a new hand of dice
