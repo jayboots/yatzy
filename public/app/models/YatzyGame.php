@@ -1,18 +1,22 @@
 <?php
 namespace Yatzy;
-require "dice.php";
+
+require_once "Dice.php";
+
+echo "This is YatzyGame.php\n";
 
 use Yatzy\Dice;
 
 class YatzyGame {
-    private $maxRolls;
-    private $maxRounds;
-    private $roundStart;
-    private $score;
-    private $activeHand;
-    private $lockRoster;
-    private $currentRound;
-    private $rollsLeft;
+    public $maxRolls;
+    public $maxRounds;
+    public $roundStart;
+    public $score;
+    public $activeHand;
+    public $lockRoster;
+    public $currentRound;
+    public $rollsLeft;
+    public $dice;
 
     public function __construct($maxRolls = 3, $maxRounds = 15) {
         $this->maxRolls = $maxRolls;
@@ -23,6 +27,7 @@ class YatzyGame {
         $this->lockRoster = array_fill(0, 5, 0);
         $this->currentRound = $this->roundStart;
         $this->rollsLeft = $this->maxRolls;
+        $this->dice = new Dice();
     }
 
     public function updateLockRoster($lockRoster) {
@@ -69,7 +74,7 @@ class YatzyGame {
     public function rollDice() {
         if ($this->rollsLeft > 0) {
             echo "Rolling the dice.\n";
-            $newSet = getNewHand();
+            $newSet = $this->dice->getNewHand();
             for ($i = 0; $i < count($this->lockRoster); $i++) {
                 if ($this->lockRoster[$i] == 0) {
                     $this->activeHand[$i] = $newSet[$i];
