@@ -21,3 +21,8 @@ $hand = $d->getNewHand();
 $hand;
 
 $yg = new YatzyGame();
+echo "Number of max rolls: {$yg->maxRolls}\n";
+$yg->rollDice();
+$yg->rollDice();
+$yg->rollDice();
+$yg->rollDice();

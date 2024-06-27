@@ -19,6 +19,7 @@ class YatzyGame {
     public $dice;
 
     public function __construct($maxRolls = 3, $maxRounds = 15) {
+        echo "Created a new YatzyGame.\n";
         $this->maxRolls = $maxRolls;
         $this->maxRounds = $maxRounds;
         $this->roundStart = 0;

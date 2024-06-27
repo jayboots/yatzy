@@ -3,5 +3,9 @@
 # Julia's testing items
 scraps/*
 
+#Ignore the PHPunit Files - these can be retrieved from composer command...
+vendor
+vendor/*
+
 #Remove graphics generator files and colour references from repo
 *.afdesign
