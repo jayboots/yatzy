@@ -9,20 +9,83 @@
 </head>
  
 <body style="text-align:center;">
- 
     <h1>Leaderboard</h1>
 
     <!-- Can work out how to display this information later. Maybe a tab. -->
-    <p>The Leaderboard text can load here...</p>
+    <div>
+        <table id="scoreboard">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody id="scores">
+            </tbody>
+        </table>
+    </div>
 
     <h2>Submit Your Name</h2>
-    <form id="nameSubmission">
+    <form id="scoreForm">
         <input type="text"
                id="input_name" 
-               value="Your Name Here">
+               placeholder="Your Name Here">
+        <button id="submitScore" type="submit">Click to Submit your Name and Score</button>
     </form>
-    <button form="nameSubmission">Click to Submit your Name and Score</button>
     <br>
+
+    <script>
+        async function getData(name, score) {
+            //request setup
+            const url = 'http://localhost:8080/score';
+            const jsonData = { name, score};
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify(jsonData) 
+            };
+
+            //get data from api and update html page
+            fetch(url, options).then(response => {
+                if (!response.ok) {
+                    throw new Error("failed with: "+ response.status);
+                }
+                return response.json();
+
+            }).then(data => {
+                let scoreData = JSON.parse(JSON.stringify(data));
+                let scoreboard = document.getElementById("scores");
+                //delete current scoreboard
+                scoreboard.innerHTML = '';
+
+                //update scoreboard with new scores
+                console.log(scoreData);
+                scoreData.map((score, index) => {
+                    let row = scoreboard.insertRow(-1);
+                    let rank = row.insertCell(0);
+                    let name = row.insertCell(1);
+                    let result = row.insertCell(2);
+                    rank.innerHTML = index+1;
+                    name.innerHTML = score.name;
+                    result.innerHTML = score.score;
+                })
+
+            }).catch(error => {
+                console.error("fetch error: ", error);
+            });
+        }
+
+        document.getElementById("scoreForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const name = document.getElementById("input_name").value;
+            //placeholder for score
+            const score = Math.floor(Math.random() * 500);
+            getData(name, score);
+        });
+    </script>
 </body>
  
 </html>
