@@ -1,1 +1,0 @@
-<!-- https://www.php.net/manual/en/reserved.variables.session.php -->
