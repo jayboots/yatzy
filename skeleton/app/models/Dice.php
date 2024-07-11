@@ -42,3 +42,15 @@ $hand = $d->getNewHand();
 
 header('Content-Type: application/json');
 echo json_encode($hand);
+
+// Get request to the above
+if(isset($_GET['action'])) {
+    // Roll a die
+    $d = new Dice(1, 6);
+
+    // Get a new hand of dice
+    $hand = $d->getNewHand();
+
+    header('Content-Type: application/json');
+    echo json_encode($hand);
+}

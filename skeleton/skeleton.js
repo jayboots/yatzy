@@ -3,6 +3,8 @@ const apiRoot = '/yatzy/skeleton/app/models/';
 const dice = 'Dice.php'
 // const game = 'YatzyGame.php'
 // const engine = 'YatzyEngine.php'
+// const scoreCard = 'ScoreCard.php'
+// const leaderBoard = 'LeaderBoard.php'
 
 var activeHand = new Array(null, null, null, null, null);
 
@@ -30,15 +32,17 @@ function rollDice(){
         // console.log(data)
         testDice.innerHTML = 'Dice Array: [' + data + ']';
     });
+
+    // callDice().then(data =>{
+    // console.log(data)
+    // // testDice.innerHTML = 'Dice Array: [' + data + ']';
+    // });
 }
 
+/**
+ * Makes a call to Dice.php and returns the value of the new hand echoed there.
+ */
 async function getDice(){
-    // console.log("Making a get request for a dice hand")
-    // fetch(apiRoot+dice).then(function(response) {
-    //     return response.json();
-    // }).then(function(data){
-    //     alert(data)
-    // });
     let data = await fetch(apiRoot+dice).then(function(response) {
         return response.json();
     }).catch(error => {
@@ -48,16 +52,26 @@ async function getDice(){
     return data
 }
 
-function postDice(){
-    console.log("Sending data on the dice hand.")
+/**
+ * Makes a call to a function in Dice.php
+ */
+async function callDice(){
+    let data = await fetch(apiRoot+dice, {
+        method: "GET"
+    }).then(data => {
+        console.log(data);
+    });
+    return data
 }
 
-function endRound(){
-    console.log("Make an AJAX request to end the round.")
-}
+// function postDice(){
+//     console.log("Sending data on the dice hand.")
+// }
 
-function resetGame(){
-    console.log("Make an AJAX request to create a new game.")
-}
+// function endRound(){
+//     console.log("Make an AJAX request to end the round.")
+// }
 
-
+// function resetGame(){
+//     console.log("Make an AJAX request to create a new game.")
+// }
