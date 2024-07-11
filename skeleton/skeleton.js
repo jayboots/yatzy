@@ -1,8 +1,10 @@
 // Handles the front-end requests
-const apiRoot = '/skeleton/app/models/';
+const apiRoot = '/yatzy/skeleton/app/models/';
 const dice = 'Dice.php'
 // const game = 'YatzyGame.php'
 // const engine = 'YatzyEngine.php'
+
+var activeHand = new Array(null, null, null, null, null);
 
 window.onload=function(){
     console.log("Window loaded")
@@ -24,15 +26,26 @@ window.onload=function(){
 function rollDice(){
     // get the dice values by making an async request
     // then handle the GUI stuff in a call to another function like drawDice()...
-    getDice();
-    testDice.innerHTML = 'Dice Array: [UPDATED DICE]'
+    getDice().then(data =>{
+        // console.log(data)
+        testDice.innerHTML = 'Dice Array: [' + data + ']';
+    });
 }
 
 async function getDice(){
-    fetch(apiRoot+dice+"$hand").then(function(data) {
-        console.log(data)
-    })
-    console.log("Making a get request for a dice hand")
+    // console.log("Making a get request for a dice hand")
+    // fetch(apiRoot+dice).then(function(response) {
+    //     return response.json();
+    // }).then(function(data){
+    //     alert(data)
+    // });
+    let data = await fetch(apiRoot+dice).then(function(response) {
+        return response.json();
+    }).catch(error => {
+        console.error("fetch error: ", error);
+    });
+    // console.log(data)
+    return data
 }
 
 function postDice(){

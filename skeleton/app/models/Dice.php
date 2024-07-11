@@ -39,4 +39,6 @@ $d = new Dice(1, 6);
 
 // Get a new hand of dice
 $hand = $d->getNewHand();
-echo implode(", ", $hand);
+
+header('Content-Type: application/json');
+echo json_encode($hand);
