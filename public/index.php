@@ -2,7 +2,7 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
-include("score.php");
+include("models/score.php");
 
 require __DIR__ . '/../vendor/autoload.php';
 session_start();
@@ -22,13 +22,13 @@ $app->addBodyParsingMiddleware();
  * placeholder for homepage
  */
 $app->get('/', function (Request $request, Response $response, array $args) {
-    $view = file_get_contents("../submitScore.html");
+    $view = file_get_contents("index.html");
     $response->getBody()->write($view);
     return $response;
 });
 
 /**
- * URL: /score?name=<>&score=<>
+ * URL: /score
  * saves player name and score to session variable and returns the top 10 scores
  */
 $app->post('/score', function(Request $request, Response $response, array $args) {

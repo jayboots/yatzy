@@ -1,0 +1,314 @@
+/* From Google Fonts - https://fonts.google.com */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Playwrite+PL:wght@100..400&display=swap');
+
+/* root-scope variables */
+:root {
+    --dsize: 4rem;
+    --dradius: 0.6rem;
+    --dotsize: 0.8rem;
+    --spacing-small: 0.2rem;
+    --spacing-medium: 0.5rem;
+    --spacing-xl: 3rem;
+    --primary-start: #eb3349;       /*munsell*/
+    --primary-fade: #F45C43;        /*tomato*/
+    --primary-shadow: #700000;      /*blood red*/
+    --secondary: #11bae5;           /*aero*/
+    --secondary-shadow: #4a7e92;    /*airforce*/
+    --white: #ffffff;               /*white*/
+    --black: #000000;
+}
+
+body {
+    /* height: 100%; */
+    margin: 0;
+    background-repeat: no-repeat;
+    background: linear-gradient(var(--primary-start), var(--primary-fade));
+
+    /* From Google Fonts - https://fonts.google.com */
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}
+
+header {
+    text-align: center;
+    width: 100%;
+    color: var(--white);
+    margin: 0px;
+}
+
+/* Yatzy logo font */
+h1 {
+    font-size: 80px;
+    text-shadow: 0.25rem 0.25rem 1px var(--secondary-shadow);
+    font-family: "Playwrite PL", cursive;
+    font-weight: bold;
+    margin: 0px;
+}
+
+footer{
+    border-top: rgb(255, 255, 255) dashed 3px;
+    background: var(--primary-start);
+    height: 100%;
+    color: var(--white);
+    font-weight: bold;
+    font-style: italic;
+    font-size: smaller;
+    padding: 0.1em;
+    text-align: center;
+}
+
+#score-card{
+    width: 100%;
+}
+
+table {
+    box-shadow: 0.25rem 0.25rem 0.25rem var(--primary-shadow);
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 0.33rem;
+    background: var(--white);
+    overflow-x: auto;
+}
+
+/* For the total score area */
+td.total-score {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+td.score-desc {
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+/* Clickable items should have the cursonr */
+#score-card tr.table-row td{
+    cursor: pointer;
+    background-color: var(--white);
+}
+
+#score-card tr.table-row:hover td{
+    cursor: pointer;
+    background-color: var(--secondary);
+    color: var(--white);
+    /* font-weight: bold; */
+}
+
+div {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+/* General Container Properties */
+div.game-area{
+    padding: 1rem;
+}
+
+/* Splits the play area in half - dice on left, score area on right. Also used in header. */
+div.split-container{
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem;
+    margin: 0.5rem;
+}
+
+/* items in the split-container */
+div.column-container{
+    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: space-around;
+    justify-content: center;
+}
+
+div.column-container#header-right{
+    margin-left: 1rem;
+}
+
+div.column-container#col-left{
+    padding-right: calc(var(--spacing-xl) * .75);
+}
+
+div.column-container#col-right{
+    min-width: 50%;
+}
+
+div.die-container{
+    display: flex;
+    padding: var(--spacing-small);
+}
+
+
+div.die-active, div.die-inactive, div.die-selected{
+    width: var(--dsize);
+    height: var(--dsize);
+    border-radius: var(--dradius);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: xx-large;
+    font-weight: bolder;
+    margin-right: calc(var(--spacing-medium) * 1.5);
+    position: relative;
+}
+
+/* Animate rolling the dice */
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-2deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-2deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(2deg); }
+    90% { transform: translate(1px, 2px) rotate(-1deg); }
+    100% { transform: translate(1px, -2px) rotate(0deg); }
+  }
+
+/* Shake a container around the die to avoid changing die parameters */
+div.rollContainer{
+    animation-name: shake;
+    animation-iteration-count: 1;
+    animation-duration: 0.25s;
+    animation-fill-mode: both;
+
+}
+
+div.die-active{
+    background: var(--white);
+    border: 1px solid var(--primary-shadow);
+    box-shadow: 0.25rem 0.25rem 0.25rem var(--primary-shadow);
+    cursor: pointer;
+    color: var(--black);
+    &:hover{
+        color: var(--secondary);
+        border: 0;
+        box-shadow: 0.25rem 0.25rem 1px var(--secondary);
+    }
+}
+
+div.die-selected{
+    background: var(--secondary);
+    border: 5px solid var(--white);
+    box-shadow: 0.25rem 0.25rem 0.15rem var(--secondary-shadow);
+    cursor: pointer;
+    color: var(--white);
+}
+
+div.die-inactive{
+    box-shadow: 0 0 2rem var(--primary-shadow);
+    border: 0.2rem dashed var(--white);
+    cursor: default;
+    color: var(--white);
+}
+
+div.dot, div.dot-selected{
+    border-radius: 50%;
+
+    /* Positioning Variables */
+    --top: 0%;
+    --left: 0%;
+
+    /* Positioning */
+    position: absolute;
+    top: var(--top);
+    left: var(--left);
+    transform: translateX(calc(var(--left) * -1)) translateY(calc(var(--top) * -1))
+}
+
+.dot{
+    width: var(--dotsize);
+    height: var(--dotsize);
+    background-color: var(--black);
+}
+
+.dot-selected{
+    width: calc(var(--dotsize) * .90);
+    height: calc(var(--dotsize) * .90);
+    background-color: var(--white);
+}
+
+div.lock-container{
+    width: var(--dsize);
+    height: var(--dsize);
+    margin: var(--spacing-small);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12;
+}
+
+button.lock {
+    border: 0;
+    cursor: pointer;
+    color: var(--white);
+    font-size: xlarge;
+    background-color: transparent;
+    text-shadow: 0.15rem 0.15rem 1px var(--secondary-shadow);
+    -webkit-text-stroke: 1px var(--secondary-shadow);
+    margin: 10px;
+
+    &:hover{
+        color: var(--white);
+        text-shadow: 0.15rem 0.15rem 1px var(--secondary);
+        -webkit-text-stroke: 0px;
+    }
+
+}
+
+div.button-container{
+    display: flex;
+    justify-content: center;
+    margin: 0.5rem;
+}
+
+.btn-function {
+    font-weight: bold;
+    background-color: var(--white);
+    height: 3rem;
+    border: 1px solid var(--secondary-shadow);
+    border-radius: 1.25em;
+    color: var(--secondary-shadow);
+    width: 90%;
+    box-shadow: 0.25rem 0.25rem 1px var(--secondary-shadow);
+    cursor: pointer;
+
+    &:hover{
+        color: var(--secondary);
+        border: 0;
+        box-shadow: 0.25rem 0.25rem 1px var(--secondary);
+    }
+    
+    &:disabled{
+        background-color: lightgrey;
+        box-shadow: 0 0 0 var(--primary-shadow);
+        border: 1px darkgrey solid;
+        color: darkgrey;
+        cursor: not-allowed;
+    }
+}
+
+div.leaderboard-container{
+    justify-content: center;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.leaderboard-container h2 {
+    color: white;
+    text-shadow: 0.15rem 0.15rem 1px var(--secondary-shadow);
+}
+
+table#scoreboard {
+    margin: 0 auto;
+    width: 20%;
+}
