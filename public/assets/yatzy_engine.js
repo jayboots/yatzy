@@ -104,7 +104,6 @@ function resetGame(){
     getGameState()
 }
 
-
 /**
  * Rolls the dice according to the logic of the game.
  */
