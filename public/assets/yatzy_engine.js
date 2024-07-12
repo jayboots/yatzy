@@ -1,5 +1,5 @@
-// import { YatzyGame } from "./yatzy_game.js";
-// import { ScoreCard } from  "./scorecard.js"; // Just to keep the code tidy, it could have been in this script.
+import { YatzyGame } from "./yatzy_game.js";
+import { ScoreCard } from  "./scorecard.js"; // Just to keep the code tidy, it could have been in this script.
 
 var game = null;
 var scoreCard = null;
@@ -7,7 +7,7 @@ var targetChoice = null;
 var targetPts = null;
 
 var canRoll = false;
-var gameOver = true; //TODO: implement, also maybe change to state
+var gameOver = true;
 
 const dicePrefix = "d_";
 const lockPrefix = "l_";

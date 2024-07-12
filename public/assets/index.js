@@ -1,3 +1,11 @@
+// Handles the front-end requests
+const apiRoot = '/app/models/';
+const dice = 'Dice.php'
+const game = 'YatzyGame.php'
+const scoreCard = 'ScoreCard.php'
+const engine = 'YatzyEngine.php'
+const leaderBoard = 'score.php'
+
 window.onload=function(){
   const endRoundBtn = document.getElementById("endRoundBtn");
 
