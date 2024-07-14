@@ -30,23 +30,34 @@ class Dice {
     }
 }
 
-// // Roll a die
-// $d = new Dice(1, 6);
+// Roll a die
+$d = new Dice(1, 6);
 
-// // Get a new hand of dice
-// $hand = $d->getNewHand();
+// Get a new hand of dice
+$hand = $d->getNewHand();
 
-// header('Content-Type: application/json');
-// echo json_encode($hand);
+// Just for testing...
+// $foo = "12345";
+// $bar = "67890";
 
-// // Get request to the above
-// if(isset($_GET['action'])) {
-//     // Roll a die
-//     $d = new Dice(1, 6);
-
-//     // Get a new hand of dice
-//     $hand = $d->getNewHand();
-
+// if(isset($_GET['foo'])){
 //     header('Content-Type: application/json');
-//     echo json_encode($hand);
+//     echo json_encode($foo);
 // }
+
+// if(isset($_GET['bar'])){
+//     header('Content-Type: application/json');
+//     echo json_encode($bar);
+// }
+
+// Get request to the above
+if(isset($_GET['roll'])) {
+    // Roll a die
+    $d = new Dice(1, 6);
+
+    // Get a new hand of dice
+    $hand = $d->getNewHand();
+
+    header('Content-Type: application/json');
+    echo json_encode($hand);
+}

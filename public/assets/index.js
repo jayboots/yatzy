@@ -1,6 +1,6 @@
 // Variables for AJAX Requests - to be enabled as we AJAXify this script
 const apiRoot = '/app/models/';
-// const dice = 'Dice.php'
+const dice = 'Dice.php'
 // const game = 'YatzyGame.php'
 // const scoreCard = 'ScoreCard.php'
 // const engine = 'YatzyEngine.php'
@@ -48,7 +48,7 @@ window.onload=function(){
 
     // Establish some states on page load by default.
     endRoundBtn.disabled = true;
-    rollBtn.disabled = true;
+    // rollBtn.disabled = true;
 
     // Event Listeners for the main game buttons
     // resetBtn.addEventListener("click", resetGame, true);
@@ -90,14 +90,19 @@ window.onload=function(){
  * Rolls the dice according to the logic of the game.
  */
 function rollDice(){
+    canRoll = true; // TODO: Delete this line when done testing...
     console.log("Attempting to roll the dice...")
+
+    // getRequest(apiRoot+dice, ['roll', 'foo', 'bar'])
+    getRequest(_url=apiRoot+dice, _params='roll', _func='helloWorld')
+
     // if (canRoll){
     //     game.rollDice();
     //     deselectDice(); //reset all selected dice when rolling
     //     var activeHand = game.activeHand;
+    //     console.log("Roll successful.")
     //     console.log(activeHand)
     //     drawDice(activeHand)
-
     //     if (game.rollsLeft == 0){
     //         canRoll = false;
     //         rollBtn.disabled = !canRoll;
@@ -109,7 +114,65 @@ function rollDice(){
     // }
 }
 
+function helloWorld(data){
+    console.log("hello, world!")
+    console.log(data)
+}
+
 // ================= AJAX FUNCTIONS ================= 
+
+/**
+ * Function to simplify making GET requests to a specified URL, with an optional number of parameters
+ *
+ * @param {*} _url - the URL
+ * @param {string} [_params=""] - (Optional) Parameters can be a string or an array of strings. 
+ */
+async function getRequest(_url, _params="", _func=null){
+
+    let url = _url
+    var params;
+    if (Array.isArray(_params)){
+        // params = _params.flatMap((x) => '?'+x).join('&');
+        params = "?"+_params.join('&');
+    }
+    else if (_params == "") {
+        var params = ""
+    }
+    else {
+        params = '?'+_params;
+    }
+
+    //Create an AJAX object
+    var xhr = new XMLHttpRequest(); 
+
+    //State of the request - 0 unsent, 1 opened, 2 headers recieved, 3 loading, 4 done.
+    // console.log("Ready State: " + xhr.readyState); 
+
+    xhr.responseType = "text";
+    
+    xhr.onreadystatechange = function(){
+        if (xhr.readyState == 4) {
+            // request has completed, so we have a response.
+            if (xhr.status == 200){ //if request successful
+                // console.log(xhr.responseText);
+                // Call some function here with the response data
+                if (_func){
+                    window[_func](xhr.responseText);
+                }
+            }
+            else if (xhr.status == 404){ //if resoure not found
+                console.log("Resource not found.");
+            }
+        }
+    }
+
+    // Now make the request (request type, resource path, async (true / false))
+    xhr.open('get', url+params, true);
+
+    // Then send request
+    xhr.send();
+
+}
 
 //gets leaderboard scores and names 
 async function submitScore(name, score) {

@@ -54,8 +54,7 @@ $app->get('/', function (Request $request, Response $response, array $args) {
  */
 $app->post('/score', function(Request $request, Response $response, array $args) {
     $name = $request->getParsedBody()['name'];
-    // $score = $request->getParsedBody()['score'];
-    $score = 8238; // TODO: Insert Real Score Here when calling this at game end... 
+    $score = $request->getParsedBody()['score']; // As noted by Tori, this is currently being read from the 'total score' UI element.
 
     //if scoreboard is not set -> create new session var; else add score to scoreboard
     if (!isset($_SESSION['scoreboard'])){
