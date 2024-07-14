@@ -8,7 +8,31 @@ require_once "score.php";
 
 use Yatzy\YatzyGame;
 
-$game = new YatzyGame();
+$_SESSION['game'] = null;
+$_SESSION['score-card'] = null;
 
-header('Content-Type: application/json');
-echo json_encode(var_dump($game));
+// By default, these are null
+
+class YatzyEngine {
+    public $game;
+    public $scoreCard;
+    public function __construct(){
+        $this->resetGame();
+    }
+
+    function resetGame(){
+        // echo "Creating new game.";
+        $this->game = new YatzyGame();
+        $this->scoreCard = new ScoreCard();
+    }
+}
+
+$engine = new YatzyEngine();
+
+if(isset($_GET['new-game'])) {
+    $engine->resetGame();
+}
+
+if(isset($_GET['info'])) {
+    var_export($engine->$game);
+}

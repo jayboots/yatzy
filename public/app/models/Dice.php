@@ -6,8 +6,7 @@ class Dice {
     public $min;
     public $max;
 
-    public function __construct(int $min = 1, int $max = 6)
-    {
+    public function __construct(int $min = 1, int $max = 6){
         $this->min = $min;
         $this->max = $max;
     }

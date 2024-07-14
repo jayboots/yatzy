@@ -47,7 +47,7 @@ window.onload=function(){
 
     // Establish some states on page load by default.
     endRoundBtn.disabled = true;
-    // rollBtn.disabled = true;
+    rollBtn.disabled = true;
 
     // Event Listeners for the main game buttons
     // resetBtn.addEventListener("click", resetGame, true);
@@ -79,6 +79,9 @@ window.onload=function(){
     //     let ID = dice[i].id
     //     document.getElementById(ID).addEventListener("click", toggleDie, true);
     // }
+
+    const testBtn = document.getElementById("testBtn");
+    testBtn.addEventListener("click", testFunc, true);
 
 }
 
@@ -130,11 +133,10 @@ function resetGame(){
  * Rolls the dice according to the logic of the game.
  */
 function rollDice(){
-    canRoll = true; // TODO: Delete this line when done testing...
     console.log("Attempting to roll the dice...")
 
     // getRequest(apiRoot+dice, ['roll', 'foo', 'bar'])
-    getRequest(_url=apiRoot+'Dice.php', _params='roll', _func='helloWorld')
+    // getRequest(_url=apiRoot+'Dice.php', _params='roll', _func='helloWorld')
 
     // if (canRoll){
     //     game.rollDice();
@@ -784,3 +786,8 @@ function helloWorld(data){
     console.log("Hello, world!")
     console.log(data)
 }
+
+function testFunc(){
+    getRequest(_url=apiRoot+'Dice.php', _params='roll', _func='helloWorld')
+}
+    // getRequest(apiRoot+dice, ['roll', 'foo', 'bar'])
