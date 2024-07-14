@@ -34,5 +34,6 @@ if(isset($_GET['new-game'])) {
 }
 
 if(isset($_GET['info'])) {
-    var_export($engine->$game);
+    header('Content-Type: application/json');
+    echo json_encode(var_export($engine));
 }

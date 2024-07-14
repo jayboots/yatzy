@@ -787,7 +787,12 @@ function helloWorld(data){
     console.log(data)
 }
 
-function testFunc(){
-    getRequest(_url=apiRoot+'Dice.php', _params='roll', _func='helloWorld')
+function secondaryFunc(data){
+    console.log(data)
 }
+
+function testFunc(){
     // getRequest(apiRoot+dice, ['roll', 'foo', 'bar'])
+    // getRequest(_url=apiRoot+'Dice.php', _params='roll', _func='helloWorld')
+    getRequest(_url=apiRoot+'YatzyEngine.php', _params='info', _func='secondaryFunc')
+}
