@@ -37,7 +37,7 @@ $app->addErrorMiddleware(true, true, true);
  * placeholder for homepage
  */
 $app->get('/', function (Request $request, Response $response, array $args) {
-    $view = file_get_contents("yatzy.html");
+    $view = file_get_contents("index.html");
     $response->getBody()->write($view);
     return $response;
 });

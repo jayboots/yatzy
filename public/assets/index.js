@@ -1,19 +1,9 @@
-// Variables for AJAX Requests - to be enabled as we AJAXify this script
 const apiRoot = '/app/models/';
-// const game = 'YatzyGame.php'
-// const scoreCard = 'ScoreCard.php'
-// const engine = 'YatzyEngine.php'
-// const leaderBoard = 'score.php'
-
-// Pre-existing Game Variables
-var game = null;
-var scoreCard = null;
-var targetChoice = null;
-var targetPts = null;
 
 // UI Variables are used to handle drawing actions or UI behaviours only
-var canRoll = false;
-var gameOver = true;
+// TODO: These can be read from YatzyEngine or YatzyGame...
+var targetChoice = null;
+var targetPts = null;
 
 const dicePrefix = "d_";
 const lockPrefix = "l_";
@@ -29,7 +19,7 @@ const dotPositionMatrix = {
     6: [[15, 15],[15, 85],[50, 15],[50, 85],[85, 15],[85, 85]]
 };
 
-// Handles which dice are "selected" for score calculation
+// Handles which dice are "selected" for score calculation. Captured data passed along for scoring.
 var selectRoster = [false, false, false, false, false]
 
 // Items that are loaded
@@ -50,9 +40,9 @@ window.onload=function(){
     rollBtn.disabled = true;
 
     // Event Listeners for the main game buttons
-    // resetBtn.addEventListener("click", resetGame, true);
+    resetBtn.addEventListener("click", resetGame, true);
     rollBtn.addEventListener("click", rollDice, true);
-    // endRoundBtn.addEventListener("click", endRound, true);
+    endRoundBtn.addEventListener("click", endRound, true);
 
     // // Event listener for the scorecard Scorecard
     // for (let i = 0; i < scoreTable.length; i++) {
@@ -83,50 +73,52 @@ window.onload=function(){
     const testBtn = document.getElementById("testBtn");
     testBtn.addEventListener("click", testFunc, true);
 
+    console.log("All variables initialized.")
+
 }
 
 // ================== UI FUNCTIONS ==================
 
 /**
- * Writes some information about the state of the game to the console.
- */
-function getGameState(){
-    // TODO: This will need to all be GET requests to YatzyEngine.php
-    // if (game == null){
-    //     console.log("No active game object. Try creating a new game.")
-    // }
-    // else{
-    //     console.log("Current round: " + game.currentRound + " / " + game.maxRounds)
-    //     console.log("Rolls available: " + game.rollsLeft + " / " + game.maxRolls)
-    //     console.log("Current score: " + game.score) //TODO: Implement
-    // }
-    // console.log("Can roll dice: " + canRoll)
-    // console.log("Game Currently Over: " + gameOver)
-    // console.log("targetChoice and targetPts: " + targetChoice + ", " + targetPts)
-}
-
-
-/**
- * Make a new game and reset some state variables and UI things.
+ * Make a new game via an AJAX call and reset some GUI features and functions.
  */
 function resetGame(){
-    // TODO: Implement with POST API calls to YatzyEngine.php
-    // console.log("Creating new game.")
-    // game = new YatzyGame();
-    // scoreCard = new ScoreCard();
-    // targetChoice = null;
-    // targetPts = null;
-    // drawScoreCard();
-    // document.getElementById("gameover-msg").innerText = "";
+    //Create an AJAX object
+    var xhr = new XMLHttpRequest(); 
+    xhr.responseType = "text";
+    xhr.onreadystatechange = function(){
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200){ 
+                // console.log(xhr.responseText);
+                // TODO: Do something here...
+                console.log(xhr.status + ": Creating new game.")
 
-    // console.log(game)
-    // canRoll = true;
-    // gameOver = false;
-    // rollBtn.disabled = !canRoll;
-    // drawDice(game.activeHand)
-    // drawLocks(game.lockRoster)
-    // deselectDice()
-    // getGameState()
+                data = JSON.parse(xhr.responseText)
+                getGameState(data)
+
+                targetChoice = null;
+                targetPts = null;
+                // drawScoreCard();
+                document.getElementById("gameover-msg").innerText = "";
+                // canRoll = true;
+                // gameOver = false;
+
+                // rollBtn.disabled = !canRoll;
+
+                drawDice(_activeHand=data["game"]["activeHand"], _lockRoster=data["game"]["lockRoster"])
+                // drawLocks(data["game"]["lockRoster"])
+                // deselectDice()
+            }
+            else if (xhr.status == 404){ //if resoure not found
+                console.log(xhr.status + ": Could not reset game. Resource not found.");
+            }
+        }
+    }
+
+    xhr.open('get', apiRoot+"YatzyEngine.php?new-game", true);
+
+    // Then send request
+    xhr.send();
 }
 
 /**
@@ -135,31 +127,35 @@ function resetGame(){
 function rollDice(){
     console.log("Attempting to roll the dice...")
 
-    // getRequest(apiRoot+dice, ['roll', 'foo', 'bar'])
-    // getRequest(_url=apiRoot+'Dice.php', _params='roll', _func='helloWorld')
+    // TODO: Migrate canRoll functionality to YatzyEngine...
 
-    // if (canRoll){
-    //     game.rollDice();
-    //     deselectDice(); //reset all selected dice when rolling
-    //     var activeHand = game.activeHand;
-    //     console.log("Roll successful.")
-    //     console.log(activeHand)
-    //     drawDice(activeHand)
-    //     if (game.rollsLeft == 0){
-    //         canRoll = false;
-    //         rollBtn.disabled = !canRoll;
-    //     }
-    // }
-    // else{
-    //     console.log("Cannot currently roll the dice.") //either game hasn't been created yet, or game logic doesn't allow this.
-    //     //Disable the roll button in the DOM here
-    // }
+    var xhr = new XMLHttpRequest(); 
+    xhr.responseType = "text";
+    xhr.onreadystatechange = function(){
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200){ 
+                let data = JSON.parse(xhr.responseText)
+                getGameState(data)
+                deselectDice(); //reset all selected dice when rolling
+                drawDice(_activeHand=data["game"]["activeHand"], _lockRoster=data["game"]["lockRoster"])
+            }
+            else if (xhr.status == 404){ //if resoure not found
+                console.log(xhr.status + ": Could not roll dice. Resource not found.");
+            }
+        }
+    }
+
+    xhr.open('get', apiRoot+"YatzyEngine.php?roll-dice", true);
+
+    // Then send request
+    xhr.send();
 }
 
 /**
  * Ends a round and determines whether the round ending means the game has finished or not.
  */
 function endRound(){
+    console.log("Clicked button to end round.")
     // TODO: Implement api calls and the scoring functionality of SubmitScore
     //Turn off this button after it is pressed, because:
     // - either a minimum of 1 roll is required before ending the next turn, or
@@ -206,58 +202,53 @@ function endRound(){
 /**
  * Updates the values of the dice visuals.
  *
- * @param {*} activeHand - the values of the dice to draw
+ * @param {*} _activeHand - array containing the values of the active hand
+ * @param {*} _lockRoster - array containing the lock state of each of the five dice
  */
-function drawDice(activeHand){
-    // if (game != null){
-    //     if (activeHand.includes(null)){
-    //         for (let i = 0; i < activeHand.length; i++) {
-    //             document.getElementById(dicePrefix+i).innerText = "?";
-    //             document.getElementById(dicePrefix+i).className = "die-inactive";
-    //             document.getElementById(dicePrefix+i).title = "Die " + (i+1) + " has no value.";
-    //         }
-    //     }
-    //     else{
-    //         let lockedDice = game.lockRoster;
-    //         console.log("Updated the drawn dice")
-        
-    //         for (let i = 0; i < lockedDice.length; i++) {
-    //             // If the die is locked, don't change the value
-    //             document.getElementById(dicePrefix+i).className = "die-active";
-    //             if (lockedDice[i] == 0) {
-    //                 // console.log("Die # " + (i + 1) + " is free. Rerolling value." );
-    //                 //TODO: Shake Dice
-    //                 let rollContainer = document.getElementById(shakePrefix+i);
-    //                 if (document.getElementById(dicePrefix+i).className == "die-active"){
-    //                     rollContainer.style.animationName = "none";
-    //                     requestAnimationFrame(() => {
-    //                       setTimeout(() => {
-    //                         rollContainer.style.animationName = ""
-    //                       }, 0);
-    //                     });
-    //                 }
-    //                 // animation-iteration-count:
-    //                 document.getElementById(dicePrefix+i).innerText = "";
-    //                 document.getElementById(dicePrefix+i).title = "Die " + (i+1) + " has a value of " + activeHand[i] + ".";
-    //             } else {
-    //                 console.log("Die # " + (i + 1) + " is locked." )
-    //                 //No need to change title on locked dice.
-    //             }
-    //             let dotList = dotPositionMatrix[activeHand[i]]
-    //             for (let j = 0; j < dotList.length; j++) {
-    //                 let dotCoords = dotList[j]
-    //                 let dot = document.createElement("div")
-    //                 dot.style.setProperty("--top", dotCoords[0] + "%")
-    //                 dot.style.setProperty("--left", dotCoords[1] + "%")
-    //                 dot.classList.add("dot")
-    //                 document.getElementById(dicePrefix+i).appendChild(dot)
-    //             }
-    //         }
-    //     }
-    // }
-    // else{ //Not sure how we'd get to this state, but just in case, have a message for it
-    //     console.log("Cannot draw dice, no game object lockRoster to reference against")
-    // }
+function drawDice(_activeHand, _lockRoster){
+    // console.log(_activeHand)
+    // console.log(_lockRoster)
+    if (_activeHand.includes(null)){
+        for (let i = 0; i < _activeHand.length; i++) {
+            document.getElementById(dicePrefix+i).innerText = "?";
+            document.getElementById(dicePrefix+i).className = "die-inactive";
+            document.getElementById(dicePrefix+i).title = "Die " + (i+1) + " has no value.";
+        }
+    }
+    else{
+        let lockedDice = _lockRoster;
+        // console.log("Updated the drawn dice")
+        for (let i = 0; i < lockedDice.length; i++) {
+            // If the die is locked, don't change the drawn value
+            document.getElementById(dicePrefix+i).className = "die-active";
+            if (lockedDice[i] == 0) {
+                let rollContainer = document.getElementById(shakePrefix+i);
+                if (document.getElementById(dicePrefix+i).className == "die-active"){
+                    rollContainer.style.animationName = "none";
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                        rollContainer.style.animationName = ""
+                        }, 0);
+                    });
+                }
+                // animation-iteration-count:
+                document.getElementById(dicePrefix+i).innerText = "";
+                document.getElementById(dicePrefix+i).title = "Die " + (i+1) + " has a value of " + _activeHand[i] + ".";
+            } else {
+                //No need to redraw any locked dice.
+                console.log("Die # " + (i + 1) + " is locked." )
+            }
+            let dotList = dotPositionMatrix[_activeHand[i]]
+            for (let j = 0; j < dotList.length; j++) {
+                let dotCoords = dotList[j]
+                let dot = document.createElement("div")
+                dot.style.setProperty("--top", dotCoords[0] + "%")
+                dot.style.setProperty("--left", dotCoords[1] + "%")
+                dot.classList.add("dot")
+                document.getElementById(dicePrefix+i).appendChild(dot)
+            }
+        }
+    }
 }
 
 /**
@@ -290,17 +281,17 @@ function toggleLock(){
 /**
  * Given a roster of numbers, draws the corresponding lock states to the GUI
  *
- * @param {number[]} lockRoster
+ * @param {number[]} _lockRoster - array containing the lock state of each of the five dice
  */
-function drawLocks(lockRoster){
-    // for (let i = 0; i < lockRoster.length; i++) {
-    //     if (lockRoster[i] == 0){ //TODO: Update to get lock roster from GET call
-    //         document.getElementById(lockPrefix+i).innerHTML = '<i class="material-icons" style="font-size:3rem;">lock_open</i>'
-    //     }
-    //     else {
-    //         document.getElementById(lockPrefix+i).innerHTML = '<i class="material-icons" style="font-size:3rem;">lock</i>';
-    //     }
-    // }
+function drawLocks(_lockRoster){
+    for (let i = 0; i < _lockRoster.length; i++) {
+        if (_lockRoster[i] == 0){
+            document.getElementById(lockPrefix+i).innerHTML = '<i class="material-icons" style="font-size:3rem;">lock_open</i>'
+        }
+        else {
+            document.getElementById(lockPrefix+i).innerHTML = '<i class="material-icons" style="font-size:3rem;">lock</i>';
+        }
+    }
 }
 
 
@@ -779,7 +770,39 @@ async function submitScore(name, score) {
   });
 }
 
-// ================ DEBUG FUNCTIONS ================= 
+// ============= DEVELOPMENT FUNCTIONS ============= 
+
+/**
+ * Writes some information about the state of the game to the console. Reads some UI states and affects the UI accordingly (button toggles, etc.)
+ */
+function getGameState(data, verbose=false){
+    // Handle data from the get request
+    // data = JSON.parse(data)
+    game = data["game"]
+    gameOver = data["gameOver"]
+
+    if (game == null){
+        console.log("No active game object. Try starting a new game.")
+    }
+    else{
+        let canRoll = (data["game"]["rollsLeft"] > 0 && data["game"]["currentRound"] < data["game"]["maxRounds"])
+        rollBtn.disabled = !canRoll;
+        let canSubmit = (data["game"]["rollsLeft"] < 3 && data["game"]["currentRound"] < data["game"]["maxRounds"])
+        endRoundBtn.disabled = !canSubmit;
+        if (verbose){
+            console.log("Can end round: " + canSubmit)
+            console.log("Can roll dice: " + canRoll)
+            console.log("Active hand: " + game['activeHand'])
+            console.log("Lock Roster: " + game['lockRoster'])
+        }
+        console.log("Current round: " + game['currentRound'] + " / " + game['maxRounds'])
+        console.log("Rolls available: " + game['rollsLeft'] + " / " + game['maxRolls'])
+        console.log("Current score: " + game.score) //
+    }
+    // TODO: Migrate these variables to YatzyEngine as they are state tracking variables
+    // console.log("Game Currently Over: " + gameOver)
+    console.log("targetChoice and targetPts: " + targetChoice + ", " + targetPts)
+}
 
 // Test function to show that API call data is being passed along
 function helloWorld(data){
@@ -788,11 +811,16 @@ function helloWorld(data){
 }
 
 function secondaryFunc(data){
-    console.log(data)
+    data = JSON.parse(data)
+    // console.log(typeof(data))
+    // console.log(Object.keys(data))
+    console.log(data["game"])
+    // console.log(data)
 }
 
 function testFunc(){
     // getRequest(apiRoot+dice, ['roll', 'foo', 'bar'])
     // getRequest(_url=apiRoot+'Dice.php', _params='roll', _func='helloWorld')
+    // getRequest(_url=apiRoot+'YatzyEngine.php', _params='info', _func='getGameState')
     getRequest(_url=apiRoot+'YatzyEngine.php', _params='info', _func='secondaryFunc')
 }

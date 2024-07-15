@@ -80,9 +80,10 @@ class YatzyGame {
             for ($i = 0; $i < count($this->lockRoster); $i++) {
                 if ($this->lockRoster[$i] == 0) {
                     $this->activeHand[$i] = $newSet[$i];
-                } else {
-                    // echo "Die # " . ($i + 1) . " is locked.\n";
                 }
+                // else {
+                    // echo "Die # " . ($i + 1) . " is locked.\n";
+                // }
             }
             $this->decrementRolls();
             return true;
