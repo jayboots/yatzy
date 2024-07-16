@@ -132,6 +132,7 @@ function rollDice(){
     var xhr = new XMLHttpRequest(); 
     xhr.responseType = "text";
     xhr.onreadystatechange = function(){
+        // TODO: Change cursor to hourglass while readystate is between 0 and 3, and revert back to normal when ready state == 4
         if (xhr.readyState == 4) {
             if (xhr.status == 200){ 
                 let data = JSON.parse(xhr.responseText)
@@ -152,7 +153,7 @@ function rollDice(){
 }
 
 /**
- * Ends a round and determines whether the round ending means the game has finished or not.
+ * Ends a round and triggers YatzyEngine to make determinations about game state changes and scores.
  */
 function endRound(){
     console.log("Clicked button to end round.")
@@ -773,7 +774,8 @@ async function submitScore(name, score) {
 // ============= DEVELOPMENT FUNCTIONS ============= 
 
 /**
- * Writes some information about the state of the game to the console. Reads some UI states and affects the UI accordingly (button toggles, etc.)
+ * Reads some UI states and affects the UI accordingly (button toggles, etc.)
+ * Additionally, writes some information about the state of the game to the console. 
  */
 function getGameState(data, verbose=false){
     // Handle data from the get request
