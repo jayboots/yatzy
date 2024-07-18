@@ -145,7 +145,7 @@ class ScoreCard {
                 }
                 break;
             case "fourKind":
-                if (strlen($stringDice) == 3){
+                if (strlen($stringDice) == 4){
                     $pattern = '/(\d)\1{3}/';
                     $outcomes = preg_match_all($pattern, $stringDice, $matches);
                     if ($outcomes) {
@@ -187,12 +187,10 @@ class ScoreCard {
                 $pts = array_sum($array);
                 break;
             case "yatzy":
-                if (strlen($stringDice) == 5){
-                    $pattern = "/(\d)\1{4}/";
-                    $outcomes = preg_match_all($pattern, $stringDice, $matches);
-                    if ($outcomes) {
-                        $pts = 50;
-                    }
+                $pattern = '/(\d)\1{4}/';
+                $outcomes = preg_match_all($pattern, $stringDice, $matches);
+                if ($outcomes) {
+                    $pts = 50;
                 }
                 break;
         }

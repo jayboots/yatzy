@@ -189,9 +189,8 @@ function endRound(){
 
                     // And if we successfully submitted our last score...
                     if(data["game"]["maxRounds"] == data["game"]["currentRound"]) {
-                        gameOver();
+                        gameOver()
                     }
-
                 }
                 else if (xhr.status == 208){
                     console.log("Already scored in this slot...")
@@ -321,7 +320,7 @@ function gameOver(){
     submitScore(name, score)
     
     //show leaderboard
-    const leaderboard = document.getElementById("leaderboard");
+    let leaderboard = document.getElementById("leaderboard");
     leaderboard.style.display = "inline";
 }
 
