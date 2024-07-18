@@ -189,7 +189,7 @@ function endRound(){
 
                     // And if we successfully submitted our last score...
                     if(data["game"]["maxRounds"] == data["game"]["currentRound"]) {
-                        gameOver();
+                        endGame();
                     }
 
                 }
@@ -314,7 +314,7 @@ function toggleLock(){
 /**
  * Game ends --> prompts user for their name, saves their score, and displays the top 10 leaderboard
  */
-function gameOver(){
+function endGame(){
     console.log("Game over, man. Game over!");
     let name = window.prompt('Enter your name');
     let score = document.getElementById("total-score").innerText;
