@@ -1,8 +1,8 @@
 <?php
 namespace Yatzy;
 
-require_once "Dice.php";
-require_once "ScoreCard.php";
+// require_once "Dice.php";
+// require_once "ScoreCard.php";
 require_once "YatzyGame.php";
 require_once "score.php";
 
@@ -12,11 +12,11 @@ session_start();
 
 class YatzyEngine {
     public $game;
-    public $scoreCard;
+    // public $scoreCard;
     public $gameOver;
     public function __construct(){
         $this->game = null;
-        $this->scoreCard = null;
+        // $this->scoreCard = null;
         $this->gameOver = true;
         // $this->resetGame(); // no active game by default!
     }
@@ -24,10 +24,9 @@ class YatzyEngine {
     public function resetGame(){
         // echo "Creating new game.";
         $this->game = new YatzyGame();
-        $this->scoreCard = new ScoreCard();
+        // $this->scoreCard = new ScoreCard();
         $this->gameOver = false;
     }
-
 
     public function rollDice($lockRoster){
         if (!empty($this->game)){
@@ -36,37 +35,44 @@ class YatzyEngine {
         }
     }
 
-    public function endRound(){
-        if (!empty($this->game)){
-            // return $this->game->activeHand;
+    public function processScore($selectRoster, $scoreChoice) {
+        if (!empty($this->game) && !empty($this->game->scoreCard)){
 
-            // $game->incrementRound();
-            // // TODO: "Lock in" the scoreboard here
-            // updateScoreCard(); // commit the selected score to the scorecard
-            // $targetChoice = null;
-            // $targetPts = null;
+            // Check if the scorecard is NULL for the choice
+            if ($this->game->scoreCard->records[$scoreChoice]==null){
 
-            // if ($game->currentRound == $game->maxRounds) {
-            //     $gameOver = true;
-            //     $bonus = $scoreCard->calculateBonus();
-            //     $game->score += $bonus;
-            //     $rollBtn->disabled = true; // Can't roll dice if the game is over.
-            //     // echo "GAME IS OVER. Can make a new game, if you want."
-            //     if ($bonus != 0) {
-            //         echo "Game over! Bonus 50 pts!";
-            //         echo "Total score: " . $game->score;
-            //     } else {
-            //         echo "Game over!";
-            //     }
-            // } else {
-            //     $game->resetDice(); // new round = new dice, new rolls, no locks
-            //     $canRoll = true;
-            //     drawDice($game->activeHand); // draw the reset
-            //     drawLocks($game->lockRoster); // draw the locks here, when implemented
-            //     $rollBtn->disabled = false; // We're starting a new round so we need to be able to roll
-            // }
-            // // redraw the scorecard regardless of if final turn or not.
-            // drawScoreCard();
+                // Create the sub-selection
+                $selectedHand = array();
+                for ($i = 0; $i < 5; $i++) {
+                    if ($selectRoster[$i]){
+                        $selectedHand[] = $this->game->activeHand[$i];
+                    }
+                }
+
+                // Create a sorted string
+                sort($selectedHand);
+                $stringDice = implode("", $selectedHand);
+
+                // Calculate the score
+                // TODO: Finish implementation with $stringDice
+                // For now everybody gets 50 pts for everything
+                $pts = 50;
+
+                // Update the scoreboard
+                $this->game->scoreCard->records[$scoreChoice] = $pts;
+                // // Increment the round
+                $this->game->incrementRound();
+            }
+            else {
+                // Space not free! :(
+                return http_response_code(208);
+            }
+
+            // If successful, update and increment round
+            // Otherwise, nothing changes.
+        }
+        else {
+            return http_response_code(400);
         }
     }
 }
@@ -86,13 +92,6 @@ if(isset($_GET['info'])) {
     echo json_encode($_SESSION["engine"]);
 }
 
-if(isset($_GET['roll-dice'])) {
-    header('Content-Type: application/json');
-    // echo json_encode($_SESSION["engine"]->rollDice());
-    $_SESSION["engine"]->rollDice();
-    echo json_encode($_SESSION["engine"]);
-}
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $payload = json_decode(file_get_contents("php://input"), true);
     if (!empty($payload)){
@@ -105,11 +104,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Handle round end and score updating
         if(isset($payload["selection"])){
-            // $_SESSION["selectRoster"] =  $payload[0];
-            // $_SESSION["choice"] =  $payload[1];
+
+            $_SESSION["engine"]->processScore($payload["selection"][0], $payload["selection"][1]);
+
             // Echo it back to me for now
             header('Content-Type: application/json');
-            echo json_encode($payload["selection"]);
+            echo json_encode($_SESSION["engine"]);
         }
     }
 }

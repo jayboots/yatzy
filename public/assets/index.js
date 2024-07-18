@@ -3,7 +3,6 @@ const apiRoot = '/app/models/';
 // UI Variables are used to handle drawing actions or UI behaviours only
 // TODO: These can be read from YatzyEngine or YatzyGame...
 var targetChoice = null;
-var targetPts = null;
 
 var canSelect = false;
 
@@ -98,10 +97,8 @@ function resetGame(){
                 data = JSON.parse(xhr.responseText)
 
                 getGameState(data)
-
                 targetChoice = null;
-                targetPts = null;
-                // drawScoreCard();
+                drawScoreCard(data);
                 document.getElementById("gameover-msg").innerText = "";
                 // canRoll = true;
                 // gameOver = false;
@@ -171,7 +168,7 @@ function endRound(){
         console.log("Please select a scoring category.")
     }
     else {
-        console.log("Clicked button to end round.")
+        // console.log("Clicked button to end round.")
         
         var xhr = new XMLHttpRequest(); 
         xhr.responseType = "text";
@@ -180,7 +177,26 @@ function endRound(){
                 if (xhr.status == 200 || xhr.status == 201){ 
                     //TODO: Complete this tomorrow morning
                     let data = JSON.parse(xhr.responseText)
-                    console.log(data)
+
+                    drawScoreCard(data)
+                    deselectDice()
+                    drawDice(data["game"]["activeHand"], data["game"]["lockRoster"])
+                    drawLocks(data["game"]["lockRoster"])
+                    getGameState(data)
+                    // Update the scorecard
+                    console.log("Successfully submitted score!")
+
+                    // And if we successfully submitted our last score...
+                    if(data["game"]["maxRounds"] == data["game"]["currentRound"]) {
+                        console.log("Game over, man. Game over!");
+                        let name = window.prompt('Enter your name');
+                        let score = document.getElementById("total-score").innerText;
+                        submitScore(name, score)
+                    }
+
+                }
+                else if (xhr.status == 208){
+                    console.log("Already scored in this slot...")
                 }
                 else if (xhr.status == 404){ //if resoure not found
                     console.log(xhr.status + ": Could not roll dice. Resource not found.");
@@ -200,7 +216,6 @@ function endRound(){
         // //TODO: "Lock in" the scoreboard here
         // updateScoreCard(); //commit the selected score to the scorecard
         // targetChoice = null;
-        // targetPts = null;
 
         // if (game.currentRound == (game.maxRounds)){
         //     gameOver = true;
@@ -265,7 +280,7 @@ function drawDice(_activeHand, _lockRoster){
                 document.getElementById(dicePrefix+i).title = "Die " + (i+1) + " has a value of " + _activeHand[i] + ".";
             } else {
                 //No need to redraw any locked dice.
-                console.log("Die # " + (i + 1) + " is locked." )
+                // console.log("Die # " + (i + 1) + " is locked." )
             }
             let dotList = dotPositionMatrix[_activeHand[i]]
             for (let j = 0; j < dotList.length; j++) {
@@ -339,8 +354,8 @@ function toggleDie(){
             }
         }
         // console.log("Selected Dice: " + selectRoster)
-        //Refresh the scorecard when we toggle a selection
-        drawScoreCard()
+        //Refresh the scorecard when we toggle a selection - TODO: Remove and swap for clicked-row highlighting!
+        // drawScoreCard()
     }
     else{
         console.log("This element cannot be clicked right now.")
@@ -362,16 +377,18 @@ function deselectDice(){
             document.getElementById(ID).childNodes[j].className = "dot"
         }
     }
-
+    targetChoice = null;
     selectRoster = [false, false, false, false, false]
-    console.log("Deselected dice")
+    lockRoster = [false, false, false, false, false]
+    drawLocks(lockRoster)
+    console.log("Deselected dice and erased any score target")
 }
 
 
 /**
  * Calculates the score of whichever item is selected.
  */
-function calculateScore(){ //TODO: Move the core functionality over to YatzyEngine.php
+function calculateScore(){ //TODO: Move the core functionality over to YatzyEngine.php and convert this to a row highlighter
     if (canSelect){
         console.log("Clicked " + this.id);
         targetChoice = this.id;
@@ -379,271 +396,7 @@ function calculateScore(){ //TODO: Move the core functionality over to YatzyEngi
     else{
         console.log("This element cannot be clicked right now.")
     }
-
-    // if (game != null && !game.activeHand.includes(null)){
-    //     if (selectRoster.includes(true)){
-    //         // Update the selected hand
-    //         let selectedHand = [];
-    //         for (let i = 0; i < 5; i++) {
-    //             if (selectRoster[i]){
-    //                 selectedHand.push(game.activeHand[i]) ;
-    //             }
-    //         }
-    //         // console.log("Selected hand: " + selectedHand);
-
-    //         let scoreChoice = this.id
-    //         let pts = 0;
-    //         let stringDice = selectedHand.sort().join("");
-    //         let pattern = null
-    //         let outcomes = null
-
-    //         let noMatchMsg = "No match. 0 pts for t his one..."
-
-    //         switch(scoreChoice) {
-    //             case "ones":
-    //                 for (let i = 0; i < selectedHand.length; i++) {
-    //                     if (selectedHand[i] == 1){
-    //                         pts += 1
-    //                     }
-    //                 }
-    //                 if (pts == 0){
-    //                     console.log(noMatchMsg)
-    //                 }
-    //                 else{
-    //                     console.log("This will give you " + pts + " points!")
-    //                 }
-    //                 break;
-    //             case "twos":
-    //                 for (let i = 0; i < selectedHand.length; i++) {
-    //                     if (selectedHand[i] == 2){
-    //                         pts += 2
-    //                     }
-    //                 }
-    //                 if (pts == 0){
-    //                     console.log(noMatchMsg)
-    //                 }
-    //                 else{
-    //                     console.log("This will give you " + pts + " points!")
-    //                 }
-    //                 break;
-    //             case "threes":
-    //                 for (let i = 0; i < selectedHand.length; i++) {
-    //                     if (selectedHand[i] == 3){
-    //                         pts += 3
-    //                     }
-    //                 }
-    //                 if (pts == 0){
-    //                     console.log(noMatchMsg)
-    //                 }
-    //                 else{
-    //                     console.log("This will give you " + pts + " points!")
-    //                 }
-    //                 break;
-    //             case "fours":
-    //                 for (let i = 0; i < selectedHand.length; i++) {
-    //                     if (selectedHand[i] == 4){
-    //                         pts += 4
-    //                     }
-    //                 }
-    //                 if (pts == 0){
-    //                     console.log(noMatchMsg)
-    //                 }
-    //                 else{
-    //                     console.log("This will give you " + pts + " points!")
-    //                 }
-    //                 break;
-    //             case "fives":
-    //                 for (let i = 0; i < selectedHand.length; i++) {
-    //                     if (selectedHand[i] == 5){
-    //                         pts += 5
-    //                     }
-    //                 }
-    //                 if (pts == 0){
-    //                     console.log(noMatchMsg)
-    //                 }
-    //                 else{
-    //                     console.log("This will give you " + pts + " points!")
-    //                 }
-    //                 break;
-    //             case "sixes":
-    //                 for (let i = 0; i < selectedHand.length; i++) {
-    //                     if (selectedHand[i] == 6){
-    //                         pts += 6
-    //                     }
-    //                 }
-    //                 if (pts == 0){
-    //                     console.log(noMatchMsg)
-    //                 }
-    //                 else{
-    //                     console.log("This will give you " + pts + " points!")
-    //                 }
-    //                 break;
-    //             case "onePair":
-    //                 // Two dice showing the same number. Score: Sum of those two dice
-    //                 if (selectedHand.length == 2){
-    //                     pattern = /(\d)\1/g
-    //                     outcomes = stringDice.match(pattern)
-    //                     if (outcomes) {
-    //                         pts = selectedHand.reduce((accumulator, currentValue) => {
-    //                             return accumulator + currentValue
-    //                           },0);
-    //                         console.log("This will give you " + pts + " points!")
-    //                     }
-    //                     else{
-    //                         console.log(noMatchMsg)
-    //                     }
-    //                 }
-    //                 else{
-    //                     console.log("You need to select *exactly* two dice to submit a pair!")
-    //                 }
-    //                 break;
-    //             case "twoPairs":
-    //                 if (selectedHand.length == 4){
-    //                     pattern = /(?<first>(?<f>\d)(\k<f>)).*?(?!\k<f>)(?<second>(?<s>\d)(\k<s>))/g
-    //                     outcomes = stringDice.match(pattern)
-    //                     if (outcomes) {
-    //                         pts = selectedHand.reduce((accumulator, currentValue) => {
-    //                             return accumulator + currentValue
-    //                           },0);
-    //                         console.log("This will give you " + pts + " points!")
-    //                     }
-    //                     else{
-    //                         console.log(noMatchMsg)
-    //                     }
-    //                 }
-    //                 else{
-    //                     console.log("You need to select four dice to submit two pairs.")
-    //                 }
-    //                 break;
-    //             case "threeKind":
-    //                 if (selectedHand.length == 3){
-    //                     pattern = /(\d)\1{2}/g
-    //                     outcomes = stringDice.match(pattern)
-    //                     if (outcomes) {
-    //                         pts = selectedHand.reduce((accumulator, currentValue) => {
-    //                             return accumulator + currentValue
-    //                         },0);
-    //                         console.log("This will give you " + pts + " points!")
-    //                     }
-    //                     else{
-    //                         console.log(noMatchMsg)
-    //                     }
-    //                 }
-    //                 else{
-    //                     console.log("You need to select three dice to score three of a kind.")
-    //                 }
-    //                 break;
-    //             case "fourKind":
-    //                 if (selectedHand.length == 4){
-    //                     pattern = /(\d)\1{3}/g
-    //                     outcomes = stringDice.match(pattern)
-    //                     if (outcomes) {
-    //                         pts = selectedHand.reduce((accumulator, currentValue) => {
-    //                             return accumulator + currentValue
-    //                         },0);
-    //                         console.log("This will give you " + pts + " points!")
-    //                     }
-    //                     else{
-    //                         console.log(noMatchMsg)
-    //                     }
-    //                 }
-    //                 else{
-    //                     console.log("You need to select four dice to score four of a kind.")
-    //                 }
-    //                 break;
-    //             case "smallStraight":
-    //                 // The combination 1-2-3-4-5. Score: 15 points (sum of all the dice)
-    //                 pattern = /(12345)/g
-    //                 outcomes = stringDice.match(pattern)
-    //                 if (outcomes){
-    //                     pts=15
-    //                     console.log(outcomes + " gives you a small straight, and " + pts + " points!")
-    //                 }
-    //                 else{
-    //                     console.log(noMatchMsg)
-    //                 }
-    //                 // console.log(outcomes)
-    //                 break;
-    //             case "largeStraight":
-    //                 // The combination 2-3-4-5-6. Score: 20 points (sum of all the dice).
-    //                 pattern = /(23456)/g
-    //                 outcomes = stringDice.match(pattern)
-    //                 if (outcomes){
-    //                     pts=20
-    //                     console.log(outcomes + " gives you a large straight, and " + pts + " points!")
-    //                 }
-    //                 else{
-    //                     console.log(noMatchMsg)
-    //                 }
-    //                 // console.log(outcomes)
-    //                 break;
-    //             case "fullHouse":
-    //                 if (selectedHand.length == 5){
-    //                     pattern = /(?<first>\d)(\k<first>){2}\d?(?<second>(?!\k<first>)\d)(\k<second>)|(?<third>\d)(\k<third>)\d?(?<fourth>(?!\k<third>)\d)(\k<fourth>){2}/g
-    //                     outcomes = stringDice.match(pattern)
-    //                     if (outcomes) {
-    //                         pts = selectedHand.reduce((accumulator, currentValue) => {
-    //                             return accumulator + currentValue
-    //                           },0);
-    //                         console.log("This will give you " + pts + " points!")
-    //                     }
-    //                     else{
-    //                         console.log(noMatchMsg)
-    //                     }
-    //                 }
-    //                 else{
-    //                     console.log("You need to select five dice to submit a full house.")
-    //                 }
-    //                 break;
-    //             case "chance":
-    //                 //Any combination of dice. Score: Sum of all the dice.
-    //                 pts = selectedHand.reduce((accumulator, currentValue) => {
-    //                     return accumulator + currentValue
-    //                   },0);
-    //                 console.log("This will give you " + pts + " points")
-    //                 break;
-    //             case "yatzy":
-    //                 if (selectedHand.length == 5){
-    //                     pattern = /(\d)\1{4}/g
-    //                     outcomes = stringDice.match(pattern)
-    //                     if (outcomes) {
-    //                         pts = 50;
-    //                         console.log(outcomes + " gives you a yatzy! And 50 pts! Congrats")
-    //                     }
-    //                     else{
-    //                         console.log(noMatchMsg)
-    //                     }
-    //                 }
-    //                 else{
-    //                     console.log("You need to select five dice to submit a yatzy.")
-    //                 }
-    //                 break;
-    //             default:
-    //                 console.log("Something went wrong. You selected: " + this.id)
-    //                 // code block
-    //                 break;
-    //             //Update the turn pts variable then write it to the game when the turn ends
-    //         } 
-
-    //         if (scoreCard.records[scoreChoice] == null){
-    //             showScoreChoice(scoreChoice, pts)
-    //             console.log("Unlocking the 'Finish Turn' button")
-    //             endRoundBtn.disabled = false;
-    //         }
-    //         else{
-    //             //TODO: Something
-    //             console.log("This section is already filled")
-    //         }
-    //     }
-    //     else{
-    //         console.log("Need to select at least one die!")
-    //     }
-    // }
-    // else {
-    //     console.log("No game or no dice, cannot do anything with the scorecard!")
-    // }
 }
-
 
 /**
  * Shows the potential score of any clicked row from the selected dice, without commiting the selection. Aka enables score preview in the scorecard.
@@ -653,7 +406,6 @@ function calculateScore(){ //TODO: Move the core functionality over to YatzyEngi
  */
 function showScoreChoice(choice, pts){
     // targetChoice = choice;
-    // targetPts = pts;
     // let scoreTable = document.getElementsByClassName("table-row");
 
     // for (let i = 0; i < scoreTable.length; i++) {
@@ -670,39 +422,23 @@ function showScoreChoice(choice, pts){
     // }
 }
 
-
 /**
  * Function to draw the score card information to the UI.
  */
-function drawScoreCard(){
-    console.log("Drawing the scorecard")
-    // let scoreTable = document.getElementsByClassName("table-row");
-    // for (let i = 0; i < scoreTable.length; i++) {
-    //     let ID = scoreTable[i].id
-    //     let scoreArea = document.getElementById(ID).childNodes[3];
+function drawScoreCard(data){
+    // console.log("Drawing the scorecard")
 
-    //     // TODO: Ajax Call
-    //     scoreArea.innerText = scoreCard.records[document.getElementById(ID).id];
-    //     }
+    let scoreTable = document.getElementsByClassName("table-row");
+    for (let i = 0; i < scoreTable.length; i++) {
+        let ID = scoreTable[i].id
+        let scoreArea = document.getElementById(ID).childNodes[3];
 
-    // let scoreSum = document.getElementById("total-score");
-    // scoreSum.innerText = game.score;
+        scoreArea.innerText = data["game"]["scoreCard"]["records"][document.getElementById(ID).id];
+        }
+
+    let scoreSum = document.getElementById("total-score");
+    scoreSum.innerText = data["game"]["scoreCard"]["score"];
 }
-
-/**
- * Updates the programatically-stored score card values, and updates the ongoing total score in the YatzyGame object.
- */
-function updateScoreCard(){
-    // if ((targetChoice != null) && (targetPts != null) &&(scoreCard.records[targetChoice] == null)){
-    //     scoreCard.records[targetChoice] = targetPts
-    //     game.score += targetPts;
-    // }
-    // else{
-    //     // Shouldn't see this message.
-    //     console.log("Somehow, trying to over-write a pre-filled score box...")
-    // }
-}
-
 
 // ================ AJAX FUNCTIONS ================= 
 
@@ -810,7 +546,7 @@ async function submitScore(name, score) {
  * Reads some UI states and affects the UI accordingly (button toggles, etc.)
  * Additionally, writes some information about the state of the game to the console. 
  */
-function getGameState(data, verbose=true){
+function getGameState(data, verbose=false){
     // Handle data from the get request
     // data = JSON.parse(data)
     game = data["game"]
@@ -824,8 +560,10 @@ function getGameState(data, verbose=true){
     else{
         let canRoll = (data["game"]["rollsLeft"] > 0 && data["game"]["currentRound"] < data["game"]["maxRounds"])
         rollBtn.disabled = !canRoll;
+        
         let canSubmit = (data["game"]["rollsLeft"] < 3 && data["game"]["currentRound"] < data["game"]["maxRounds"])
         endRoundBtn.disabled = !canSubmit;
+
         let nullDice = (data["game"]["activeHand"].includes(null))
         canSelect = !nullDice
         if (verbose){
@@ -837,9 +575,9 @@ function getGameState(data, verbose=true){
         }
         console.log("Current round: " + game['currentRound'] + " / " + game['maxRounds'])
         console.log("Rolls available: " + game['rollsLeft'] + " / " + game['maxRolls'])
-        console.log("Current score: " + game.score) //
+        // console.log("Current score: " + game.score) //
     }
     // TODO: Migrate these variables to YatzyEngine as they are state tracking variables
     // console.log("Game Currently Over: " + gameOver)
-    console.log("targetChoice and targetPts: " + targetChoice + ", " + targetPts)
+    console.log("targetChoice: " + targetChoice)
 }

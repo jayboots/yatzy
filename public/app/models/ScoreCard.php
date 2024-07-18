@@ -1,25 +1,35 @@
 <?php
 namespace Yatzy;
 class ScoreCard {
-    private $records = array(
-        "ones" => null,
-        "twos" => null,
-        "threes" => null,
-        "fours" => null,
-        "fives" => null,
-        "sixes" => null,
-        "onePair" => null,
-        "twoPairs" => null,
-        "threeKind" => null,
-        "fourKind" => null,
-        "smallStraight" => null,
-        "largeStraight" => null,
-        "fullHouse" => null,
-        "chance" => null,
-        "yatzy" => null
-    );
-    private $bonus = 0;
-    private $bonusThreshold = 63;
+    public $records;
+    public $score;
+    public $totalScore;
+    public $bonus;
+    public $bonusThreshold;
+
+    public function __construct() {
+        $this->records = array(
+            "ones" => null,
+            "twos" => null,
+            "threes" => null,
+            "fours" => null,
+            "fives" => null,
+            "sixes" => null,
+            "onePair" => null,
+            "twoPairs" => null,
+            "threeKind" => null,
+            "fourKind" => null,
+            "smallStraight" => null,
+            "largeStraight" => null,
+            "fullHouse" => null,
+            "chance" => null,
+            "yatzy" => null
+        );
+        $this->score = 0;
+        $this->totalScore = 0;
+        $this->bonus = 0;
+        $this->bonusThreshold = 63;
+    }
 
     public function calculateBonus() {
         $firstSectionTotal = $this->records["ones"]
@@ -28,16 +38,18 @@ class ScoreCard {
             + $this->records["fours"]
             + $this->records["fives"]
             + $this->records["sixes"];
+
+        // If the threshold is met and the bonus has not yet been applied
         if ($firstSectionTotal >= $this->bonusThreshold && $this->bonus == 0) {
             $this->bonus = 50;
-        } else {
-            // echo "First six sum score: " . $firstSectionTotal . "\n";
-            // echo "No bonus...\n";
+            $this->totalScore = ($this->score + $this->bonus);
         }
-        return $this->bonus;
     }
 
-    public function calculateScores() {
+    public function tallyScore() {
+        $this->score = 0;
+        foreach ($this->records as $key => $value) {
+            $this->score += $value;
+        }
     }
-
 }
