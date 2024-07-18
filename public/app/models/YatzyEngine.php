@@ -12,20 +12,16 @@ session_start();
 
 class YatzyEngine {
     public $game;
-    // public $scoreCard;
-    public $gameOver;
+    // public $gameOver;
     public function __construct(){
         $this->game = null;
-        // $this->scoreCard = null;
-        $this->gameOver = true;
+        // $this->gameOver = true;
         // $this->resetGame(); // no active game by default!
     }
 
     public function resetGame(){
-        // echo "Creating new game.";
         $this->game = new YatzyGame();
-        // $this->scoreCard = new ScoreCard();
-        $this->gameOver = false;
+        // $this->gameOver = false;
     }
 
     public function rollDice($lockRoster){
@@ -75,8 +71,6 @@ class YatzyEngine {
 }
 
 if(isset($_GET['new-game'])) {
-    //$engine->resetGame();
-    // http_response_code(201);
     $_SESSION["engine"] = new YatzyEngine();
     $_SESSION["engine"]->resetGame();
     header('Content-Type: application/json');
@@ -85,9 +79,15 @@ if(isset($_GET['new-game'])) {
 
 if(isset($_GET['info'])) {
     header('Content-Type: application/json');
-    // echo json_encode(var_export($engine));
     echo json_encode($_SESSION["engine"]);
 }
+
+// TODO: Call for Bonus
+// if(isset($_GET['game-over'])) {
+//     $_SESSION["engine"]->game->scoreCard->calculateBonus();
+//     header('Content-Type: application/json');
+//     echo json_encode($_SESSION["engine"]);
+// }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $payload = json_decode(file_get_contents("php://input"), true);
