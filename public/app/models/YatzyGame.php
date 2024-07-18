@@ -25,7 +25,7 @@ class YatzyGame {
         $this->roundStart = 0;
         $this->score = 0;
         $this->activeHand = array_fill(0, 5, null);
-        $this->lockRoster = array_fill(0, 5, 0);
+        $this->lockRoster = array_fill(0, 5, false);
         $this->currentRound = $this->roundStart;
         $this->rollsLeft = $this->maxRolls;
         $this->dice = new Dice();
@@ -60,7 +60,7 @@ class YatzyGame {
     public function resetDice() {
         // echo "Resetting all dice, rolls, and lock states.\n";
         $this->activeHand = array_fill(0, 5, null);
-        $this->lockRoster = array_fill(0, 5, 0);
+        $this->lockRoster = array_fill(0, 5, false);
         $this->rollsLeft = $this->maxRolls;
     }
 
@@ -78,7 +78,7 @@ class YatzyGame {
             // echo "Rolling the dice.\n";
             $newSet = $this->dice->getNewHand();
             for ($i = 0; $i < count($this->lockRoster); $i++) {
-                if ($this->lockRoster[$i] == 0) {
+                if ($this->lockRoster[$i] == false) {
                     $this->activeHand[$i] = $newSet[$i];
                 }
                 // else {

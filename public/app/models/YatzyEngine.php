@@ -28,8 +28,10 @@ class YatzyEngine {
         $this->gameOver = false;
     }
 
-    public function rollDice(){
+
+    public function rollDice($lockRoster){
         if (!empty($this->game)){
+            $this->game->lockRoster = $lockRoster;
             $this->game->rollDice();
         }
     }
@@ -65,15 +67,13 @@ class YatzyEngine {
             // }
             // // redraw the scorecard regardless of if final turn or not.
             // drawScoreCard();
-
-            
         }
     }
-
 }
 
 if(isset($_GET['new-game'])) {
     //$engine->resetGame();
+    // http_response_code(201);
     $_SESSION["engine"] = new YatzyEngine();
     $_SESSION["engine"]->resetGame();
     header('Content-Type: application/json');
@@ -91,4 +91,25 @@ if(isset($_GET['roll-dice'])) {
     // echo json_encode($_SESSION["engine"]->rollDice());
     $_SESSION["engine"]->rollDice();
     echo json_encode($_SESSION["engine"]);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $payload = json_decode(file_get_contents("php://input"), true);
+    if (!empty($payload)){
+        // if we have lock data
+        if(isset($payload["locks"])){
+            $_SESSION["engine"]->rollDice($payload["locks"]);
+            header('Content-Type: application/json');
+            echo json_encode($_SESSION["engine"]);
+        }
+
+        // Handle round end and score updating
+        if(isset($payload["selection"])){
+            // $_SESSION["selectRoster"] =  $payload[0];
+            // $_SESSION["choice"] =  $payload[1];
+            // Echo it back to me for now
+            header('Content-Type: application/json');
+            echo json_encode($payload["selection"]);
+        }
+    }
 }

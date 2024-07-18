@@ -20,6 +20,7 @@ function jsonReply(Response $response, $data)
     return $response->withHeader('Content-Type', 'application/json');
 }
 
+// Static method
 $app = AppFactory::create();
 
 $app->addBodyParsingMiddleware();

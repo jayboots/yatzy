@@ -5,6 +5,8 @@ const apiRoot = '/app/models/';
 var targetChoice = null;
 var targetPts = null;
 
+var canSelect = false;
+
 const dicePrefix = "d_";
 const lockPrefix = "l_";
 const shakePrefix = "s_";
@@ -19,8 +21,9 @@ const dotPositionMatrix = {
     6: [[15, 15],[15, 85],[50, 15],[50, 85],[85, 15],[85, 85]]
 };
 
-// Handles which dice are "selected" for score calculation. Captured data passed along for scoring.
+// Handles which dice are selected and locked by the UI. Passes this info via POST request to the API.
 var selectRoster = [false, false, false, false, false]
+var lockRoster = [false, false, false, false, false]
 
 // Items that are loaded
 window.onload=function(){
@@ -38,17 +41,18 @@ window.onload=function(){
     // Establish some states on page load by default.
     endRoundBtn.disabled = true;
     rollBtn.disabled = true;
+    resetBtn.disabled = true;
 
     // Event Listeners for the main game buttons
     resetBtn.addEventListener("click", resetGame, true);
     rollBtn.addEventListener("click", rollDice, true);
     endRoundBtn.addEventListener("click", endRound, true);
 
-    // // Event listener for the scorecard Scorecard
-    // for (let i = 0; i < scoreTable.length; i++) {
-    //     let ID = scoreTable[i].id
-    //     document.getElementById(ID).addEventListener("click", calculateScore, true)
-    // }
+    // Event listener for the scorecard Scorecard
+    for (let i = 0; i < scoreTable.length; i++) {
+        let ID = scoreTable[i].id
+        document.getElementById(ID).addEventListener("click", calculateScore, true)
+    }
 
     // // "Submit Score" i.e. the "end round" button
     // endRoundBtn.addEventListener('click', function(event) {
@@ -58,21 +62,19 @@ window.onload=function(){
     //     submitScore(name, score);
     // }); 
 
-    // // Event listeners for the locks
-    // for (let i = 0; i < locks.length; i++) {
-    //     let ID = locks[i].id
-    //     document.getElementById(ID).addEventListener("click", toggleLock, true);
-    // }
+    // Event listeners for the locks
+    for (let i = 0; i < locks.length; i++) {
+        let ID = locks[i].id
+        document.getElementById(ID).addEventListener("click", toggleLock, true);
+    }
 
-    // // Event listeners for the dice
-    // for (let i = 0; i < dice.length; i++) {
-    //     let ID = dice[i].id
-    //     document.getElementById(ID).addEventListener("click", toggleDie, true);
-    // }
+    // Event listeners for the dice
+    for (let i = 0; i < dice.length; i++) {
+        let ID = dice[i].id
+        document.getElementById(ID).addEventListener("click", toggleDie, true);
+    }
 
-    const testBtn = document.getElementById("testBtn");
-    testBtn.addEventListener("click", testFunc, true);
-
+    resetBtn.disabled = false;
     console.log("All variables initialized.")
 
 }
@@ -94,6 +96,7 @@ function resetGame(){
                 console.log(xhr.status + ": Creating new game.")
 
                 data = JSON.parse(xhr.responseText)
+
                 getGameState(data)
 
                 targetChoice = null;
@@ -106,8 +109,8 @@ function resetGame(){
                 // rollBtn.disabled = !canRoll;
 
                 drawDice(_activeHand=data["game"]["activeHand"], _lockRoster=data["game"]["lockRoster"])
-                // drawLocks(data["game"]["lockRoster"])
-                // deselectDice()
+                drawLocks(data["game"]["lockRoster"])
+                deselectDice()
             }
             else if (xhr.status == 404){ //if resoure not found
                 console.log(xhr.status + ": Could not reset game. Resource not found.");
@@ -126,16 +129,18 @@ function resetGame(){
  */
 function rollDice(){
     console.log("Attempting to roll the dice...")
+    console.log("Sending lock roster status: " + lockRoster)
 
-    // TODO: Migrate canRoll functionality to YatzyEngine...
+    // TODO: POST Selected Dice here as well to pre-calculate scores of the scoreboard
 
     var xhr = new XMLHttpRequest(); 
     xhr.responseType = "text";
     xhr.onreadystatechange = function(){
         // TODO: Change cursor to hourglass while readystate is between 0 and 3, and revert back to normal when ready state == 4
         if (xhr.readyState == 4) {
-            if (xhr.status == 200){ 
+            if (xhr.status == 200 || xhr.status == 201){ 
                 let data = JSON.parse(xhr.responseText)
+                // console.log(data)
                 getGameState(data)
                 deselectDice(); //reset all selected dice when rolling
                 drawDice(_activeHand=data["game"]["activeHand"], _lockRoster=data["game"]["lockRoster"])
@@ -146,59 +151,82 @@ function rollDice(){
         }
     }
 
-    xhr.open('get', apiRoot+"YatzyEngine.php?roll-dice", true);
+    xhr.open('POST', apiRoot+"YatzyEngine.php", true);
 
+    xhr.setRequestHeader('Content-Type', 'application/json')
     // Then send request
-    xhr.send();
+    xhr.send(JSON.stringify({"locks": lockRoster}));
+
 }
 
 /**
  * Ends a round and triggers YatzyEngine to make determinations about game state changes and scores.
  */
 function endRound(){
-    console.log("Clicked button to end round.")
-    // TODO: Implement api calls and the scoring functionality of SubmitScore
-    //Turn off this button after it is pressed, because:
-    // - either a minimum of 1 roll is required before ending the next turn, or
-    // - the game is over (i.e. this was the last round)
-    // endRoundBtn.disabled = true;
+    
+    if (!selectRoster.includes(true)){
+        console.log("Please select at least one die")
+    }
+    else if (targetChoice == null){
+        console.log("Please select a scoring category.")
+    }
+    else {
+        console.log("Clicked button to end round.")
+        
+        var xhr = new XMLHttpRequest(); 
+        xhr.responseType = "text";
+        xhr.onreadystatechange = function(){
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200 || xhr.status == 201){ 
+                    //TODO: Complete this tomorrow morning
+                    let data = JSON.parse(xhr.responseText)
+                    console.log(data)
+                }
+                else if (xhr.status == 404){ //if resoure not found
+                    console.log(xhr.status + ": Could not roll dice. Resource not found.");
+                    endRoundBtn.disabled = false;
+                }
+            }
+        }
 
-    // if (game != null){
-    //     game.incrementRound()
-    //     deselectDice() // remove all selections
+        xhr.open('POST', apiRoot+"YatzyEngine.php", true);
+        xhr.setRequestHeader('Content-Type', 'application/json')
+        xhr.send(JSON.stringify({"selection": [selectRoster, targetChoice]}));
+        
+        // #TODO on YatzyEngine.php: 
+        // game.incrementRound()
+        // deselectDice() // remove all selections
 
-    //     //TODO: "Lock in" the scoreboard here
-    //     updateScoreCard(); //commit the selected score to the scorecard
-    //     targetChoice = null;
-    //     targetPts = null;
+        // //TODO: "Lock in" the scoreboard here
+        // updateScoreCard(); //commit the selected score to the scorecard
+        // targetChoice = null;
+        // targetPts = null;
 
-    //     if (game.currentRound == (game.maxRounds)){
-    //         gameOver = true;
-    //         let bonus = scoreCard.calculateBonus();
-    //         game.score += bonus;
-    //         rollBtn.disabled = true; //Can't roll dice if the game is over.
-    //         // console.log("GAME IS OVER. Can make a new game, if you want.")
-    //         if (bonus != 0){
-    //             document.getElementById("gameover-msg").innerText = "Game over! Bonus 50 pts!";
-    //             document.getElementById("total-score").innerText = game.score;
-    //         }
-    //         else{
-    //             document.getElementById("gameover-msg").innerText = "Game over!";
-    //         }
-            
-    //     }
-    //     else{
-    //         game.resetDice() //new round = new dice, new rolls, no locks
-    //         canRoll = true;
-    //         drawDice(game.activeHand) //draw the reset
-    //         drawLocks(game.lockRoster) //draw the locks here, when implemented
-    //         rollBtn.disabled = false; //We're starting a new round so we need to be able to roll
-    //     }
-    //     //redraw the scorecard regardless of if final turn or not.
-    //     drawScoreCard(); 
-    // }
+        // if (game.currentRound == (game.maxRounds)){
+        //     gameOver = true;
+        //     let bonus = scoreCard.calculateBonus();
+        //     game.score += bonus;
+        //     rollBtn.disabled = true; //Can't roll dice if the game is over.
+        //     // console.log("GAME IS OVER. Can make a new game, if you want.")
+        //     if (bonus != 0){
+        //         document.getElementById("gameover-msg").innerText = "Game over! Bonus 50 pts!";
+        //         document.getElementById("total-score").innerText = game.score;
+        //     }
+        //     else{
+        //         document.getElementById("gameover-msg").innerText = "Game over!";
+        //     }
+        // }
+        // else{
+        //     game.resetDice() //new round = new dice, new rolls, no locks
+        //     canRoll = true;
+        //     drawDice(game.activeHand) //draw the reset
+        //     drawLocks(game.lockRoster) //draw the locks here, when implemented
+        //     rollBtn.disabled = false; //We're starting a new round so we need to be able to roll
+        // }
+        // //redraw the scorecard regardless of if final turn or not.
+        // drawScoreCard();
+    }
 }
-
 
 /**
  * Updates the values of the dice visuals.
@@ -222,7 +250,7 @@ function drawDice(_activeHand, _lockRoster){
         for (let i = 0; i < lockedDice.length; i++) {
             // If the die is locked, don't change the drawn value
             document.getElementById(dicePrefix+i).className = "die-active";
-            if (lockedDice[i] == 0) {
+            if (lockedDice[i] == false) {
                 let rollContainer = document.getElementById(shakePrefix+i);
                 if (document.getElementById(dicePrefix+i).className == "die-active"){
                     rollContainer.style.animationName = "none";
@@ -256,27 +284,18 @@ function drawDice(_activeHand, _lockRoster){
  * Handles the interaction between the UI lock interface(s) and the YatzyGame lockRoster
  */
 function toggleLock(){
-    // let ID = this.id.split("_")[1];
-    // console.log("Clicked lock " + ID)
-    // // Check lock status then invert it, provided there is a game and no null values in the turn
-    // if ((game != null) && (!game.activeHand.includes(null))){
-    //     if (game.lockRoster[ID] == 0){
-    //         // If unlocked, lock
-    //         game.lockRoster[ID] = 1;
-    //         console.log("Locking die " + (1 + parseInt(ID)))
-    //    }
-    //    else {
-    //        // If locked, unlock
-    //         game.lockRoster[ID] = 0;
-    //         console.log("Unlocking die " + (1 +  parseInt(ID)))
-    //    }
-    //    drawLocks(game.lockRoster)
-    //    console.log("Lock roster: " + game.lockRoster)
-    // }
-    // else{
-    //     //TODO: Disable the locks in the GUI when they can't be used.
-    //     console.log("...but the locks can't be used right now.")
-    // }
+    if (canSelect){
+        let ID = this.id.split("_")[1];
+
+        // Flip flip the lock state
+        lockRoster[ID] = !lockRoster[ID];
+
+        // Update the locks on the UI
+        drawLocks(lockRoster)
+    }
+    else{
+        console.log("This element cannot be clicked right now.")
+    }
 }
 
 /**
@@ -286,7 +305,7 @@ function toggleLock(){
  */
 function drawLocks(_lockRoster){
     for (let i = 0; i < _lockRoster.length; i++) {
-        if (_lockRoster[i] == 0){
+        if (_lockRoster[i] != true){
             document.getElementById(lockPrefix+i).innerHTML = '<i class="material-icons" style="font-size:3rem;">lock_open</i>'
         }
         else {
@@ -295,33 +314,37 @@ function drawLocks(_lockRoster){
     }
 }
 
-
 /**
  * Handles the interaction between the UI dice selection mechanism and the selected hand of dice variables.
  */
 function toggleDie(){
-    // if (game != null && !game.activeHand.includes(null)){
-    //     let ID = this.id.split("_")[1];
-    //     let die = document.getElementById(this.id);
+    if (canSelect){
+        // console.log("clicked a die")
 
-    //     // Manage the selection roster toggles
-    //     selectRoster[ID] = ! selectRoster[ID];
-    //     if (selectRoster[ID]){
+        let ID = this.id.split("_")[1];
+        let die = document.getElementById(this.id);
 
-    //         die.className = "die-selected";
-    //         for (var i = 0; i < die.childNodes.length; i += 1) {
-    //             die.childNodes[i].className = "dot-selected"
-    //         }
-    //     }
-    //     else{
-    //         die.className = "die-active";
-    //         for (var i = 0; i < die.childNodes.length; i += 1) {
-    //             die.childNodes[i].className = "dot"
-    //         }
-    //     }
-    //     //Refresh the scorecard when we toggle a selection
-    //     drawScoreCard()
-    // }
+        // Manage the selection roster toggles
+        selectRoster[ID] = ! selectRoster[ID];
+        if (selectRoster[ID]){
+            die.className = "die-selected";
+            for (var i = 0; i < die.childNodes.length; i += 1) {
+                die.childNodes[i].className = "dot-selected"
+            }
+        }
+        else{
+            die.className = "die-active";
+            for (var i = 0; i < die.childNodes.length; i += 1) {
+                die.childNodes[i].className = "dot"
+            }
+        }
+        // console.log("Selected Dice: " + selectRoster)
+        //Refresh the scorecard when we toggle a selection
+        drawScoreCard()
+    }
+    else{
+        console.log("This element cannot be clicked right now.")
+    }
 }
 
 /**
@@ -330,7 +353,6 @@ function toggleDie(){
  */
 function deselectDice(){
     let dice = document.getElementsByClassName("die-active");
-
     for (let i = 0; i < dice.length; i++) {
 
         let ID = dice[i].id
@@ -342,6 +364,7 @@ function deselectDice(){
     }
 
     selectRoster = [false, false, false, false, false]
+    console.log("Deselected dice")
 }
 
 
@@ -349,6 +372,14 @@ function deselectDice(){
  * Calculates the score of whichever item is selected.
  */
 function calculateScore(){ //TODO: Move the core functionality over to YatzyEngine.php
+    if (canSelect){
+        console.log("Clicked " + this.id);
+        targetChoice = this.id;
+    }
+    else{
+        console.log("This element cannot be clicked right now.")
+    }
+
     // if (game != null && !game.activeHand.includes(null)){
     //     if (selectRoster.includes(true)){
     //         // Update the selected hand
@@ -644,12 +675,16 @@ function showScoreChoice(choice, pts){
  * Function to draw the score card information to the UI.
  */
 function drawScoreCard(){
+    console.log("Drawing the scorecard")
     // let scoreTable = document.getElementsByClassName("table-row");
     // for (let i = 0; i < scoreTable.length; i++) {
     //     let ID = scoreTable[i].id
     //     let scoreArea = document.getElementById(ID).childNodes[3];
+
+    //     // TODO: Ajax Call
     //     scoreArea.innerText = scoreCard.records[document.getElementById(ID).id];
     //     }
+
     // let scoreSum = document.getElementById("total-score");
     // scoreSum.innerText = game.score;
 }
@@ -771,17 +806,17 @@ async function submitScore(name, score) {
   });
 }
 
-// ============= DEVELOPMENT FUNCTIONS ============= 
-
 /**
  * Reads some UI states and affects the UI accordingly (button toggles, etc.)
  * Additionally, writes some information about the state of the game to the console. 
  */
-function getGameState(data, verbose=false){
+function getGameState(data, verbose=true){
     // Handle data from the get request
     // data = JSON.parse(data)
     game = data["game"]
     gameOver = data["gameOver"]
+
+    console.log("Can select: " + canSelect)
 
     if (game == null){
         console.log("No active game object. Try starting a new game.")
@@ -791,9 +826,12 @@ function getGameState(data, verbose=false){
         rollBtn.disabled = !canRoll;
         let canSubmit = (data["game"]["rollsLeft"] < 3 && data["game"]["currentRound"] < data["game"]["maxRounds"])
         endRoundBtn.disabled = !canSubmit;
+        let nullDice = (data["game"]["activeHand"].includes(null))
+        canSelect = !nullDice
         if (verbose){
             console.log("Can end round: " + canSubmit)
             console.log("Can roll dice: " + canRoll)
+            console.log("Can select elements: " + canSelect)
             console.log("Active hand: " + game['activeHand'])
             console.log("Lock Roster: " + game['lockRoster'])
         }
@@ -804,25 +842,4 @@ function getGameState(data, verbose=false){
     // TODO: Migrate these variables to YatzyEngine as they are state tracking variables
     // console.log("Game Currently Over: " + gameOver)
     console.log("targetChoice and targetPts: " + targetChoice + ", " + targetPts)
-}
-
-// Test function to show that API call data is being passed along
-function helloWorld(data){
-    console.log("Hello, world!")
-    console.log(data)
-}
-
-function secondaryFunc(data){
-    data = JSON.parse(data)
-    // console.log(typeof(data))
-    // console.log(Object.keys(data))
-    console.log(data["game"])
-    // console.log(data)
-}
-
-function testFunc(){
-    // getRequest(apiRoot+dice, ['roll', 'foo', 'bar'])
-    // getRequest(_url=apiRoot+'Dice.php', _params='roll', _func='helloWorld')
-    // getRequest(_url=apiRoot+'YatzyEngine.php', _params='info', _func='getGameState')
-    getRequest(_url=apiRoot+'YatzyEngine.php', _params='info', _func='secondaryFunc')
 }

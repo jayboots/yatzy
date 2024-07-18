@@ -36,4 +36,8 @@ class ScoreCard {
         }
         return $this->bonus;
     }
+
+    public function calculateScores() {
+    }
+
 }
