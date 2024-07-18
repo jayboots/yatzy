@@ -54,9 +54,7 @@ class YatzyEngine {
                 $stringDice = implode("", $selectedHand);
 
                 // Calculate the score
-                // TODO: Finish implementation with $stringDice
-                // For now everybody gets 50 pts for everything
-                $pts = 50;
+                $pts = $this->game->scoreCard->calculateScore($scoreChoice, $stringDice);
 
                 // Update the scoreboard
                 $this->game->scoreCard->records[$scoreChoice] = $pts;
@@ -67,11 +65,10 @@ class YatzyEngine {
                 // Space not free! :(
                 return http_response_code(208);
             }
-
             // If successful, update and increment round
-            // Otherwise, nothing changes.
         }
         else {
+            // Otherwise, nothing changes. Return a response code and have the UI respond accordingly... i.e. allow another try. 
             return http_response_code(400);
         }
     }

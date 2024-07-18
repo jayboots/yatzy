@@ -53,14 +53,6 @@ window.onload=function(){
         document.getElementById(ID).addEventListener("click", calculateScore, true)
     }
 
-    // // "Submit Score" i.e. the "end round" button
-    // endRoundBtn.addEventListener('click', function(event) {
-    //     console.log("clicked");
-    //     let name = window.prompt('Enter your name');
-    //     const score = document.getElementById("total-score").innerText;
-    //     submitScore(name, score);
-    // }); 
-
     // Event listeners for the locks
     for (let i = 0; i < locks.length; i++) {
         let ID = locks[i].id
@@ -105,9 +97,14 @@ function resetGame(){
 
                 // rollBtn.disabled = !canRoll;
 
+                lockRoster = data["game"]["lockRoster"]
                 drawDice(_activeHand=data["game"]["activeHand"], _lockRoster=data["game"]["lockRoster"])
                 drawLocks(data["game"]["lockRoster"])
                 deselectDice()
+
+                // TODO: TORI - when this fires, set leaderboard status to hidden! :)
+                
+
             }
             else if (xhr.status == 404){ //if resoure not found
                 console.log(xhr.status + ": Could not reset game. Resource not found.");
@@ -126,24 +123,23 @@ function resetGame(){
  */
 function rollDice(){
     console.log("Attempting to roll the dice...")
-    console.log("Sending lock roster status: " + lockRoster)
-
-    // TODO: POST Selected Dice here as well to pre-calculate scores of the scoreboard
 
     var xhr = new XMLHttpRequest(); 
     xhr.responseType = "text";
     xhr.onreadystatechange = function(){
-        // TODO: Change cursor to hourglass while readystate is between 0 and 3, and revert back to normal when ready state == 4
         if (xhr.readyState == 4) {
-            if (xhr.status == 200 || xhr.status == 201){ 
+            if (xhr.status == 200){ 
                 let data = JSON.parse(xhr.responseText)
                 // console.log(data)
-                getGameState(data)
+                getGameState(data, false)
                 deselectDice(); //reset all selected dice when rolling
                 drawDice(_activeHand=data["game"]["activeHand"], _lockRoster=data["game"]["lockRoster"])
             }
             else if (xhr.status == 404){ //if resoure not found
                 console.log(xhr.status + ": Could not roll dice. Resource not found.");
+            }
+            else {
+                console.log("Something went wrong.")
             }
         }
     }
@@ -153,7 +149,6 @@ function rollDice(){
     xhr.setRequestHeader('Content-Type', 'application/json')
     // Then send request
     xhr.send(JSON.stringify({"locks": lockRoster}));
-
 }
 
 /**
@@ -180,18 +175,20 @@ function endRound(){
 
                     drawScoreCard(data)
                     deselectDice()
-                    drawDice(data["game"]["activeHand"], data["game"]["lockRoster"])
-                    drawLocks(data["game"]["lockRoster"])
                     getGameState(data)
+                    drawDice(data["game"]["activeHand"], data["game"]["lockRoster"])
+
+
+                    // Update our local copy...
+                    lockRoster = data["game"]["lockRoster"]
+                    drawLocks(data["game"]["lockRoster"])
+                    // getGameState(data)
                     // Update the scorecard
                     console.log("Successfully submitted score!")
 
                     // And if we successfully submitted our last score...
                     if(data["game"]["maxRounds"] == data["game"]["currentRound"]) {
-                        console.log("Game over, man. Game over!");
-                        let name = window.prompt('Enter your name');
-                        let score = document.getElementById("total-score").innerText;
-                        submitScore(name, score)
+                        gameOver();
                     }
 
                 }
@@ -313,6 +310,14 @@ function toggleLock(){
     }
 }
 
+// TODO: TORI - when this fires, expose the leaderboard!
+function gameOver(){
+    console.log("Game over, man. Game over!");
+    let name = window.prompt('Enter your name');
+    let score = document.getElementById("total-score").innerText;
+    submitScore(name, score)
+}
+
 /**
  * Given a roster of numbers, draws the corresponding lock states to the GUI
  *
@@ -379,8 +384,10 @@ function deselectDice(){
     }
     targetChoice = null;
     selectRoster = [false, false, false, false, false]
-    lockRoster = [false, false, false, false, false]
-    drawLocks(lockRoster)
+
+    // TODO: Maybe change this so locks persist turn over turn...
+    // lockRoster = [false, false, false, false, false]
+    // drawLocks(lockRoster)
     console.log("Deselected dice and erased any score target")
 }
 
