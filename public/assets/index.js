@@ -102,8 +102,9 @@ function resetGame(){
                 drawLocks(data["game"]["lockRoster"])
                 deselectDice()
 
-                // TODO: TORI - when this fires, set leaderboard status to hidden! :)
-                
+                // set leaderboard to hidden
+                const leaderboard = document.getElementById("leaderboard");
+                leaderboard.style.display = "none";
 
             }
             else if (xhr.status == 404){ //if resoure not found
@@ -310,12 +311,18 @@ function toggleLock(){
     }
 }
 
-// TODO: TORI - when this fires, expose the leaderboard!
+/**
+ * Game ends --> prompts user for their name, saves their score, and displays the top 10 leaderboard
+ */
 function gameOver(){
     console.log("Game over, man. Game over!");
     let name = window.prompt('Enter your name');
     let score = document.getElementById("total-score").innerText;
     submitScore(name, score)
+    
+    //show leaderboard
+    const leaderboard = document.getElementById("leaderboard");
+    leaderboard.style.display = "inline";
 }
 
 /**
