@@ -393,7 +393,6 @@ function toggleRowSelect(){
 }
 
 
-
 /**
  * Function to draw the score card information to the UI.
  *
