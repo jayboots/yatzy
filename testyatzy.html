@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html>
+ 
+<head>
+    <title>
+        Skeleton Yatzy Game
+    </title>
+    <script type="module" src="skeleton.js" defer></script>
+</head>
+ 
+<body style="text-align:center;">
+    <h1>CRUD OPS</h1>
+
+    <h2>USERS TABLE</h2>
+
+    <table>
+        <tr>
+          <th>UID</th>
+          <th>Username</th>
+          <th>Real Name</th>
+          <th>Password</th>
+          <th>Location (??)</th>
+          <th>Account Type</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Player1</td>
+          <td>John McGurk</td>
+          <td>12345</td>
+          <td>My House</td>
+          <td>admin</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>IHateYatzy</td>
+          <td>Milton Bradley</td>
+          <td>password</td>
+          <td>Your House</td>
+          <td>non-admin</td>
+        </tr>
+    </table>
+    <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition">Geolocation: getCurrentPosition() method</a></p>
+
+      <p>Username: <input type="text"/></p>
+      <p>Password: <input type="text"/></p>
+  
+      <!-- Start a New Game -->
+      <button
+      type="Create Account">Add Account</button>
+      <br/>
+
+      <h2>SCORE TABLE</h2>
+      <table>
+        <tr>
+          <th>UID</th>
+          <th>Score</th>
+          <th>Datetime</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>10</td>
+          <td>2024/07/19 + HHMMSS</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>1000000000</td>
+          <td>2024/07/19 + HHMMSS</td>
+        </tr>
+    </table> 
+
+    <button
+    type="Create Account">Add Score (random)</button>
+    <br/>
+    <br/>
+    <button
+    type="Create Account">Retrieve Top 10</button>
+    <br/>
+    <br/>
+
+    <p>Player X UID: <input type="text"/></p>
+    <button
+    type="Create Account">Show Play History of Player X</button>
+    <br/>
+    <br/>
+
+    <h2>ADMIN FUNCTIONS</h2>
+
+    <p>Player X UID: <input type="text"/></p>
+    <button
+    type="Delete Account">Delete Player X</button>
+    <br/>
+    <br/>
+
+    <p>Score record UID: <input type="text"/></p>
+    <button
+    type="Create Account">Delete Row in Score Table</button>
+    <br/>
+    <br/>
+
+</body>
+ 
+</html>
