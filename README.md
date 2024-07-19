@@ -4,6 +4,16 @@
 
 This implementation of Yatzy is a single-player five dice game. To read about the design choices made while developing this implementation, please see our [Design System](docs/design_sytem.md) markdown file.
 
+## How to Run
+Clone or download this repo and open cmd/terminal in the directory. Then use the following commands in terminal:
+
+```
+cd public 
+php -S localhost:4000
+```
+
+Open http://localhost:4000/
+
 ## How to Play
 
 ### The Rules
