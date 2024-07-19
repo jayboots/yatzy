@@ -18,6 +18,7 @@ const dotPositionMatrix = {
 };
 
 // Handles which dice are selected and locked by the UI. Passes this info via POST request to the API.
+// Exists to capture and pass on user input only.
 var selectRoster = [false, false, false, false, false]
 var lockRoster = [false, false, false, false, false]
 
@@ -109,7 +110,7 @@ function resetGame(){
 }
 
 /**
- * Rolls the dice according to the logic of the game.
+ * Handles the request for rolling dice and triggers updates to dice-related UI elements based on responses.
  */
 function rollDice(){
     console.log("Attempting to roll the dice...")
@@ -150,12 +151,12 @@ function rollDice(){
 function endRound(){
     
     if (!selectRoster.includes(true)){
-        console.log("Please select at least one die")
+        console.log("Please select at least one die.")
     }
-    else if (targetChoice == null){
+    if (targetChoice == null){
         console.log("Please select a scoring category.")
     }
-    else {
+    if (selectRoster.includes(true) && targetChoice != null) {
         // console.log("Clicked button to end round.")
         
         var xhr = new XMLHttpRequest(); 
@@ -204,6 +205,11 @@ function endRound(){
     }
 }
 
+
+/**
+ * Provides UI feedback when a request is processing.
+ * Disables buttons while requests are processing to prevent spamming.
+ */
 function pauseUI(){
     console.log("Processing request. Please wait.")
     document.body.style.cursor = "wait";
@@ -264,7 +270,7 @@ function drawDice(_activeHand, _lockRoster){
 }
 
 /**
- * Handles the interaction between the UI lock interface(s) and the YatzyGame lockRoster
+ * Handles the state of the locks in the UI
  */
 function toggleLock(){
     if (canSelect){
@@ -282,7 +288,8 @@ function toggleLock(){
 }
 
 /**
- * Game ends --> prompts user for their name, saves their score, and displays the top 10 leaderboard
+ * Called when the game ends. Prompts user for their name,
+ * saves their score, and displays the top 10 leaderboard.
  */
 function endGame(){
     console.log("Game over, man. Game over!");
@@ -345,7 +352,6 @@ function toggleDie(){
 
 /**
  * Deselects all dice and returns the colour to the default.
- * Sets the programmatic implementation of the selected dice to the default value (all dice unselected).
  */
 function deselectDice(){
     let dice = document.getElementsByClassName("die-active");
@@ -365,7 +371,8 @@ function deselectDice(){
 
 
 /**
- * Calculates the score of whichever item is selected.
+ * Tracks which row has been clicked by the user in the scorecard and
+ * manages the class state of the selected and unselected rows.
  */
 function toggleRowSelect(){
 
@@ -386,8 +393,11 @@ function toggleRowSelect(){
 }
 
 
+
 /**
  * Function to draw the score card information to the UI.
+ *
+ * @param {*} data - passed from GET request
  */
 function drawScoreCard(data){
     // console.log("Drawing the scorecard")
@@ -413,6 +423,10 @@ function drawScoreCard(data){
 }
 
 
+/**
+ * Function to visually de-select any rows in the scorecard by
+ * reverting their CSS class to the default unselected state
+ */
 function clearSelectedRows(){
     let wholeTable = document.getElementById("score-card")
     // Erase any selected table rows
@@ -422,66 +436,15 @@ function clearSelectedRows(){
     }
 }
 
-// ================ AJAX FUNCTIONS ================= 
 
 /**
- * Function to simplify making GET requests to a specified URL, with an optional number of parameters
+ * Gets leaderboard scores and names 
  *
- * @param {*} _url - the URL
- * @param {string} [_params=""] - (Optional) Parameters can be a string or an array of strings. 
+ * @async
+ * @param {*} name
+ * @param {*} score
+ * @returns {*}
  */
-async function getRequest(_url, _params="", _func=null){
-
-    let url = _url
-    var params;
-    if (Array.isArray(_params)){
-        // params = _params.flatMap((x) => '?'+x).join('&');
-        params = "?"+_params.join('&');
-    }
-    else if (_params == "") {
-        var params = ""
-    }
-    else {
-        params = '?'+_params;
-    }
-
-    //Create an AJAX object
-    var xhr = new XMLHttpRequest(); 
-
-    //State of the request - 0 unsent, 1 opened, 2 headers recieved, 3 loading, 4 done.
-    // console.log("Ready State: " + xhr.readyState); 
-
-    xhr.responseType = "text";
-    
-    xhr.onreadystatechange = function(){
-        if (xhr.readyState == 4) {
-            // request has completed, so we have a response.
-            if (xhr.status == 200){ //if request successful
-                // console.log(xhr.responseText);
-                // Call some function here with the response data... which is presumably what we'll want to do a lot of.
-                if (_func){
-                    console.log("Passing response data to specified function " + _func + "()")
-                    window[_func](xhr.responseText);
-                }
-                else{
-                    console.log("No function was passed...")
-                }
-            }
-            else if (xhr.status == 404){ //if resoure not found
-                console.log("Resource not found.");
-            }
-        }
-    }
-
-    // Now make the request (request type, resource path, async (true / false))
-    xhr.open('get', url+params, true);
-
-    // Then send request
-    xhr.send();
-
-}
-
-//gets leaderboard scores and names 
 async function submitScore(name, score) {
   //request setup
   const url = '/score';
@@ -524,21 +487,26 @@ async function submitScore(name, score) {
   });
 }
 
+
 /**
- * Reads some UI states and affects the UI accordingly (button toggles, etc.)
- * Additionally, writes some information about the state of the game to the console. 
+ * Handles information about the game state and optionally writes state information to the console.
+ *
+ * @param {*} data - data from a GET request
+ * @param {boolean} [verbose=false] - toggles writing things to the console
  */
 function getGameState(data, verbose=false){
-    // Handle data from the get request
-    // data = JSON.parse(data)
+
     document.body.style.cursor = "auto";
-    
     game = data["game"]
 
-    console.log("Can select: " + canSelect)
+    if (verbose){
+        console.log("Can select: " + canSelect)
+    }
 
     if (game == null){
-        console.log("No active game object. Try starting a new game.")
+        if (verbose){
+            console.log("No active game object. Try starting a new game.")
+        }
     }
     else{
         let canRoll = (data["game"]["rollsLeft"] > 0 && data["game"]["currentRound"] < data["game"]["maxRounds"])
