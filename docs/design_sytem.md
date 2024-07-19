@@ -53,7 +53,7 @@ This section provides documentation of major game components.
 
 ### Starting a new game
 
-To start a new game, users click a button to initialize a new game. This initializes the play area and game objects (i.e. an instance of *YatzyGame*) and their associated variables. The remaining buttons "Roll Dice" and button activates.
+To start a new game, users click a button to initialize a new game. When the game is ready to play, the UI will become interactive and the "Roll Dice" button will be enabled.
 
 ### In-Game Play (Rules and Controls)
 
