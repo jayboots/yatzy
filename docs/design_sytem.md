@@ -91,23 +91,32 @@ The interactive scoreboard shows information about the game. It keeps track of t
 
 The scoreboard is designed as a simple table of columns and rows, to mimic the appearance of a real paper score card.
 
-Players can click any category row to view the potential points for a choice. Unlike a paper scorecard, the category row directly under the cursor will change its colour to help the user make a selection.
+Unlike a paper scorecard, the category row directly under the cursor will change its colour to help the user make a selection. If this row is clicked, it will darken in order to help the player remember their selection.
 
-![image](assets/design_system/scoreboard.jpg)
+![image](assets/design_system/scoring_3.gif)
 
 - The most recently-selected category will be used for scoring when a turn ends.
 - The name of each score category appears under the **Category** column.
 - The number of points earned per category is displayed in the **Pts** column.
 - The criteria for computing score is provided in the **Description**. This information provides the player with context to help them make strategic scoring choices.
 
+#### Bonus
+
+- If a player has scored 63 or more points in the first six categories, at the time this threshold is met, a bonus score of 50 points is immediately added to the total.
+- A message displays next to the total score in the scorecard when the bonus has been achieved.
+
+![image](assets/design_system/bonus.gif)
+
 ### End of the game
 
-- The game ends when the score card has been completed and all 15 turns. The base score is computed as the sum of all category scores (a.k.a. the Pts rows).
-- If a player has scored 63 or more points in the first six categories, a bonus score of 50 points is added to the total.
-- The player is shown their final total score (base score and bonus score) at the bottom of the score card.
-- The scoreboard will also display a message when the game ends. This message will congratulate the player if the bonus condition has been achieved.
-- The player can begin a new game by clicking the "Start a New Game" button found next to thet logo. This will erase all game and score information.
+- The game ends when the score card has been completed and all 15 turns.
+- A pop-up appears upon submitting the final score, prompting the player to input their name.
+- Upon inputting their name, the leaderboard will appear below the scoreboard.
+- If the player's score is within the top 10 scores, their name, score, and rank will be displayed alongside any other entries.
+- The player can begin a new game by clicking the "Start a New Game" button found next to thet logo. This will start a new game and hide the leaderboard.
 - To quit the game, the player closes the browser.
+
+![image](assets/design_system/gameover.gif)
 
 ### Header
 
@@ -123,9 +132,9 @@ A footer displays the name of our group in the primary colour. A dashed border l
 
 ### Game Buttons
 
-The game buttons utilize a common design of rounded edges, the secondary blue colour set, and a drop shadow. These buttons become disabled under certain game circumstances.
+The game buttons utilize a common design of rounded edges, the secondary blue colour set, and a drop shadow. These buttons become disabled under certain game circumstances or certain request processing conditions.
 
-![image](assets/design_system/gameButtons.jpg)
+![image](assets/design_system/buttons.gif)
 
 #### Locks
 
@@ -136,12 +145,13 @@ The locks use [Google's material icons font](https://fonts.google.com/icons). Un
 ### Cursor
 
 The cursor will change to reflect components that are interactive, or to signify that certain components have become inactive.
+
 - The **pointer** signifies something can be clicked. This includes buttons, rows, dice, and locks.
 - The **forbidden sign** signifies when buttons are disabled and cannot be clicked.
 - The **default** cursor shows in all other instances.
-- **LAB 8, in progress:** The **hourglass** cursor will appear when an AJAX request is processing (i.e. for ready states 1, 2, and 3)
+- The **hourglass** cursor will appear when an AJAX request is processing (i.e. for ready states 1, 2, and 3), provided the cursor is not currently showing as **forbidden**.
 
-## (Lab 08) Designing the Leaderboard
+## Designing the Leaderboard
 
 The original leaderboard functions and features were designed in a prototype (see 'submitScore.html') and connected to a JSON API. Names were solicited via a form and 'scores" were simulated via a random number generator.
 
@@ -151,6 +161,6 @@ The API stores the session's top 10 scores and, if the leaderboard is full, dete
 
 After core functionality was established, the leaderboard was integrated into the existing yatzy infrastructure as a table utilizing the same table css styling components as the scoreboard.
 
-The player's name is solicited by a pop-up that occurs when the game ends and the final score is shown. Note that some of these design choices may change or be refined in the final product.
+The player's name is solicited by a pop-up that occurs when the game ends and the final score is shown.
 
 ![image](assets/design_system/leaderboard.jpg)

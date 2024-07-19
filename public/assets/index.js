@@ -1,11 +1,8 @@
 const apiRoot = '/app/models/';
 
 // UI Variables are used to handle drawing actions or UI behaviours only
-// TODO: These can be read from YatzyEngine or YatzyGame...
 var targetChoice = null;
-
 var canSelect = false;
-
 const dicePrefix = "d_";
 const lockPrefix = "l_";
 const shakePrefix = "s_";
@@ -26,8 +23,6 @@ var lockRoster = [false, false, false, false, false]
 
 // Items that are loaded
 window.onload=function(){
-
-    // console.log("Window loaded. Initializing variables.")
 
     // Link interactive ui elements to variables
     const resetBtn = document.getElementById("resetBtn");
@@ -80,8 +75,6 @@ function resetGame(){
     xhr.onreadystatechange = function(){
         if (xhr.readyState == 4) {
             if (xhr.status == 200){ 
-                // console.log(xhr.responseText);
-                // console.log(xhr.status + ": Creating new game.")
 
                 data = JSON.parse(xhr.responseText)
 
@@ -103,6 +96,9 @@ function resetGame(){
             else if (xhr.status == 404){ //if resoure not found
                 console.log(xhr.status + ": Could not reset game. Resource not found.");
             }
+        }
+        else{
+            pauseUI()
         }
     }
 
@@ -136,6 +132,9 @@ function rollDice(){
                 console.log("Something went wrong.")
             }
         }
+        else{
+            pauseUI()
+        }
     }
 
     xhr.open('POST', apiRoot+"YatzyEngine.php", true);
@@ -164,7 +163,7 @@ function endRound(){
         xhr.onreadystatechange = function(){
             if (xhr.readyState == 4) {
                 if (xhr.status == 200 || xhr.status == 201){ 
-                    //TODO: Complete this tomorrow morning
+
                     let data = JSON.parse(xhr.responseText)
 
                     drawScoreCard(data)
@@ -193,6 +192,9 @@ function endRound(){
                     endRoundBtn.disabled = false;
                 }
             }
+            else{
+                pauseUI()
+            }
         }
 
         xhr.open('POST', apiRoot+"YatzyEngine.php", true);
@@ -200,6 +202,14 @@ function endRound(){
         xhr.send(JSON.stringify({"selection": [selectRoster, targetChoice]}));
 
     }
+}
+
+function pauseUI(){
+    console.log("Processing request. Please wait.")
+    document.body.style.cursor = "wait";
+    rollBtn.disabled = true;
+    endRoundBtn.disabled = true;
+    canSelect = false;
 }
 
 /**
@@ -521,8 +531,9 @@ async function submitScore(name, score) {
 function getGameState(data, verbose=false){
     // Handle data from the get request
     // data = JSON.parse(data)
+    document.body.style.cursor = "auto";
+    
     game = data["game"]
-    gameOver = data["gameOver"]
 
     console.log("Can select: " + canSelect)
 
