@@ -27,7 +27,7 @@ var lockRoster = [false, false, false, false, false]
 // Items that are loaded
 window.onload=function(){
 
-    console.log("Window loaded. Initializing variables.")
+    // console.log("Window loaded. Initializing variables.")
 
     // Link interactive ui elements to variables
     const resetBtn = document.getElementById("resetBtn");
@@ -50,7 +50,7 @@ window.onload=function(){
     // Event listener for the scorecard Scorecard
     for (let i = 0; i < scoreTable.length; i++) {
         let ID = scoreTable[i].id
-        document.getElementById(ID).addEventListener("click", calculateScore, true)
+        document.getElementById(ID).addEventListener("click", toggleRowSelect, true)
     }
 
     // Event listeners for the locks
@@ -66,8 +66,6 @@ window.onload=function(){
     }
 
     resetBtn.disabled = false;
-    console.log("All variables initialized.")
-
 }
 
 // ================== UI FUNCTIONS ==================
@@ -83,8 +81,7 @@ function resetGame(){
         if (xhr.readyState == 4) {
             if (xhr.status == 200){ 
                 // console.log(xhr.responseText);
-                // TODO: Do something here...
-                console.log(xhr.status + ": Creating new game.")
+                // console.log(xhr.status + ": Creating new game.")
 
                 data = JSON.parse(xhr.responseText)
 
@@ -92,10 +89,6 @@ function resetGame(){
                 targetChoice = null;
                 drawScoreCard(data);
                 document.getElementById("gameover-msg").innerText = "";
-                // canRoll = true;
-                // gameOver = false;
-
-                // rollBtn.disabled = !canRoll;
 
                 lockRoster = data["game"]["lockRoster"]
                 drawDice(_activeHand=data["game"]["activeHand"], _lockRoster=data["game"]["lockRoster"])
@@ -205,38 +198,7 @@ function endRound(){
         xhr.open('POST', apiRoot+"YatzyEngine.php", true);
         xhr.setRequestHeader('Content-Type', 'application/json')
         xhr.send(JSON.stringify({"selection": [selectRoster, targetChoice]}));
-        
-        // #TODO on YatzyEngine.php: 
-        // game.incrementRound()
-        // deselectDice() // remove all selections
 
-        // //TODO: "Lock in" the scoreboard here
-        // updateScoreCard(); //commit the selected score to the scorecard
-        // targetChoice = null;
-
-        // if (game.currentRound == (game.maxRounds)){
-        //     gameOver = true;
-        //     let bonus = scoreCard.calculateBonus();
-        //     game.score += bonus;
-        //     rollBtn.disabled = true; //Can't roll dice if the game is over.
-        //     // console.log("GAME IS OVER. Can make a new game, if you want.")
-        //     if (bonus != 0){
-        //         document.getElementById("gameover-msg").innerText = "Game over! Bonus 50 pts!";
-        //         document.getElementById("total-score").innerText = game.score;
-        //     }
-        //     else{
-        //         document.getElementById("gameover-msg").innerText = "Game over!";
-        //     }
-        // }
-        // else{
-        //     game.resetDice() //new round = new dice, new rolls, no locks
-        //     canRoll = true;
-        //     drawDice(game.activeHand) //draw the reset
-        //     drawLocks(game.lockRoster) //draw the locks here, when implemented
-        //     rollBtn.disabled = false; //We're starting a new round so we need to be able to roll
-        // }
-        // //redraw the scorecard regardless of if final turn or not.
-        // drawScoreCard();
     }
 }
 
@@ -247,8 +209,7 @@ function endRound(){
  * @param {*} _lockRoster - array containing the lock state of each of the five dice
  */
 function drawDice(_activeHand, _lockRoster){
-    // console.log(_activeHand)
-    // console.log(_lockRoster)
+
     if (_activeHand.includes(null)){
         for (let i = 0; i < _activeHand.length; i++) {
             document.getElementById(dicePrefix+i).innerText = "?";
@@ -315,6 +276,7 @@ function toggleLock(){
  */
 function gameOver(){
     console.log("Game over, man. Game over!");
+
     let name = window.prompt('Enter your name');
     let score = document.getElementById("total-score").innerText;
     submitScore(name, score)
@@ -365,8 +327,6 @@ function toggleDie(){
             }
         }
         // console.log("Selected Dice: " + selectRoster)
-        //Refresh the scorecard when we toggle a selection - TODO: Remove and swap for clicked-row highlighting!
-        // drawScoreCard()
     }
     else{
         console.log("This element cannot be clicked right now.")
@@ -390,10 +350,6 @@ function deselectDice(){
     }
     targetChoice = null;
     selectRoster = [false, false, false, false, false]
-
-    // TODO: Maybe change this so locks persist turn over turn...
-    // lockRoster = [false, false, false, false, false]
-    // drawLocks(lockRoster)
     console.log("Deselected dice and erased any score target")
 }
 
@@ -401,45 +357,33 @@ function deselectDice(){
 /**
  * Calculates the score of whichever item is selected.
  */
-function calculateScore(){ //TODO: Move the core functionality over to YatzyEngine.php and convert this to a row highlighter
+function toggleRowSelect(){
+
+    // Erase any previous coloured rows
+    clearSelectedRows()
+
+    // Then, see if we colour the one we've clicked
     if (canSelect){
-        console.log("Clicked " + this.id);
+        // console.log("Clicked " + this.id);
         targetChoice = this.id;
+        let targetRow = document.getElementById(targetChoice)
+        targetRow.className = "selected-table-row";
+        console.log(targetRow)
     }
     else{
         console.log("This element cannot be clicked right now.")
     }
 }
 
-/**
- * Shows the potential score of any clicked row from the selected dice, without commiting the selection. Aka enables score preview in the scorecard.
- *
- * @param {*} choice - the selected score category
- * @param {*} pts - the number of points
- */
-function showScoreChoice(choice, pts){
-    // targetChoice = choice;
-    // let scoreTable = document.getElementsByClassName("table-row");
-
-    // for (let i = 0; i < scoreTable.length; i++) {
-    //     let ID = scoreTable[i].id
-    //     let scoreArea = document.getElementById(ID).childNodes[3];
-    //     if (document.getElementById(ID).id == targetChoice){
-    //         // console.log("Show the score and highlight")
-    //         scoreArea.innerText = pts;
-    //     }
-    //     else{
-    //         // console.log("Reset these to saved state on the scorecard")
-    //         scoreArea.innerText = scoreCard.records[document.getElementById(ID).id];
-    //     }
-    // }
-}
 
 /**
  * Function to draw the score card information to the UI.
  */
 function drawScoreCard(data){
     // console.log("Drawing the scorecard")
+
+    // Remove any selected rows when re-drawing the scorecard
+    clearSelectedRows()
 
     let scoreTable = document.getElementsByClassName("table-row");
     for (let i = 0; i < scoreTable.length; i++) {
@@ -450,7 +394,22 @@ function drawScoreCard(data){
         }
 
     let scoreSum = document.getElementById("total-score");
-    scoreSum.innerText = data["game"]["scoreCard"]["score"];
+    scoreSum.innerText = data["game"]["scoreCard"]["totalScore"];
+
+    let bonusBox = document.getElementById("gameover-msg");
+    if (data["game"]["scoreCard"]["bonus"] != 0 && bonusBox.innerText == ""){
+        document.getElementById("gameover-msg").innerText = "🎉🎉 Bonus! +50 pts! 🎉🎉"
+    }
+}
+
+
+function clearSelectedRows(){
+    let wholeTable = document.getElementById("score-card")
+    // Erase any selected table rows
+    for (let i = 0; i < 15; i++){
+        wholeTable.childNodes[7].children[i].className = "table-row"
+        // console.log(wholeTable.childNodes[7].children[i])
+    }
 }
 
 // ================ AJAX FUNCTIONS ================= 
@@ -585,12 +544,10 @@ function getGameState(data, verbose=false){
             console.log("Can select elements: " + canSelect)
             console.log("Active hand: " + game['activeHand'])
             console.log("Lock Roster: " + game['lockRoster'])
+            console.log("targetChoice: " + targetChoice)
+            console.log("Current round: " + game['currentRound'] + " / " + game['maxRounds'])
+            console.log("Rolls available: " + game['rollsLeft'] + " / " + game['maxRolls'])
+            console.log("Current score: " + game.score)
         }
-        console.log("Current round: " + game['currentRound'] + " / " + game['maxRounds'])
-        console.log("Rolls available: " + game['rollsLeft'] + " / " + game['maxRolls'])
-        // console.log("Current score: " + game.score) //
     }
-    // TODO: Migrate these variables to YatzyEngine as they are state tracking variables
-    // console.log("Game Currently Over: " + gameOver)
-    console.log("targetChoice: " + targetChoice)
 }

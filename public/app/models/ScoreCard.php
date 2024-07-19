@@ -42,8 +42,8 @@ class ScoreCard {
         // If the threshold is met and the bonus has not yet been applied
         if ($firstSectionTotal >= $this->bonusThreshold && $this->bonus == 0) {
             $this->bonus = 50;
-            $this->totalScore = ($this->score + $this->bonus);
         }
+        $this->totalScore = $this->score + $this->bonus;
     }
 
     public function tallyScore() {

@@ -1,8 +1,6 @@
 <?php
 namespace Yatzy;
 
-// require_once "Dice.php";
-// require_once "ScoreCard.php";
 require_once "YatzyGame.php";
 require_once "score.php";
 
@@ -54,6 +52,13 @@ class YatzyEngine {
 
                 // Update the scoreboard
                 $this->game->scoreCard->records[$scoreChoice] = $pts;
+
+                // Update base score
+                $this->game->scoreCard->tallyScore();
+
+                // See if we need to calculate our bonus yet
+                $this->game->scoreCard->calculateBonus();
+
                 // // Increment the round
                 $this->game->incrementRound();
             }
@@ -81,13 +86,6 @@ if(isset($_GET['info'])) {
     header('Content-Type: application/json');
     echo json_encode($_SESSION["engine"]);
 }
-
-// TODO: Call for Bonus
-// if(isset($_GET['game-over'])) {
-//     $_SESSION["engine"]->game->scoreCard->calculateBonus();
-//     header('Content-Type: application/json');
-//     echo json_encode($_SESSION["engine"]);
-// }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $payload = json_decode(file_get_contents("php://input"), true);

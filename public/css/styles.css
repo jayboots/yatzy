@@ -100,6 +100,21 @@ td.score-desc {
     /* font-weight: bold; */
 }
 
+/* Selected Rows */
+#score-card tr.selected-table-row td{
+    cursor: pointer;
+    background-color: var(--secondary-shadow);
+    color: var(--white);
+}
+
+#score-card tr.selected-table-row:hover td{
+    cursor: pointer;
+    background-color: #284a57;
+    color: var(--white);
+    /* font-weight: bold; */
+}
+
+
 div {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
