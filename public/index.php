@@ -4,9 +4,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Selective\BasePath\BasePathMiddleware;
 use Slim\Factory\AppFactory;
 
-// https://github.com/selective-php/basepath
-// https://stackoverflow.com/questions/70637856/php-slim-exception-httpnotfoundexception-404-not-found-and-nothing-is-helping
-
 include("app/models/score.php");
 
 require_once __DIR__ . '/../vendor/autoload.php';
