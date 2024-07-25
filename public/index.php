@@ -10,6 +10,15 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 session_start();
 
+$host = "localhost";
+$dbname = "yatzy";
+$user = "postgres";
+$password = "admin";
+
+$port = "5432"; 
+
+$connection = pg_connect("host=". $host ." port=". $port ." dbname=". $dbname ." user=". $user ." password=". $password ."");
+
 function jsonReply(Response $response, $data)
 {
     $payload = json_encode($data);
@@ -40,34 +49,87 @@ $app->get('/', function (Request $request, Response $response, array $args) {
     return $response;
 });
 
-// Define app routes for testing - will want to assign root to above
-// $app->get('/', function (Request $request, Response $response) {
-//     $response->getBody()->write('Hello, World!');
-//     return $response;
-// })->setName('root');
-
 /**
  * URL: /score
- * saves player name and score to session variable and returns the top 10 scores
+ * saves player name and score to session variable
  */
 $app->post('/score', function(Request $request, Response $response, array $args) {
-    $name = $request->getParsedBody()['name'];
-    $score = $request->getParsedBody()['score']; // As noted by Tori, this is currently being read from the 'total score' UI element.
+    $userId = $request->getParsedBody()['userId'];
+    $score = $request->getParsedBody()['score'];
 
-    //if scoreboard is not set -> create new session var; else add score to scoreboard
-    if (!isset($_SESSION['scoreboard'])){
-        $_SESSION['scoreboard'] = array();
-      }
-    $_SESSION['scoreboard'][] = new Score($name, $score);
+    //temp user id
+    $userId = 1;
 
-    //sort to get top 10 (descending)
-    function comparitor($a, $b) {
-        return $b->score <=> $a->score;
+    if (!$GLOBALS['connection']){
+        return http_response_code(502);
     }
-    usort($_SESSION['scoreboard'], 'comparitor');
+    else {
+        $query = "INSERT INTO scores ( score, user_id ) VALUES ('{$score}', '{$userId}');";
+                
+        $query_result = pg_query($GLOBALS['connection'], $query);
 
-    //response
-    jsonReply($response, array_slice($_SESSION['scoreboard'],0,10));
+        if ($query_result) {
+            $query = "SELECT username, score
+                    FROM scores left join users on scores.user_id = users.user_id
+                    ORDER BY score DESC 
+                    limit 10";
+        
+            $query_result = pg_query($GLOBALS['connection'], $query);
+            $results = pg_fetch_all($query_result);
+            jsonReply($response, $results);
+        }
+    }
+    
+    return $response; 
+});
+
+/**
+ * URL: /getleaderboard
+ * no parameters
+ * gets the top 10 global leaderboard without entering a score
+ */
+$app->get('/leaderboard', function(Request $request, Response $response, array $args) {
+    if (!$GLOBALS['connection']){
+        return http_response_code(502);
+    }
+    else {
+        $query = "SELECT username, score
+                    FROM scores left join users on scores.user_id = users.user_id
+                    ORDER BY score DESC 
+                    limit 10";
+                
+        $query_result = pg_query($GLOBALS['connection'], $query);
+        $results = pg_fetch_all($query_result);
+        jsonReply($response, $results);
+    }
+    
+    return $response; 
+});
+
+/**
+ * URL: /leaderboard/{id}
+ * params: user id
+ * gets all of the user's scores
+ */
+$app->get('/leaderboard/{id}', function(Request $request, Response $response, array $args) {
+    $userId = $request->getQueryParams()['id'];
+
+    //temp user id
+    $userId = 1;
+
+    if (!$GLOBALS['connection']){
+        return http_response_code(502);
+    }
+    else {
+        $query = "SELECT username, score
+                    FROM scores left join users on scores.user_id = users.user_id
+                    WHERE scores.user_id = '{$userId}'";
+                
+        $query_result = pg_query($GLOBALS['connection'], $query);
+        $results = pg_fetch_all($query_result);
+        jsonReply($response, $results);
+    }
+    
     return $response; 
 });
 
