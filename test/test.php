@@ -1,6 +1,15 @@
 <?php
 
-$connection = pg_connect("host=localhost port=5433 dbname=yatzy user=postgres password=admin");
+$host = "localhost";
+$dbname = "yatzy";
+$user = "postgres";
+$password = "admin";
+
+$port = "5433";
+// This version uses my port settings, but it is unneeded...
+// $connection = pg_connect("host=". $host ." port=". $port ." dbname=". $dbname ." user=". $user ." password=". $password ."");
+
+$connection = pg_connect("host=". $host ." dbname=". $dbname ." user=". $user ." password=". $password ."");
 
 if (!$connection){
     // 502 Bad Gateway
@@ -12,7 +21,8 @@ if (!$connection){
 }
 else {
 
-    $query_result = pg_query($connection, "SELECT * FROM users");
+    $query = "SELECT * FROM users";
+    $query_result = pg_query($connection, $query);
 
     if (!$query_result){
         // 404 - Resource Not Found
@@ -34,5 +44,4 @@ else {
         }
         echo "</table>";
     }
-
 }
