@@ -2,7 +2,7 @@
 namespace Yatzy;
 
 require_once "YatzyGame.php";
-require_once "score.php";
+require_once "score.php"; 
 
 use Yatzy\YatzyGame;
 

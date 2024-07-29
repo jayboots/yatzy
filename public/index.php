@@ -1,10 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Selective\BasePath\BasePathMiddleware;
 use Slim\Factory\AppFactory;
-
-include("app/models/score.php");
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -32,19 +33,28 @@ $app->add(new BasePathMiddleware($app));
 $app->addErrorMiddleware(true, true, true);
 
 /**
- * placeholder for homepage
+ * Establish the app root.
  */
 $app->get('/', function (Request $request, Response $response, array $args) {
     $view = file_get_contents("index.html");
+    // include 'app/navbar.php';
     $response->getBody()->write($view);
     return $response;
 });
 
-// Define app routes for testing - will want to assign root to above
-// $app->get('/', function (Request $request, Response $response) {
-//     $response->getBody()->write('Hello, World!');
-//     return $response;
-// })->setName('root');
+/**
+ * Routing for the leaderboard data
+ */
+$app->get('/api/leaderboard', function (Request $request, Response $response, array $args) {
+
+    require __DIR__ . '/../src/App/Database.php';
+    $db = new App\Database;
+    $dbconn = $db->getConnection();
+
+    $body = json_encode(get_top_10($dbconn));
+    $response->getBody()->write($body);
+    return $response;
+});
 
 /**
  * URL: /score
@@ -70,6 +80,31 @@ $app->post('/score', function(Request $request, Response $response, array $args)
     jsonReply($response, array_slice($_SESSION['scoreboard'],0,10));
     return $response; 
 });
+
+
+function get_top_10($connection){
+
+    $query = "SELECT score, users.username, users.first_name, users.last_name, regions.region_name FROM public.scores
+    LEFT JOIN public.users ON public.scores.user_id = public.users.user_id
+    LEFT JOIN public.regions ON public.users.region_id = public.regions.region_id
+    ORDER BY score DESC
+    LIMIT 10";
+
+    if (!$connection){
+        // 502 Bad Gateway
+        return http_response_code(502);
+    }
+    else {
+        $query_result = pg_query($connection, $query);
+        if (!$query_result){
+            // 404 - Resource Not Found
+            return http_response_code(404);
+        }
+        else {
+            return pg_fetch_all($query_result, PGSQL_NUM);
+        }
+    }
+}
 
 // Run app
 $app->run();
