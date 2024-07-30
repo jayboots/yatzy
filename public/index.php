@@ -6,8 +6,13 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Selective\BasePath\BasePathMiddleware;
 use Slim\Factory\AppFactory;
+use DI\Container; //Dependency Injector
 
 require_once __DIR__ . '/../vendor/autoload.php';
+
+// Configure application with dependency injector container
+$container = new Container;
+AppFactory::setContainer($container);
 
 session_start();
 
@@ -46,10 +51,16 @@ $app->get('/', function (Request $request, Response $response, array $args) {
  * GET Endpoint for the top 10 leaderboard data
  */
 $app->get('/api/leaderboard', function (Request $request, Response $response, array $args) {
-    $db = new App\Database;
-    $leaderboard = new App\Repositories\Leaderboard($db); 
+
+    // $db = new App\Database;
+    // $leaderboard = new App\Repositories\Leaderboard($db);
+
+    // Dependency injection allows for the $db requirement for the leaderboard class
+    // to be resolved automatically, replacing the above code.
+    $leaderboard = $this->get(App\Repositories\Leaderboard::class); 
     $body = json_encode($leaderboard->getTop10());
     $response->getBody()->write($body);
+
     return $response;
 });
 
@@ -57,19 +68,21 @@ $app->get('/api/leaderboard', function (Request $request, Response $response, ar
  * GET Endpoint for all scores
  */
 $app->get('/api/scores', function (Request $request, Response $response, array $args) {
-    $db = new App\Database;
-    $leaderboard = new App\Repositories\Leaderboard($db); 
+
+    $leaderboard = $this->get(App\Repositories\Leaderboard::class); 
     $body = json_encode($leaderboard->getAllScores());
     $response->getBody()->write($body);
+
     return $response;
 });
 
 
 $app->get('/api/users', function (Request $request, Response $response, array $args) {
-    $db = new App\Database;
-    $userList = new App\Repositories\UserRegistry($db); 
+
+    $userList = $this->get(App\Repositories\UserRegistry::class); 
     $body = json_encode($userList->getAllUsers());
     $response->getBody()->write($body);
+
     return $response;
 });
 
