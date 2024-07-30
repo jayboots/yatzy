@@ -62,22 +62,23 @@ class UserRegistry {
         }
     }
 
-    public function getUserScore(){
-
+    // Registration. By default, our GUI forces all users to be registered as "players".
+    // You cannot make yourself an admin via our interface, although there are features that are locked to the admin user type.
+    // Please use our SEED data in our schema with pre-loaded admin accounts, or just add one yourself via a POSTGRESQL insert statement.
+    public function addUser($username, $password, $firstName, $lastName=null, $regionId=null){
+    // TODO: Implement
     }
 
-    public function addUser(){
-
-    }
-
-    public function removeUser(){
-
+    // Admins can delete user accounts.
+    public function removeUser($id){
+// TODO: Implement
     }
 
     // Only allows updating of the user's first_name, last_name, and region_id.
     // Users who want to change usernames must request their account be deleted instead and then make a new one.
     // Also in this hypothetical yatzy company, a PW reset can be done via emailing the fictitious admin.
-    public function updateUser(){
+    // Every user, regardless of type, can access their own account info
+    public function updateUser($id, $firstName, $lastName, $regionId){
 
     }
 }

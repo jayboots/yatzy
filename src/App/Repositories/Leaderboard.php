@@ -92,11 +92,11 @@ class Leaderboard {
 
     // Called when a game ends to add a game to the scores history
     public function addNewScore(){
-
+    // TODO: Implement
     }
 
     // Admin functionality only. To prevent admins modifying somebody's play history maliciously, admins can only remove things that are suspect, not modify.
     public function removeScore(){
-
+    // TODO: Implement
     }
 }

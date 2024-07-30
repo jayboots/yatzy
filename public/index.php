@@ -53,11 +53,6 @@ $app->get('/', function (Request $request, Response $response, array $args) {
  */
 $app->get('/api/leaderboard', function (Request $request, Response $response) {
 
-    // $db = new App\Database;
-    // $leaderboard = new App\Repositories\Leaderboard($db);
-
-    // Dependency injection allows for the $db requirement for the leaderboard class
-    // to be resolved automatically, replacing the above code.
     $leaderboard = $this->get(App\Repositories\Leaderboard::class); 
     $body = json_encode($leaderboard->getTop10());
     $response->getBody()->write($body);
@@ -115,6 +110,20 @@ $app->get('/api/users/{user_id}', function (Request $request, Response $response
 
     return $response;
 });
+
+
+/**
+ * Endpoint for getting a list of all the possible geographic regions a player can assign to themselves
+ */
+$app->get('/api/regions', function (Request $request, Response $response) {
+
+    $regionList = $this->get(App\Repositories\RegionRegistry::class); 
+    $body = json_encode($regionList->getRegions());
+    $response->getBody()->write($body);
+
+    return $response;
+});
+
 
 /**
  * URL: /score
