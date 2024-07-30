@@ -6,12 +6,13 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Selective\BasePath\BasePathMiddleware;
 use Slim\Factory\AppFactory;
-use DI\Container; //Dependency Injector
+use DI\ContainerBuilder; //Dependency Injector
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // Configure application with dependency injector container
-$container = new Container;
+$builder = new ContainerBuilder;
+$container = $builder->addDefinitions(__DIR__ . "/../config/definitions.php")->build();
 AppFactory::setContainer($container);
 
 session_start();
