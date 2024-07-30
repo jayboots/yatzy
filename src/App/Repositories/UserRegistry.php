@@ -65,6 +65,12 @@ class UserRegistry {
         }
     }
 
+    public function login($username, $password): array|bool
+    {
+        // TODO: Just for testing right now, no DB validation yet.
+        return [$username, $password];
+    }
+
     // Registration. By default, our GUI forces all users to be registered as "players".
     // You cannot make yourself an admin via our interface, although there are features that are locked to the admin user type.
     // Please use our SEED data in our schema with pre-loaded admin accounts, or just add one yourself via a POSTGRESQL insert statement.
@@ -82,6 +88,7 @@ class UserRegistry {
     // Users who want to change usernames must request their account be deleted instead and then make a new one.
     // Also in this hypothetical yatzy company, a PW reset can be done via emailing the fictitious admin.
     // Every user, regardless of type, can access their own account info
+
     public function updateUser($id, $firstName, $lastName, $regionId){
 
     }

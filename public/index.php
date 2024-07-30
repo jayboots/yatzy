@@ -56,6 +56,33 @@ $app->get('/', function (Request $request, Response $response, array $args) {
     return $response;
 });
 
+
+/**
+ * TODO: Login
+ */
+$app->get('api/login/{username:[0-9]+}/{password}', function (Request $request, Response $response, string $username, string $password) {
+
+    $records = $this->get(App\Repositories\UserRegistry::class);
+    $result = $records->login((string) $username, (string) $password); //function that does something to validate the info given against the records in the DB
+    if ($result === false){
+        // Don't want to throw an error here necessarily, but leaving for now.
+        throw new \Slim\Exception\HttpNotFoundException($request, message: 'Could not log in.');
+    }
+    else {
+        // Set the session variables is_logged_in, is_admin, and user_id
+        $body = json_encode($result);
+        $response->getBody()->write($body);
+    
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+});
+
+// TODO: Logout
+$app->get('/logout', function (Request $request, Response $response) {
+    // Reset the session variables is_logged_in, is_admin, and user_id
+    // Call an AJAX request to reset the page / navbar?
+});
+
 /**
  * Endpoint for the top 10 leaderboard data
  */
