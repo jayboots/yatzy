@@ -49,9 +49,9 @@ $app->get('/', function (Request $request, Response $response, array $args) {
 });
 
 /**
- * GET Endpoint for the top 10 leaderboard data
+ * Endpoint for the top 10 leaderboard data
  */
-$app->get('/api/leaderboard', function (Request $request, Response $response, array $args) {
+$app->get('/api/leaderboard', function (Request $request, Response $response) {
 
     // $db = new App\Database;
     // $leaderboard = new App\Repositories\Leaderboard($db);
@@ -66,9 +66,9 @@ $app->get('/api/leaderboard', function (Request $request, Response $response, ar
 });
 
 /**
- * GET Endpoint for all scores
+ * Endpoint for all scores, for admin purposes
  */
-$app->get('/api/scores', function (Request $request, Response $response, array $args) {
+$app->get('/api/scores', function (Request $request, Response $response) {
 
     $leaderboard = $this->get(App\Repositories\Leaderboard::class); 
     $body = json_encode($leaderboard->getAllScores());
@@ -78,10 +78,39 @@ $app->get('/api/scores', function (Request $request, Response $response, array $
 });
 
 
-$app->get('/api/users', function (Request $request, Response $response, array $args) {
+/**
+ * Endpoint for all users
+ */
+$app->get('/api/users', function (Request $request, Response $response) {
 
     $userList = $this->get(App\Repositories\UserRegistry::class); 
     $body = json_encode($userList->getAllUsers());
+    $response->getBody()->write($body);
+
+    return $response;
+});
+
+/**
+ * Endpoint for a specific user's score, for user profile play history
+ */
+$app->get('/api/scores/{user_id}', function (Request $request, Response $response,  array $args) {
+
+    $id = $args['user_id'];
+    $leaderboard = $this->get(App\Repositories\Leaderboard::class); 
+    $body = json_encode($leaderboard->getUserScoreHistory($id));
+    $response->getBody()->write($body);
+
+    return $response;
+});
+
+/**
+ * Endpoint for a specific user's info, for a non-admin profile purposes
+ */
+$app->get('/api/users/{user_id}', function (Request $request, Response $response, array $args) {
+
+    $id = $args['user_id'];
+    $userList = $this->get(App\Repositories\UserRegistry::class); 
+    $body = json_encode($userList->getUser($id));
     $response->getBody()->write($body);
 
     return $response;

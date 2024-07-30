@@ -35,20 +35,6 @@ $d = new Dice(1, 6);
 // Get a new hand of dice
 $hand = $d->getNewHand();
 
-// Just for testing...
-// $foo = "12345";
-// $bar = "67890";
-
-// if(isset($_GET['foo'])){
-//     header('Content-Type: application/json');
-//     echo json_encode($foo);
-// }
-
-// if(isset($_GET['bar'])){
-//     header('Content-Type: application/json');
-//     echo json_encode($bar);
-// }
-
 // Get request to the above
 if(isset($_GET['roll'])) {
     // Roll a die

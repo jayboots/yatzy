@@ -38,6 +38,34 @@ class UserRegistry {
         }
     }
 
+    public function getUser($id): array{
+        $connection = $this->database->getConnection();
+
+        // SQL statement to return the top 10 scores
+        $query = "SELECT user_id, username, first_name, last_name, regions.region_name FROM public.users
+        LEFT JOIN public.regions ON public.users.region_id = public.regions.region_id
+        WHERE user_id = " . $id;
+    
+        if (!$connection){
+            // 502 Bad Gateway
+            return http_response_code(502);
+        }
+        else {
+            $query_result = pg_query($connection, $query);
+            if (!$query_result){
+                // 404 - Resource Not Found
+                return http_response_code(404);
+            }
+            else {
+                return pg_fetch_assoc($query_result);
+            }
+        }
+    }
+
+    public function getUserScore(){
+
+    }
+
     public function addUser(){
 
     }

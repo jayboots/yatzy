@@ -39,9 +39,9 @@ class Leaderboard {
         }
     }
 
+    // Could paginate these results.
     public function getAllScores(): array
     {
-
         $connection = $this->database->getConnection();
 
         // SQL statement to return the top 10 scores
@@ -65,10 +65,37 @@ class Leaderboard {
         }
     }
 
+
+    public function getUserScoreHistory($id): array
+    {
+        $connection = $this->database->getConnection();
+
+        $query = "SELECT score, users.username, date FROM public.scores
+        LEFT JOIN public.users ON public.scores.user_id = public.users.user_id
+        WHERE users.user_id = " . $id . " ORDER BY score DESC";
+
+        if (!$connection){
+            // 502 Bad Gateway
+            return http_response_code(502);
+        }
+        else {
+            $query_result = pg_query($connection, $query);
+            if (!$query_result){
+                // 404 - Resource Not Found
+                return http_response_code(404);
+            }
+            else {
+                return pg_fetch_all($query_result, PGSQL_NUM);
+            }
+        }
+    }
+
+    // Called when a game ends to add a game to the scores history
     public function addNewScore(){
 
     }
 
+    // Admin functionality only. To prevent admins modifying somebody's play history maliciously, admins can only remove things that are suspect, not modify.
     public function removeScore(){
 
     }
