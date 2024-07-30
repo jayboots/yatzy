@@ -8,6 +8,7 @@ use Selective\BasePath\BasePathMiddleware;
 use Slim\Factory\AppFactory;
 use DI\ContainerBuilder; //Dependency Injector
 use Slim\Handlers\Strategies\RequestResponseArgs;
+use App\Middleware\AddJsonResponseHeader;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -31,6 +32,9 @@ $app = AppFactory::create();
 // Allows the passage of string variables by variable name instead of 'array $args' in requests
 $collector = $app->getRouteCollector();
 $collector->setDefaultInvocationStrategy(new RequestResponseArgs);
+
+// Set responses to have JSON headers be default
+$app->add(new AddJsonResponseHeader);
 
 $app->addBodyParsingMiddleware();
 
@@ -60,7 +64,8 @@ $app->get('/', function (Request $request, Response $response, array $args) {
 /**
  * TODO: Login
  */
-$app->get('api/login/{username:[0-9]+}/{password}', function (Request $request, Response $response, string $username, string $password) {
+$app->get('api
+/login/{username:[0-9]+}/{password}', function (Request $request, Response $response, string $username, string $password) {
 
     $records = $this->get(App\Repositories\UserRegistry::class);
     $result = $records->login((string) $username, (string) $password); //function that does something to validate the info given against the records in the DB
@@ -73,7 +78,8 @@ $app->get('api/login/{username:[0-9]+}/{password}', function (Request $request, 
         $body = json_encode($result);
         $response->getBody()->write($body);
     
-        return $response->withHeader('Content-Type', 'application/json');
+        // return $response->withHeader('Content-Type', 'application/json');
+        return $response;
     }
 });
 
@@ -92,7 +98,8 @@ $app->get('/api/leaderboard', function (Request $request, Response $response) {
     $body = json_encode($leaderboard->getTop10());
     $response->getBody()->write($body);
 
-    return $response->withHeader('Content-Type', 'application/json');
+    return $response;
+    // return $response->withHeader('Content-Type', 'application/json');
 });
 
 /**
@@ -104,7 +111,8 @@ $app->get('/api/scores', function (Request $request, Response $response) {
     $body = json_encode($leaderboard->getAllScores());
     $response->getBody()->write($body);
 
-    return $response->withHeader('Content-Type', 'application/json');
+    // return $response->withHeader('Content-Type', 'application/json');
+    return $response;
 });
 
 
@@ -117,7 +125,8 @@ $app->get('/api/users', function (Request $request, Response $response) {
     $body = json_encode($userList->getAllUsers());
     $response->getBody()->write($body);
 
-    return $response->withHeader('Content-Type', 'application/json');
+    return $response;
+    // return $response->withHeader('Content-Type', 'application/json');
 });
 
 /**
@@ -135,7 +144,8 @@ $app->get('/api/scores/{user_id:[0-9]+}', function (Request $request, Response $
     $body = json_encode($result);
     $response->getBody()->write($body);
 
-    return $response->withHeader('Content-Type', 'application/json');
+    return $response;
+    // return $response->withHeader('Content-Type', 'application/json');
 });
 
 /**
@@ -153,7 +163,8 @@ $app->get('/api/users/{user_id:[0-9]+}', function (Request $request, Response $r
     $body = json_encode($result);
     $response->getBody()->write($body);
 
-    return $response->withHeader('Content-Type', 'application/json');
+    return $response;
+    // return $response->withHeader('Content-Type', 'application/json');
 });
 
 
@@ -166,7 +177,8 @@ $app->get('/api/regions', function (Request $request, Response $response) {
     $body = json_encode($regionList->getRegions());
     $response->getBody()->write($body);
 
-    return $response->withHeader('Content-Type', 'application/json');
+    return $response;
+    // return $response->withHeader('Content-Type', 'application/json');
 });
 
 /**
