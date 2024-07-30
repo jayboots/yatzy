@@ -43,15 +43,32 @@ $app->get('/', function (Request $request, Response $response, array $args) {
 });
 
 /**
- * Routing for the leaderboard data
+ * GET Endpoint for the top 10 leaderboard data
  */
 $app->get('/api/leaderboard', function (Request $request, Response $response, array $args) {
-
-    require __DIR__ . '/../src/App/Database.php';
     $db = new App\Database;
-    $dbconn = $db->getConnection();
+    $leaderboard = new App\Repositories\Leaderboard($db); 
+    $body = json_encode($leaderboard->getTop10());
+    $response->getBody()->write($body);
+    return $response;
+});
 
-    $body = json_encode(get_top_10($dbconn));
+/**
+ * GET Endpoint for all scores
+ */
+$app->get('/api/scores', function (Request $request, Response $response, array $args) {
+    $db = new App\Database;
+    $leaderboard = new App\Repositories\Leaderboard($db); 
+    $body = json_encode($leaderboard->getAllScores());
+    $response->getBody()->write($body);
+    return $response;
+});
+
+
+$app->get('/api/users', function (Request $request, Response $response, array $args) {
+    $db = new App\Database;
+    $userList = new App\Repositories\UserRegistry($db); 
+    $body = json_encode($userList->getAllUsers());
     $response->getBody()->write($body);
     return $response;
 });
@@ -80,31 +97,6 @@ $app->post('/score', function(Request $request, Response $response, array $args)
     jsonReply($response, array_slice($_SESSION['scoreboard'],0,10));
     return $response; 
 });
-
-
-function get_top_10($connection){
-
-    $query = "SELECT score, users.username, users.first_name, users.last_name, regions.region_name FROM public.scores
-    LEFT JOIN public.users ON public.scores.user_id = public.users.user_id
-    LEFT JOIN public.regions ON public.users.region_id = public.regions.region_id
-    ORDER BY score DESC
-    LIMIT 10";
-
-    if (!$connection){
-        // 502 Bad Gateway
-        return http_response_code(502);
-    }
-    else {
-        $query_result = pg_query($connection, $query);
-        if (!$query_result){
-            // 404 - Resource Not Found
-            return http_response_code(404);
-        }
-        else {
-            return pg_fetch_all($query_result, PGSQL_NUM);
-        }
-    }
-}
 
 // Run app
 $app->run();
