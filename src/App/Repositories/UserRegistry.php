@@ -38,20 +38,23 @@ class UserRegistry {
         }
     }
 
-    public function getUser($id): array{
+    public function getUser($id): array|bool{
         $connection = $this->database->getConnection();
 
         // SQL statement to return the top 10 scores
         $query = "SELECT user_id, username, first_name, last_name, regions.region_name FROM public.users
         LEFT JOIN public.regions ON public.users.region_id = public.regions.region_id
-        WHERE user_id = " . $id;
+        WHERE user_id = $1";
+        
+        $qname = "user_info";
+        $sql = pg_prepare($connection, $qname, $query);
     
         if (!$connection){
             // 502 Bad Gateway
             return http_response_code(502);
         }
         else {
-            $query_result = pg_query($connection, $query);
+            $query_result = pg_execute($connection, $qname, array($id));
             if (!$query_result){
                 // 404 - Resource Not Found
                 return http_response_code(404);
@@ -65,6 +68,7 @@ class UserRegistry {
     // Registration. By default, our GUI forces all users to be registered as "players".
     // You cannot make yourself an admin via our interface, although there are features that are locked to the admin user type.
     // Please use our SEED data in our schema with pre-loaded admin accounts, or just add one yourself via a POSTGRESQL insert statement.
+    
     public function addUser($username, $password, $firstName, $lastName=null, $regionId=null){
     // TODO: Implement
     }

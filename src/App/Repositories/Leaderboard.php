@@ -65,27 +65,32 @@ class Leaderboard {
         }
     }
 
-
-    public function getUserScoreHistory($id): array
+    public function getUserScoreHistory($id): array|bool
     {
         $connection = $this->database->getConnection();
 
-        $query = "SELECT score, users.username, date FROM public.scores
+        // Parameterized to prevent against SQL-injection
+        $query = "SELECT score, users.username, date
+        FROM public.scores
         LEFT JOIN public.users ON public.scores.user_id = public.users.user_id
-        WHERE users.user_id = " . $id . " ORDER BY score DESC";
+        WHERE users.user_id = $1 ORDER BY score DESC";
+
+        $qname = "user_history";
+        $sql = pg_prepare($connection, $qname, $query);
 
         if (!$connection){
             // 502 Bad Gateway
             return http_response_code(502);
         }
         else {
-            $query_result = pg_query($connection, $query);
+            $query_result = pg_execute($connection, $qname, array($id));
             if (!$query_result){
                 // 404 - Resource Not Found
                 return http_response_code(404);
             }
             else {
-                return pg_fetch_all($query_result, PGSQL_NUM);
+                $history = pg_fetch_all($query_result, PGSQL_NUM);
+                return $history;
             }
         }
     }

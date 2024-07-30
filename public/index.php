@@ -7,6 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Selective\BasePath\BasePathMiddleware;
 use Slim\Factory\AppFactory;
 use DI\ContainerBuilder; //Dependency Injector
+use Slim\Handlers\Strategies\RequestResponseArgs;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -27,6 +28,10 @@ function jsonReply(Response $response, $data)
 // Static method
 $app = AppFactory::create();
 
+// Allows the passage of string variables by variable name instead of 'array $args' in requests
+$collector = $app->getRouteCollector();
+$collector->setDefaultInvocationStrategy(new RequestResponseArgs);
+
 $app->addBodyParsingMiddleware();
 
 // Add Slim routing middleware
@@ -36,7 +41,10 @@ $app->addRoutingMiddleware();
 // This path is used in urlFor().
 $app->add(new BasePathMiddleware($app));
 
-$app->addErrorMiddleware(true, true, true);
+// Import error middleware - see https://www.slimframework.com/docs/v4/middleware/error-handling.html
+$error_middleware = $app->addErrorMiddleware(true, true, true);
+$error_handler = $error_middleware->getDefaultErrorHandler();
+$error_handler->forceContentType('application/json'); //make error reports into json instead of displaying a trace or HTML garble
 
 /**
  * Establish the app root.
@@ -57,7 +65,7 @@ $app->get('/api/leaderboard', function (Request $request, Response $response) {
     $body = json_encode($leaderboard->getTop10());
     $response->getBody()->write($body);
 
-    return $response;
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
 /**
@@ -69,7 +77,7 @@ $app->get('/api/scores', function (Request $request, Response $response) {
     $body = json_encode($leaderboard->getAllScores());
     $response->getBody()->write($body);
 
-    return $response;
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
 
@@ -82,33 +90,43 @@ $app->get('/api/users', function (Request $request, Response $response) {
     $body = json_encode($userList->getAllUsers());
     $response->getBody()->write($body);
 
-    return $response;
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
 /**
  * Endpoint for a specific user's score, for user profile play history
  */
-$app->get('/api/scores/{user_id}', function (Request $request, Response $response,  array $args) {
+$app->get('/api/scores/{user_id:[0-9]+}', function (Request $request, Response $response, string $id) {
 
-    $id = $args['user_id'];
-    $leaderboard = $this->get(App\Repositories\Leaderboard::class); 
-    $body = json_encode($leaderboard->getUserScoreHistory($id));
+    $leaderboard = $this->get(App\Repositories\Leaderboard::class);
+    $result = $leaderboard->getUserScoreHistory((int) $id);
+
+    if ($result === false){
+        throw new \Slim\Exception\HttpNotFoundException($request, message: 'Could not retrieve score history for this user.');
+    }
+
+    $body = json_encode($result);
     $response->getBody()->write($body);
 
-    return $response;
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
 /**
  * Endpoint for a specific user's info, for a non-admin profile purposes
  */
-$app->get('/api/users/{user_id}', function (Request $request, Response $response, array $args) {
+$app->get('/api/users/{user_id:[0-9]+}', function (Request $request, Response $response, string $id) {
 
-    $id = $args['user_id'];
     $userList = $this->get(App\Repositories\UserRegistry::class); 
-    $body = json_encode($userList->getUser($id));
+    $result = $userList->getUser((int) $id);
+
+    if ($result === false){
+        throw new \Slim\Exception\HttpNotFoundException($request, message: 'Could not find such a user.');
+    }
+
+    $body = json_encode($result);
     $response->getBody()->write($body);
 
-    return $response;
+    return $response->withHeader('Content-Type', 'application/json');
 });
 
 
@@ -121,9 +139,8 @@ $app->get('/api/regions', function (Request $request, Response $response) {
     $body = json_encode($regionList->getRegions());
     $response->getBody()->write($body);
 
-    return $response;
+    return $response->withHeader('Content-Type', 'application/json');
 });
-
 
 /**
  * URL: /score
