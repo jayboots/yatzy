@@ -33,10 +33,11 @@ $app = AppFactory::create();
 $collector = $app->getRouteCollector();
 $collector->setDefaultInvocationStrategy(new RequestResponseArgs);
 
+// For POST requests
+$app->addBodyParsingMiddleware();
+
 // Set responses to have JSON headers be default
 $app->add(new AddJsonResponseHeader);
-
-$app->addBodyParsingMiddleware();
 
 // Add Slim routing middleware
 $app->addRoutingMiddleware();
@@ -60,34 +61,9 @@ $app->get('/', function (Request $request, Response $response, array $args) {
     return $response;
 });
 
-
-/**
- * TODO: Login
- */
-$app->get('api
-/login/{username:[0-9]+}/{password}', function (Request $request, Response $response, string $username, string $password) {
-
-    $records = $this->get(App\Repositories\UserRegistry::class);
-    $result = $records->login((string) $username, (string) $password); //function that does something to validate the info given against the records in the DB
-    if ($result === false){
-        // Don't want to throw an error here necessarily, but leaving for now.
-        throw new \Slim\Exception\HttpNotFoundException($request, message: 'Could not log in.');
-    }
-    else {
-        // Set the session variables is_logged_in, is_admin, and user_id
-        $body = json_encode($result);
-        $response->getBody()->write($body);
-    
-        // return $response->withHeader('Content-Type', 'application/json');
-        return $response;
-    }
-});
+// TODO: Login
 
 // TODO: Logout
-$app->get('/logout', function (Request $request, Response $response) {
-    // Reset the session variables is_logged_in, is_admin, and user_id
-    // Call an AJAX request to reset the page / navbar?
-});
 
 /**
  * Endpoint for the top 10 leaderboard data.
@@ -125,6 +101,14 @@ $app->get('/api/users/{user_id:[0-9]+}', App\Controllers\UserIndex::class . ':ge
  * See .\src\App\Controllers\RegionIndex.php for details of the endpoint.
  */
 $app->get('/api/regions', App\Controllers\RegionIndex::class);
+
+// Add a new score with a payload of user_id and score
+$app->post('/api/scores', [App\Controllers\ScoresIndex::class, 'addNewScore']);
+
+// Create a new user account with all the associated information (some of it optional)
+$app->post('/api/signup', [App\Controllers\UserIndex::class, 'addNewUser']);
+
+
 
 // First endpoint created for Assignment 3 remains below
 /**

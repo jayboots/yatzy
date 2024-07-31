@@ -8,9 +8,7 @@ use App\Database;
 
 class Leaderboard {
 
-    public function __construct(private Database $database) {
-
-    }
+    public function __construct(private Database $database){}
     public function getTop10(): array
     {
 
@@ -39,7 +37,6 @@ class Leaderboard {
         }
     }
 
-    // Could paginate these results.
     public function getAllScores(): array
     {
         $connection = $this->database->getConnection();
@@ -47,8 +44,9 @@ class Leaderboard {
         // SQL statement to return the top 10 scores
         $query = "SELECT id, score, users.username, users.user_id, date FROM public.scores
         LEFT JOIN public.users ON public.scores.user_id = public.users.user_id
-        ORDER BY id ASC";
-    
+        ORDER BY id DESC";
+        //Changed sort order to DESC so you can see the most recently-created "plays" first in this dataset
+
         if (!$connection){
             // 502 Bad Gateway
             return http_response_code(502);
@@ -64,7 +62,6 @@ class Leaderboard {
             }
         }
     }
-
     public function getUserScoreHistory($id): array|bool
     {
         $connection = $this->database->getConnection();
@@ -98,9 +95,28 @@ class Leaderboard {
         }
     }
 
-    // Called when a game ends to add a game to the scores history
-    public function addNewScore(){
-    // TODO: Implement
+    // Adds a new score to the scores table
+    // Payload example: {"user_id":2, "score":120}
+    public function addNewScore(array $data) {
+        $connection = $this->database->getConnection();
+
+        $query = "INSERT INTO public.scores (score, user_id)
+        VALUES ($1, $2)";
+
+        $qname = "add_score";
+        $sql = pg_prepare($connection, $qname, $query);
+
+        if (!$connection){
+            return http_response_code(502);
+        }
+        else {
+            $statement = pg_execute($connection, $qname, array($data['score'], $data['user_id']));
+            
+            //Return the newly created record
+            $new_entry = pg_fetch_all(pg_query($connection, "SELECT * FROM public.scores
+            ORDER BY id DESC LIMIT 1"));
+            return $new_entry[0];
+        }
     }
 
     // Admin functionality only. To prevent admins modifying somebody's play history maliciously, admins can only remove things that are suspect, not modify.

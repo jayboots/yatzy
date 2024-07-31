@@ -70,13 +70,69 @@ class UserRegistry {
         // TODO: Just for testing right now, no DB validation yet.
         return [$username, $password];
     }
-
-    // Registration. By default, our GUI forces all users to be registered as "players".
-    // You cannot make yourself an admin via our interface, although there are features that are locked to the admin user type.
-    // Please use our SEED data in our schema with pre-loaded admin accounts, or just add one yourself via a POSTGRESQL insert statement.
     
-    public function addUser($username, $password, $firstName, $lastName=null, $regionId=null){
-    // TODO: Implement
+    // Adds a new user to the users table
+    // Payload example:
+    // {
+    //  "username":"mrtestguy",
+    //  "first_name":"test",
+    //  "last_name":"guy",
+    //  "password": "12345",
+    //  "region_id": 1
+    // }
+    // username must be unique
+    // last_name and region_id can be null / absent and changed by user later.
+    // 
+    public function addNewUser(array $data) {
+
+        //NOTE: GUI and DB default params force all users to be registered as "players". You cannot make yourself an admin via the front-end interface.
+        // Please use our SEED data in our schema with pre-loaded admin accounts, or just add one yourself via a POSTGRESQL insert statement.
+
+        $connection = $this->database->getConnection();
+
+        $query = "INSERT INTO public.users (username, first_name, last_name, password, region_id)
+        VALUES ($1, $2, $3, $4, $5)";
+
+        $qname = "add_user";
+        $sql = pg_prepare($connection, $qname, $query);
+
+
+        if (!$connection){
+            return http_response_code(502);
+        }
+        else {
+
+            if (empty($data["last_name"])){
+                $last_name = null;
+            }
+            else{
+                $last_name = ucfirst(strtolower($data["last_name"]));
+            }
+
+            if (empty($data["region_id"])){
+                $region_id = null;
+            }
+            else{
+                $region_id = $data["region_id"];
+            }
+
+            $statement = pg_execute($connection, $qname, array(strtolower($data['username']),
+            ucfirst(strtolower($data['first_name'])),
+            $last_name,
+            $data['password'],
+            $region_id));
+            
+            // Determine status
+            if ($statement){
+                //Return the newly created record
+                $new_user = pg_fetch_all(pg_query($connection, "SELECT * FROM public.users
+                ORDER BY user_id DESC LIMIT 1"));
+                return $new_user[0];
+            }
+            else{
+                return $statement;
+            }
+        }
     }
 
     // Admins can delete user accounts.

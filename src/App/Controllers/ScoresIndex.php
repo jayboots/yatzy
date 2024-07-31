@@ -39,4 +39,18 @@ class ScoresIndex{
     
         return $response;
     }
+
+    public function addNewScore(Request $request, Response $response): Response
+    {
+        $body = $request->getParsedBody();
+
+        $newScore = $this->leaderboard->addNewScore($body);
+
+        $body = json_encode([
+            'message' => 'Score added.',
+            'entry' => $newScore
+        ]);
+        $response->getBody()->write($body);
+        return $response->withStatus(201);
+    }
 }

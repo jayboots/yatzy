@@ -32,4 +32,27 @@ class UserIndex{
     
         return $response;
     }
+
+    public function addNewUser(Request $request, Response $response): Response
+    {
+        $body = $request->getParsedBody();
+
+        $newUser = $this->userList->addNewUser($body);
+
+        if ($newUser == false){
+            $body = json_encode([
+                'message' => 'Could not create new user.'
+            ]);
+        }
+        else{
+            $body = json_encode([
+                'message' => 'New user account created.',
+                'entry' => $newUser
+            ]);
+        }
+
+
+        $response->getBody()->write($body);
+        return $response->withStatus(201);
+    }
 }
