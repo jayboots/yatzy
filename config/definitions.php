@@ -11,7 +11,7 @@ return [
             dbname: "yatzy",
             user: "postgres",
             password: "admin",
-            port: "5433"
+            port: "5432"
         );
     }
 ];

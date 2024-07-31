@@ -21,7 +21,7 @@ Logged-In Users:
 - Submit Scores to Leaderboard  --> DONE :)
 - View Top 10			--> DONE :)
 - View Personal Score History	--> DONE :)
-- Delete Account (--> Log-Out)
+- Delete Account (--> and then force Log-Out / variable reset)
 
 Admin:
 - View All Users		--> DONE :)

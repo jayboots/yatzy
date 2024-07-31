@@ -36,9 +36,6 @@ $collector->setDefaultInvocationStrategy(new RequestResponseArgs);
 // For POST requests
 $app->addBodyParsingMiddleware();
 
-// Set responses to have JSON headers be default
-$app->add(new AddJsonResponseHeader);
-
 // Add Slim routing middleware
 $app->addRoutingMiddleware();
 
@@ -54,12 +51,16 @@ $error_handler->forceContentType('application/json'); //make error reports into 
 /**
  * Establish the app root.
  */
-$app->get('/', function (Request $request, Response $response, array $args) {
+$app->get('/', function (Request $request, Response $response) {
     $view = file_get_contents("index.html");
-    // include 'app/navbar.php';
     $response->getBody()->write($view);
     return $response;
 });
+
+//Set responses to have JSON headers be default
+// TODO: Not working? Need to fix to exclude the app root
+// $app->add(new AddJsonResponseHeader);
+
 
 // TODO: Login
 

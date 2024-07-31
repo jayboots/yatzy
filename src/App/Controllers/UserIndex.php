@@ -21,7 +21,7 @@ class UserIndex{
         $body = json_encode($this->userList->getAllUsers());
         $response->getBody()->write($body);
 
-        return $response;
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
     public function getUser(Request $request, Response $response, string $id)
@@ -32,7 +32,7 @@ class UserIndex{
         $body = json_encode($result);
         $response->getBody()->write($body);
     
-        return $response;
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
     public function addNewUser(Request $request, Response $response): Response
@@ -70,7 +70,7 @@ class UserIndex{
                 ]);
             }
             $response->getBody()->write($body);
-            return $response->withStatus(201);
+            return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
         }
     }
 
@@ -106,7 +106,7 @@ class UserIndex{
                 ]);
             }
             $response->getBody()->write($body);
-            return $response->withStatus(200);
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
         }
     }
 

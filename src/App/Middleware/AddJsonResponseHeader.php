@@ -1,5 +1,7 @@
 <?php
 
+// TODO: Somehow exclude the app root from this?
+
 declare(strict_types=1);
 
 namespace App\Middleware;

@@ -18,7 +18,7 @@ class ScoresIndex{
         $body = json_encode($this->leaderboard->getAllScores());
         $response->getBody()->write($body);
 
-        return $response;
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
     public function getTop10(Request $request, Response $response)
@@ -26,7 +26,7 @@ class ScoresIndex{
         $body = json_encode($this->leaderboard->getTop10());
         $response->getBody()->write($body);
 
-        return $response;
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
     public function getUserScores(Request $request, Response $response, string $id)
@@ -37,7 +37,7 @@ class ScoresIndex{
         $body = json_encode($result);
         $response->getBody()->write($body);
     
-        return $response;
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
     public function addNewScore(Request $request, Response $response): Response
@@ -51,7 +51,7 @@ class ScoresIndex{
             'entry' => $newScore
         ]);
         $response->getBody()->write($body);
-        return $response->withStatus(201);
+        return $response->withStatus(201)->withHeader('Content-Type', 'application/json');
     }
 
     public function deleteRecord(){
