@@ -1,0 +1,32 @@
+Functionalities to implement
+
+Session Variables
+- user_id (reset on logout)
+- is_logged_in (false by default)
+- is_admin (false by default, only flips on checking when logging in)
+
+These items and how they change will change how some elements appear on the page / can be accessed.
+
+All Users:
+- Log-In
+- Sign-Up (--> add account)	--> DONE :)
+- Log-out
+
+Logged-In Users:
+- View Profile			--> DONE :)
+- Change First Name		--> DONE :)
+- Change Last Name		--> DONE :)
+- Change Region			--> DONE :)
+- Play Yatzy			--> DONE :)
+- Submit Scores to Leaderboard  --> DONE :)
+- View Top 10			--> DONE :)
+- View Personal Score History	--> DONE :)
+- Delete Account (--> Log-Out)
+
+Admin:
+- View All Users		--> DONE :)
+- Change First Name		--> DONE :)
+- Change Last Name		--> DONE :)
+- Change Region			--> DONE :)
+- "Manage Users" (Delete Specific User Account)
+- "Manage Scores" (Delete Specific Records)

@@ -15,7 +15,7 @@ skills learned in this course including:
 * HTML/CSS for front end design (make sure to add to the profile)
 * JavaScript for client side interactions
 * PHP (or similar) for server side interactions
-* Postgres (or similar) for managing data ( this is important)
+* Postgres (or similar) for managing data (this is important)
 
 ## Sample Application
 
