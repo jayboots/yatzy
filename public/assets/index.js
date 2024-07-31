@@ -1,4 +1,5 @@
-const apiRoot = '/app/models/';
+const modelsRoot = '/app/models/';
+// const apiRoot = '/api/';
 
 // UI Variables are used to handle drawing actions or UI behaviours only
 var targetChoice = null;
@@ -103,7 +104,7 @@ function resetGame(){
         }
     }
 
-    xhr.open('get', apiRoot+"YatzyEngine.php?new-game", true);
+    xhr.open('get', modelsRoot+"YatzyEngine.php?new-game", true);
 
     // Then send request
     xhr.send();
@@ -138,7 +139,7 @@ function rollDice(){
         }
     }
 
-    xhr.open('POST', apiRoot+"YatzyEngine.php", true);
+    xhr.open('POST', modelsRoot+"YatzyEngine.php", true);
 
     xhr.setRequestHeader('Content-Type', 'application/json')
     // Then send request
@@ -198,7 +199,7 @@ function endRound(){
             }
         }
 
-        xhr.open('POST', apiRoot+"YatzyEngine.php", true);
+        xhr.open('POST', modelsRoot+"YatzyEngine.php", true);
         xhr.setRequestHeader('Content-Type', 'application/json')
         xhr.send(JSON.stringify({"selection": [selectRoster, targetChoice]}));
 
@@ -528,4 +529,13 @@ function getGameState(data, verbose=false){
             console.log("Current score: " + game.score)
         }
     }
+}
+
+function updateNavBar(){
+    // TODO: Implement
+    // Update the navbar to show/hide (enable/disable) certain buttons in the navbar in certain contexts, such as:
+    // Login
+    // Logout
+    // Page Navigation
+    // User Class...
 }

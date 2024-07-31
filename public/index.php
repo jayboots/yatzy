@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
+use Slim\Factory\AppFactory;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Selective\BasePath\BasePathMiddleware;
-use Slim\Factory\AppFactory;
 use DI\ContainerBuilder; //Dependency Injector
 use Slim\Handlers\Strategies\RequestResponseArgs;
 use App\Middleware\AddJsonResponseHeader;
@@ -90,97 +90,44 @@ $app->get('/logout', function (Request $request, Response $response) {
 });
 
 /**
- * Endpoint for the top 10 leaderboard data
+ * Endpoint for the top 10 leaderboard data.
+ * Distinct in purpose from general scores reading, so gets its own endpoint.
+ * See .\src\App\Controllers\LeaderIndex.php for details of the endpoint.
  */
-$app->get('/api/leaderboard', function (Request $request, Response $response) {
-
-    $leaderboard = $this->get(App\Repositories\Leaderboard::class); 
-    $body = json_encode($leaderboard->getTop10());
-    $response->getBody()->write($body);
-
-    return $response;
-    // return $response->withHeader('Content-Type', 'application/json');
-});
+$app->get('/api/leaderboard', App\Controllers\LeaderIndex::class);
 
 /**
  * Endpoint for all scores, for admin purposes
+ * See .\src\App\Controllers\ScoresIndex.php for details of the endpoint.
  */
-$app->get('/api/scores', function (Request $request, Response $response) {
-
-    $leaderboard = $this->get(App\Repositories\Leaderboard::class); 
-    $body = json_encode($leaderboard->getAllScores());
-    $response->getBody()->write($body);
-
-    // return $response->withHeader('Content-Type', 'application/json');
-    return $response;
-});
-
+$app->get('/api/scores', App\Controllers\ScoresIndex::class);
 
 /**
- * Endpoint for all users
+ * Endpoint for retrieving all user data.
+ * See .\src\App\Controllers\UserIndex.php for details of the endpoint.
  */
-$app->get('/api/users', function (Request $request, Response $response) {
-
-    $userList = $this->get(App\Repositories\UserRegistry::class); 
-    $body = json_encode($userList->getAllUsers());
-    $response->getBody()->write($body);
-
-    return $response;
-    // return $response->withHeader('Content-Type', 'application/json');
-});
+$app->get('/api/users', App\Controllers\UserIndex::class);
 
 /**
- * Endpoint for a specific user's score, for user profile play history
+ * Endpoint for a specific user's score history, for user profile play history
+ * See details at .\src\App\Middleware\GetUserScores.php
  */
-$app->get('/api/scores/{user_id:[0-9]+}', function (Request $request, Response $response, string $id) {
-
-    $leaderboard = $this->get(App\Repositories\Leaderboard::class);
-    $result = $leaderboard->getUserScoreHistory((int) $id);
-
-    if ($result === false){
-        throw new \Slim\Exception\HttpNotFoundException($request, message: 'Could not retrieve score history for this user.');
-    }
-
-    $body = json_encode($result);
-    $response->getBody()->write($body);
-
-    return $response;
-    // return $response->withHeader('Content-Type', 'application/json');
-});
+$app->get('/api/scores/{user_id:[0-9]+}', App\Controllers\UserScoreHistory::class)->add(App\Middleware\GetUserScores::class);
 
 /**
- * Endpoint for a specific user's info, for a non-admin profile purposes
+ * Endpoint for a specific user's account info, for a non-admin profile purposes
+ * See details at .\src\App\Controllers\UserProfile.php and .\src\App\Middleware\GetUser.php
  */
-$app->get('/api/users/{user_id:[0-9]+}', function (Request $request, Response $response, string $id) {
-
-    $userList = $this->get(App\Repositories\UserRegistry::class); 
-    $result = $userList->getUser((int) $id);
-
-    if ($result === false){
-        throw new \Slim\Exception\HttpNotFoundException($request, message: 'Could not find such a user.');
-    }
-
-    $body = json_encode($result);
-    $response->getBody()->write($body);
-
-    return $response;
-    // return $response->withHeader('Content-Type', 'application/json');
-});
-
+$app->get('/api/users/{user_id:[0-9]+}', App\Controllers\UserProfile::class)->add(App\Middleware\GetUser::class);
 
 /**
- * Endpoint for getting a list of all the possible geographic regions a player can assign to themselves
+ * Endpoint for getting a list of all the possible geographic location categories
+ * a player can assign to themselves / their account info.
+ * See .\src\App\Controllers\RegionIndex.php for details of the endpoint.
  */
-$app->get('/api/regions', function (Request $request, Response $response) {
+$app->get('/api/regions', App\Controllers\RegionIndex::class);
 
-    $regionList = $this->get(App\Repositories\RegionRegistry::class); 
-    $body = json_encode($regionList->getRegions());
-    $response->getBody()->write($body);
-
-    return $response;
-    // return $response->withHeader('Content-Type', 'application/json');
-});
-
+// First endpoint created for Assignment 3 remains below
 /**
  * URL: /score
  * saves player name and score to session variable and returns the top 10 scores

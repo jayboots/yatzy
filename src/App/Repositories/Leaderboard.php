@@ -90,6 +90,9 @@ class Leaderboard {
             }
             else {
                 $history = pg_fetch_all($query_result, PGSQL_NUM);
+                if (count($history) === 0) {
+                    return false;
+                }
                 return $history;
             }
         }
