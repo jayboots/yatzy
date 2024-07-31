@@ -28,6 +28,7 @@ class GetUser {
             throw new HttpNotFoundException($request, message: 'Could not find such a user.');
         }
 
+        // Here we assign the attribute the name 'user'
         $request = $request->withAttribute('user', $result);
         $response = $handler->handle($request);
 

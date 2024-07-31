@@ -15,7 +15,7 @@ class UserScoreHistory{
     }
     public function __invoke(Request $request, Response $response, string $id)
     {
-
+        //Reminder: Attribute name "score_history" is set up in the middleware GetUserScores class
         $result = $request->getAttribute('score_history');
 
         $body = json_encode($result);

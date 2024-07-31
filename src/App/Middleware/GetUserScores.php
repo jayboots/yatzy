@@ -28,6 +28,7 @@ class GetUserScores {
             throw new HttpNotFoundException($request, message: 'No play history found for the provided user ID.');
         }
 
+        // Here we assign the attribute the name 'score_history'
         $request = $request->withAttribute('score_history', $result);
         $response = $handler->handle($request);
 

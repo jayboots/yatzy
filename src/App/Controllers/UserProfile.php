@@ -15,8 +15,8 @@ class UserProfile{
     }
     public function __invoke(Request $request, Response $response, string $id)
     {
-
-        $result = $request->getAttribute('user');
+        //Reminder: Attribute name "user" is set up in the middleware GetUser class
+        $result = $request->getAttribute('user'); 
 
         $body = json_encode($result);
         $response->getBody()->write($body);
