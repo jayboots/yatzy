@@ -7,12 +7,14 @@ namespace App\Controllers;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use App\Repositories\UserRegistry;
+use Valitron\Validator;
 
 class UserIndex{
 
-    public function __construct(private UserRegistry $userList){
-
+    public function __construct(private UserRegistry $userList, private Validator $validator){
     }
+
+    // Makes a call to the UserRegistry class's getAllUsers() function and returns the result.
     public function getAllUsers(Request $request, Response $response)
     {
 
@@ -35,24 +37,80 @@ class UserIndex{
 
     public function addNewUser(Request $request, Response $response): Response
     {
+        // Rules
+        $this->validator->mapFieldsRules([
+            'username' => ['required', ['lengthMin', 4], 'alphaNum'],
+            'first_name' => ['required', ['lengthMin', 1], 'alphaNum'],
+            'last_name' => [['lengthMin', 1], 'alphaNum'],
+            'password' => ['required', ['lengthMin', 4], 'alphaNum'],
+            'region_id' => ['integer', ['min', 3], ['max', 9]]
+            ]
+        );
+
         $body = $request->getParsedBody();
 
-        $newUser = $this->userList->addNewUser($body);
+        $this->validator = $this->validator->withData($body);
 
-        if ($newUser == false){
-            $body = json_encode([
-                'message' => 'Could not create new user.'
-            ]);
+        if(!$this->validator->validate()){
+            $response->getBody()->write(json_encode($this->validator->errors()));
+            return $response->withStatus(422);
         }
         else{
-            $body = json_encode([
-                'message' => 'New user account created.',
-                'entry' => $newUser
-            ]);
+            $newUser = $this->userList->addNewUser($body);
+
+            if ($newUser == false){
+                $body = json_encode([
+                    'message' => 'Could not create new user.'
+                ]);
+            }
+            else{
+                $body = json_encode([
+                    'message' => 'New user account created.',
+                    'entry' => $newUser
+                ]);
+            }
+            $response->getBody()->write($body);
+            return $response->withStatus(201);
         }
+    }
 
+    public function updateUser(Request $request, Response $response, string $id): Response
+    {
+        $this->validator->mapFieldsRules([
+            'first_name' => [['lengthMin', 1], 'alphaNum'],
+            'last_name' => [['lengthMin', 1], 'alphaNum'],
+            'region_id' => ['integer', ['min', 3], ['max', 9]]
+            ]
+        );
 
-        $response->getBody()->write($body);
-        return $response->withStatus(201);
+        $body = $request->getParsedBody();
+
+        $this->validator = $this->validator->withData($body);
+
+        if(!$this->validator->validate()){
+            $response->getBody()->write(json_encode($this->validator->errors()));
+            return $response->withStatus(422);
+        }
+        else{
+            $userInfo = $this->userList->updateUser($body, (int) $id);
+
+            if ($userInfo == false){
+                $body = json_encode([
+                    'message' => 'Could not update this user.'
+                ]);
+            }
+            else{
+                $body = json_encode([
+                    'message' => 'Updated user information.',
+                    'entry' => $userInfo
+                ]);
+            }
+            $response->getBody()->write($body);
+            return $response->withStatus(200);
+        }
+    }
+
+    public function deleteUser(){
+        // TO IMPLEMENT
     }
 }

@@ -108,7 +108,8 @@ $app->post('/api/scores', [App\Controllers\ScoresIndex::class, 'addNewScore']);
 // Create a new user account with all the associated information (some of it optional)
 $app->post('/api/signup', [App\Controllers\UserIndex::class, 'addNewUser']);
 
-
+// Update some of the fields associated with a user account.
+$app->patch('/api/users/{user_id:[0-9]+}', [App\Controllers\UserIndex::class, 'updateUser'])->add(App\Middleware\GetUser::class);
 
 // First endpoint created for Assignment 3 remains below
 /**

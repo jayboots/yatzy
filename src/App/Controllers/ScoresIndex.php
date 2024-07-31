@@ -53,4 +53,8 @@ class ScoresIndex{
         $response->getBody()->write($body);
         return $response->withStatus(201);
     }
+
+    public function deleteRecord(){
+        // TO IMPLEMENT
+    }
 }

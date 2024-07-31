@@ -38,7 +38,7 @@ class UserRegistry {
         }
     }
 
-    public function getUser($id): array|bool{
+    public function getUser(int $id, string $qname="user_info"): array|bool{
         $connection = $this->database->getConnection();
 
         // SQL statement to return the top 10 scores
@@ -46,7 +46,6 @@ class UserRegistry {
         LEFT JOIN public.regions ON public.users.region_id = public.regions.region_id
         WHERE user_id = $1";
         
-        $qname = "user_info";
         $sql = pg_prepare($connection, $qname, $query);
     
         if (!$connection){
@@ -65,36 +64,33 @@ class UserRegistry {
         }
     }
 
-    public function login($username, $password): array|bool
+    public function login(string $username, string $password): array|bool
     {
         // TODO: Just for testing right now, no DB validation yet.
         return [$username, $password];
     }
     
-    // Adds a new user to the users table
-    // Payload example:
-    // {
-    //  "username":"mrtestguy",
-    //  "first_name":"test",
-    //  "last_name":"guy",
-    //  "password": "12345",
-    //  "region_id": 1
-    // }
-    // username must be unique
-    // last_name and region_id can be null / absent and changed by user later.
-    // 
+    /** Adds a new user to the users table
+     * Payload example:
+     * {
+     *  "username":"mrtestguy",
+     *  "first_name":"test",
+     *  "last_name":"guy",
+     *  "password": "12345",
+     *  "region_id": 1
+     * }
+     * username must be unique
+     * last_name and region_id can be null / absent and changed by user later.
+     */ 
     public function addNewUser(array $data) {
-
-        //NOTE: GUI and DB default params force all users to be registered as "players". You cannot make yourself an admin via the front-end interface.
-        // Please use our SEED data in our schema with pre-loaded admin accounts, or just add one yourself via a POSTGRESQL insert statement.
-
+        //NOTE: GUI and DB default params force all users to be registered as "players". As a deliberate design choice, you cannot make yourself an admin via the front-end interface. Please use our SEED data in our schema with pre-loaded admin accounts, or just add one yourself via a POSTGRESQL insert statement.
         $connection = $this->database->getConnection();
 
         $query = "INSERT INTO public.users (username, first_name, last_name, password, region_id)
         VALUES ($1, $2, $3, $4, $5)";
 
         $qname = "add_user";
-        $sql = pg_prepare($connection, $qname, $query);
+        $updates = pg_prepare($connection, $qname, $query);
 
 
         if (!$connection){
@@ -135,17 +131,68 @@ class UserRegistry {
         }
     }
 
+    public function updateUser(array $data, int $id) {
+        $connection = $this->database->getConnection();
+
+        $query = "UPDATE public.users
+        SET username=username, first_name=$1, last_name=$2, password=$3, region_id=$4
+        WHERE user_id = $5";
+
+        // $qname = "update_user";
+        $prep = pg_prepare($connection, "update_user", $query);
+
+
+        if (!$connection){
+            return http_response_code(502);
+        }
+        else {
+
+            $oldInfo = $this->getUser($id, "initial_info");
+
+            if (empty($data["first_name"])){
+                $first_name = $oldInfo["first_name"];
+            }
+            else{
+                $first_name = ucfirst(strtolower($data["first_name"]));
+            }
+
+            if (empty($data["last_name"])){
+                $last_name = null;
+            }
+            else{
+                $last_name = ucfirst(strtolower($data["last_name"]));
+            }
+
+            if (empty($data["password"])){
+                $password = $oldInfo["password"];
+            }
+            else{
+                $password = $data["password"];
+            }
+
+            if (empty($data["region_id"])){
+                $region_id = null;
+            }
+            else{
+                $region_id = $data["region_id"];
+            }
+
+            $statement = pg_execute($connection, "update_user", array(
+                $first_name,
+                $last_name,
+                $password,
+                $region_id,
+                $id));
+
+
+            $newInfo = $this->getUser($id, "refreshed_info");
+            return $newInfo;
+        }
+    }
+
     // Admins can delete user accounts.
-    public function removeUser($id){
+    public function removeUser(int $id){
 // TODO: Implement
     }
 
-    // Only allows updating of the user's first_name, last_name, and region_id.
-    // Users who want to change usernames must request their account be deleted instead and then make a new one.
-    // Also in this hypothetical yatzy company, a PW reset can be done via emailing the fictitious admin.
-    // Every user, regardless of type, can access their own account info
-
-    public function updateUser($id, $firstName, $lastName, $regionId){
-
-    }
 }
