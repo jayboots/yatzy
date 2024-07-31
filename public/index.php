@@ -33,6 +33,9 @@ $app = AppFactory::create();
 $collector = $app->getRouteCollector();
 $collector->setDefaultInvocationStrategy(new RequestResponseArgs);
 
+// Set responses to have JSON headers be default
+$app->add(new AddJsonResponseHeader);
+
 // For POST requests
 $app->addBodyParsingMiddleware();
 
@@ -54,12 +57,10 @@ $error_handler->forceContentType('application/json'); //make error reports into 
 $app->get('/', function (Request $request, Response $response) {
     $view = file_get_contents("index.html");
     $response->getBody()->write($view);
+
+    // If header unassigned here, it would default to JSON and cause rendering errors
     return $response->withHeader('Content-Type', 'text/html');
 });
-
-// Set responses to have JSON headers be default
-// TODO: Not working? Need to fix to exclude the app root
-$app->add(new AddJsonResponseHeader);
 
 
 // TODO: Login
