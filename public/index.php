@@ -54,12 +54,12 @@ $error_handler->forceContentType('application/json'); //make error reports into 
 $app->get('/', function (Request $request, Response $response) {
     $view = file_get_contents("index.html");
     $response->getBody()->write($view);
-    return $response;
+    return $response->withHeader('Content-Type', 'text/html');
 });
 
-//Set responses to have JSON headers be default
+// Set responses to have JSON headers be default
 // TODO: Not working? Need to fix to exclude the app root
-// $app->add(new AddJsonResponseHeader);
+$app->add(new AddJsonResponseHeader);
 
 
 // TODO: Login

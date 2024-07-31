@@ -15,6 +15,13 @@ class AddJsonResponseHeader {
     {
         $response = $handler->handle($request);
 
-        return $response->withHeader('Content-Type', 'application/json');
+        // If no set headers, assign json headers
+        if (!($response->hasHeader('Content-Type'))) {
+            return $response->withHeader('Content-Type', 'application/json');
+        }
+        else {
+            // Otherwise, respect set headers
+            return $response;
+        }
     }
 }

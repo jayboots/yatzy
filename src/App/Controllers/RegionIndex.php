@@ -19,6 +19,6 @@ class RegionIndex{
         $body = json_encode($this->regionList->getRegions());
         $response->getBody()->write($body);
 
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response;
     }
 }
