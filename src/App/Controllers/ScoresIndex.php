@@ -13,11 +13,30 @@ class ScoresIndex{
     public function __construct(private Leaderboard $leaderboard){
 
     }
-    public function __invoke(Request $request, Response $response)
+    public function getAllScores(Request $request, Response $response)
     {
         $body = json_encode($this->leaderboard->getAllScores());
         $response->getBody()->write($body);
 
+        return $response;
+    }
+
+    public function getTop10(Request $request, Response $response)
+    {
+        $body = json_encode($this->leaderboard->getTop10());
+        $response->getBody()->write($body);
+
+        return $response;
+    }
+
+    public function getUserScores(Request $request, Response $response, string $id)
+    {
+        //Reminder: Attribute name "score_history" is set up in the middleware GetUserScores class
+        $result = $request->getAttribute('score_history');
+
+        $body = json_encode($result);
+        $response->getBody()->write($body);
+    
         return $response;
     }
 }

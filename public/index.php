@@ -91,34 +91,33 @@ $app->get('/logout', function (Request $request, Response $response) {
 
 /**
  * Endpoint for the top 10 leaderboard data.
- * Distinct in purpose from general scores reading, so gets its own endpoint.
- * See .\src\App\Controllers\LeaderIndex.php for details of the endpoint.
+ * See .\src\App\Controllers\ScoresIndex.php for more info.
  */
-$app->get('/api/leaderboard', App\Controllers\LeaderIndex::class);
+$app->get('/api/scores/top10', App\Controllers\ScoresIndex::class . ':getTop10');
 
 /**
  * Endpoint for all scores, for admin purposes
- * See .\src\App\Controllers\ScoresIndex.php for details of the endpoint.
+ * See .\src\App\Controllers\ScoresIndex.php for more info.
  */
-$app->get('/api/scores', App\Controllers\ScoresIndex::class);
+$app->get('/api/scores', App\Controllers\ScoresIndex::class . ':getAllScores');
+
+/**
+ * Endpoint for a specific user's score history, for user profile play history
+ * See .\src\App\Controllers\ScoresIndex.php for more info.
+ */
+$app->get('/api/scores/{user_id:[0-9]+}', App\Controllers\ScoresIndex::class . ':getUserScores')->add(App\Middleware\GetUserScores::class);
 
 /**
  * Endpoint for retrieving all user data.
  * See .\src\App\Controllers\UserIndex.php for details of the endpoint.
  */
-$app->get('/api/users', App\Controllers\UserIndex::class);
-
-/**
- * Endpoint for a specific user's score history, for user profile play history
- * See details at .\src\App\Middleware\GetUserScores.php
- */
-$app->get('/api/scores/{user_id:[0-9]+}', App\Controllers\UserScoreHistory::class)->add(App\Middleware\GetUserScores::class);
+$app->get('/api/users', App\Controllers\UserIndex::class . ':getAllUsers');
 
 /**
  * Endpoint for a specific user's account info, for a non-admin profile purposes
  * See details at .\src\App\Controllers\UserProfile.php and .\src\App\Middleware\GetUser.php
  */
-$app->get('/api/users/{user_id:[0-9]+}', App\Controllers\UserProfile::class)->add(App\Middleware\GetUser::class);
+$app->get('/api/users/{user_id:[0-9]+}', App\Controllers\UserIndex::class . ':getUser')->add(App\Middleware\GetUser::class);
 
 /**
  * Endpoint for getting a list of all the possible geographic location categories

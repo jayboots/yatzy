@@ -14,12 +14,6 @@ class Database {
     }
     public function getConnection(){
 
-        // $host = "localhost";
-        // $dbname = "yatzy";
-        // $user = "postgres";
-        // $password = "admin";
-        // $port = "5433";
-
         $connection = pg_connect("host=". $this->host ." port=". $this->port ." dbname=". $this->dbname ." user=". $this->user ." password=". $this->password ."");
 
         return $connection;
