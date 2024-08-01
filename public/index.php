@@ -12,8 +12,8 @@ session_start();
 
 $host = "localhost";
 $dbname = "yatzy";
-$user = "postgres";
-$password = "admin";
+$user = "yatzyuser";
+$password = "password";
 
 $port = "5432"; 
 

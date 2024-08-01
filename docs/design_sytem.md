@@ -164,3 +164,10 @@ After core functionality was established, the leaderboard was integrated into th
 The player's name is solicited by a pop-up that occurs when the game ends and the final score is shown.
 
 ![image](assets/design_system/leaderboard.jpg)
+
+
+## Database Design
+![image](schema.png)
+
+
+The full database design document can be found [here](db.md)
