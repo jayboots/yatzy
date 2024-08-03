@@ -19,14 +19,14 @@ AppFactory::setContainer($container);
 
 session_start();
 
-$host = "localhost";
-$dbname = "yatzy";
-$user = "yatzyuser";
-$password = "password";
+// $host = "localhost";
+// $dbname = "yatzy";
+// $user = "yatzyuser";
+// $password = "password";
 
-$port = "5432"; 
+// $port = "5432"; 
 
-$connection = pg_connect("host=". $host ." port=". $port ." dbname=". $dbname ." user=". $user ." password=". $password ."");
+// $connection = pg_connect("host=". $host ." port=". $port ." dbname=". $dbname ." user=". $user ." password=". $password ."");
 
 function jsonReply(Response $response, $data)
 {
@@ -129,93 +129,91 @@ $app->post('/api/signup', [App\Controllers\UserIndex::class, 'addNewUser']);
 
 
 
-
-
 // First endpoint created for Assignment 3 remains below. We will need to remove this and replace where it is called with the add new score item above, but only when logged in and when there is a user ID
 
 /**
  * URL: /score
  * saves player name and score to session variable
  */
-$app->post('/score', function(Request $request, Response $response, array $args) {
-    $userId = $request->getParsedBody()['userId'];
-    $score = $request->getParsedBody()['score'];
+// $app->post('/score', function(Request $request, Response $response, array $args) {
+//     $userId = $request->getParsedBody()['userId'];
+//     $score = $request->getParsedBody()['score'];
 
-    //temp user id
-    $userId = 1;
+//     //temp user id
+//     $userId = 1;
 
-    if (!$GLOBALS['connection']){
-        return http_response_code(502);
-    }
-    else {
-        $query = "INSERT INTO scores ( score, user_id ) VALUES ('{$score}', '{$userId}');";
+//     if (!$GLOBALS['connection']){
+//         return http_response_code(502);
+//     }
+//     else {
+//         $query = "INSERT INTO scores ( score, user_id ) VALUES ('{$score}', '{$userId}');";
                 
-        $query_result = pg_query($GLOBALS['connection'], $query);
+//         $query_result = pg_query($GLOBALS['connection'], $query);
 
-        if ($query_result) {
-            $query = "SELECT username, score
-                    FROM scores left join users on scores.user_id = users.user_id
-                    ORDER BY score DESC 
-                    limit 10";
+//         if ($query_result) {
+//             $query = "SELECT username, score
+//                     FROM scores left join users on scores.user_id = users.user_id
+//                     ORDER BY score DESC 
+//                     limit 10";
         
-            $query_result = pg_query($GLOBALS['connection'], $query);
-            $results = pg_fetch_all($query_result);
-            jsonReply($response, $results);
-        }
-    }
+//             $query_result = pg_query($GLOBALS['connection'], $query);
+//             $results = pg_fetch_all($query_result);
+//             jsonReply($response, $results);
+//         }
+//     }
     
-    return $response; 
-});
+//     return $response; 
+// });
 
-/**
- * URL: /getleaderboard
- * no parameters
- * gets the top 10 global leaderboard without entering a score
- */
-$app->get('/leaderboard', function(Request $request, Response $response, array $args) {
-    if (!$GLOBALS['connection']){
-        return http_response_code(502);
-    }
-    else {
-        $query = "SELECT username, score
-                    FROM scores left join users on scores.user_id = users.user_id
-                    ORDER BY score DESC 
-                    limit 10";
+// /**
+//  * URL: /getleaderboard
+//  * no parameters
+//  * gets the top 10 global leaderboard without entering a score
+//  */
+// $app->get('/leaderboard', function(Request $request, Response $response, array $args) {
+//     if (!$GLOBALS['connection']){
+//         return http_response_code(502);
+//     }
+//     else {
+//         $query = "SELECT username, score
+//                     FROM scores left join users on scores.user_id = users.user_id
+//                     ORDER BY score DESC 
+//                     limit 10";
                 
-        $query_result = pg_query($GLOBALS['connection'], $query);
-        $results = pg_fetch_all($query_result);
-        jsonReply($response, $results);
-    }
+//         $query_result = pg_query($GLOBALS['connection'], $query);
+//         $results = pg_fetch_all($query_result);
+//         jsonReply($response, $results);
+//     }
     
-    return $response; 
-});
+//     return $response; 
+// });
 
-/**
- * URL: /leaderboard/{id}
- * params: user id
- * gets all of the user's scores
- */
-$app->get('/leaderboard/{id}', function(Request $request, Response $response, array $args) {
-    $userId = $request->getQueryParams()['id'];
+// /**
+//  * URL: /leaderboard/{id}
+//  * params: user id
+//  * gets all of the user's scores
+//  */
+// $app->get('/leaderboard/{id}', function(Request $request, Response $response, array $args) {
+//     $userId = $request->getQueryParams()['id'];
 
-    //temp user id
-    $userId = 1;
+//     //temp user id
+//     $userId = 1;
 
-    if (!$GLOBALS['connection']){
-        return http_response_code(502);
-    }
-    else {
-        $query = "SELECT username, score
-                    FROM scores left join users on scores.user_id = users.user_id
-                    WHERE scores.user_id = '{$userId}'";
+//     if (!$GLOBALS['connection']){
+//         return http_response_code(502);
+//     }
+//     else {
+//         $query = "SELECT username, score
+//                     FROM scores left join users on scores.user_id = users.user_id
+//                     WHERE scores.user_id = '{$userId}'";
                 
-        $query_result = pg_query($GLOBALS['connection'], $query);
-        $results = pg_fetch_all($query_result);
-        jsonReply($response, $results);
-    }
+//         $query_result = pg_query($GLOBALS['connection'], $query);
+//         $results = pg_fetch_all($query_result);
+//         jsonReply($response, $results);
+//     }
     
-    return $response; 
-});
+//     return $response; 
+// });
 
 // Run app
 $app->run();
