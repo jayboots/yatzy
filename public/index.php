@@ -118,6 +118,13 @@ $app->get('/api/users/{user_id:[0-9]+}', App\Controllers\UserIndex::class . ':ge
 $app->patch('/api/users/{user_id:[0-9]+}', [App\Controllers\UserIndex::class, 'updateUser'])->add(App\Middleware\GetUser::class);
 
 /**
+ * Endpoint for deleting a score from the score records.
+ */
+$app->delete('/api/users/{id:[0-9]+}', App\Controllers\UserIndex::class . ':deleteUser')->add(App\Middleware\DeleteUser::class);
+;
+
+
+/**
  * Endpoint for getting a list of all the possible geographic location categories
  * a player can assign to themselves / their account info.
  * See .\src\App\Controllers\RegionIndex.php for details of the endpoint.
@@ -126,8 +133,6 @@ $app->get('/api/regions', App\Controllers\RegionIndex::class);
 
 // Create a new user account with all the associated information (some of it optional)
 $app->post('/api/signup', [App\Controllers\UserIndex::class, 'addNewUser']);
-
-
 
 // First endpoint created for Assignment 3 remains below. We will need to remove this and replace where it is called with the add new score item above, but only when logged in and when there is a user ID
 

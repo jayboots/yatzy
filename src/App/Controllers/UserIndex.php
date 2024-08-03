@@ -110,7 +110,15 @@ class UserIndex{
         }
     }
 
-    public function deleteUser(){
-        // TO IMPLEMENT
+    public function deleteUser(Request $request, Response $response, string $id): Response
+    {
+        $deletedUser = $this->userList->deleteUser($id);
+        $body = json_encode([
+            'message' => 'Deleted any user matching id=' . $id
+        ]);
+
+        $response->getBody()->write($body);
+        
+        return $response->withStatus(200);
     }
 }

@@ -38,22 +38,21 @@ class UserRegistry {
         }
     }
 
-    public function getUser(int $id, string $qname="user_info"): array|bool{
+    public function getUser(int $id): array|bool{
         $connection = $this->database->getConnection();
 
         // SQL statement to return the top 10 scores
         $query = "SELECT user_id, username, first_name, last_name, regions.region_name FROM public.users
         LEFT JOIN public.regions ON public.users.region_id = public.regions.region_id
         WHERE user_id = $1";
-        
-        $sql = pg_prepare($connection, $qname, $query);
     
         if (!$connection){
             // 502 Bad Gateway
             return http_response_code(502);
         }
         else {
-            $query_result = pg_execute($connection, $qname, array($id));
+            $query_result = pg_query_params($connection, $query, array($id));
+
             if (!$query_result){
                 // 404 - Resource Not Found
                 return http_response_code(404);
@@ -76,7 +75,6 @@ class UserRegistry {
      *  "username":"mrtestguy",
      *  "first_name":"test",
      *  "last_name":"guy",
-     *  "password": "12345",
      *  "region_id": 1
      * }
      * username must be unique
@@ -88,10 +86,6 @@ class UserRegistry {
 
         $query = "INSERT INTO public.users (username, first_name, last_name, password, region_id)
         VALUES ($1, $2, $3, $4, $5)";
-
-        $qname = "add_user";
-        $updates = pg_prepare($connection, $qname, $query);
-
 
         if (!$connection){
             return http_response_code(502);
@@ -112,11 +106,13 @@ class UserRegistry {
                 $region_id = $data["region_id"];
             }
 
-            $statement = pg_execute($connection, $qname, array(strtolower($data['username']),
-            ucfirst(strtolower($data['first_name'])),
-            $last_name,
-            $data['password'],
-            $region_id));
+            $statement = pg_query_params($connection, $query, array(
+                strtolower($data['username']),
+                ucfirst(strtolower($data['first_name'])),
+                $last_name,
+                $data['password'],
+                $region_id)
+            );
             
             // Determine status
             if ($statement){
@@ -131,23 +127,26 @@ class UserRegistry {
         }
     }
 
+    /**
+     * Update a user's first name, last name, password, and region ID.
+     * First name and password are required and cannot be null.
+     * @param array $data
+     * @param int $id
+     * @return array|bool|int
+     */
     public function updateUser(array $data, int $id) {
         $connection = $this->database->getConnection();
 
         $query = "UPDATE public.users
-        SET username=username, first_name=$1, last_name=$2, password=$3, region_id=$4
-        WHERE user_id = $5";
-
-        // $qname = "update_user";
-        $prep = pg_prepare($connection, "update_user", $query);
-
+        SET first_name=$1, last_name=$2, region_id=$3
+        WHERE user_id = $4";
 
         if (!$connection){
             return http_response_code(502);
         }
         else {
 
-            $oldInfo = $this->getUser($id, "initial_info");
+            $oldInfo = $this->getUser($id);
 
             if (empty($data["first_name"])){
                 $first_name = $oldInfo["first_name"];
@@ -163,12 +162,13 @@ class UserRegistry {
                 $last_name = ucfirst(strtolower($data["last_name"]));
             }
 
-            if (empty($data["password"])){
-                $password = $oldInfo["password"];
-            }
-            else{
-                $password = $data["password"];
-            }
+            // No password changing... email the administrator. >:)
+            // if (empty($data["password"])){
+            //     $password = $oldInfo["password"];
+            // }
+            // else{
+            //     $password = $data["password"];
+            // }
 
             if (empty($data["region_id"])){
                 $region_id = null;
@@ -177,22 +177,34 @@ class UserRegistry {
                 $region_id = $data["region_id"];
             }
 
-            $statement = pg_execute($connection, "update_user", array(
-                $first_name,
+            $statement = pg_query_params($connection, $query, array(
+                $first_name, 
                 $last_name,
-                $password,
                 $region_id,
-                $id));
+                $id)
+            );
 
-
-            $newInfo = $this->getUser($id, "refreshed_info");
+            $newInfo = $this->getUser($id);
             return $newInfo;
         }
     }
 
-    // Admins can delete user accounts.
-    public function removeUser(int $id){
-// TODO: Implement
-    }
+    /**
+     * Delete a user account (and all associated scores)
+     * Note: this feature is locked to users of the admin type via the UI.
+     * @param string $id
+     */
+    public function deleteUser($id) {
+    
+        $connection = $this->database->getConnection();
+        $query = "DELETE FROM public.users
+        WHERE users.user_id = $1";
 
+        if (!$connection){
+            return http_response_code(502);
+        }
+        else {
+            $statement = pg_query_params($connection, $query, array($id));
+        }
+    }
 }
