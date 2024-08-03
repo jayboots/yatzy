@@ -10,14 +10,34 @@ Before getting started, ensure you have the following installed and properly con
 
 - [php](https://www.php.net/manual/en/install.php)
 - [composer](https://getcomposer.org/)
+- [postgreSQL](https://www.postgresql.org/)
 
 ## How to Run
 
 Clone or download the project repository and open cmd/terminal in the directory. Run ```composer install``` to install project dependencies.
 
+### Setup Database
+Make sure you have postgreSQL and psql setup properly on your computer ('postgres' is the admin user here, replace it if you set it up with a different name). To create the yatzy database on your local computer, use the following commands. You will be prompted for the password for the user 'postgres'.
+
+```cmd
+cd db
+createdb -U postgres -T template0 "yatzy"
+psql -U postgres -d yatzy -f schema.sql  
+psql -U postgres -d yatzy -f seed.sql
+```
+
+*Note: to check user privileges run:
+```cmd
+psql -h localhost -U yatzyuser yatzy
+```
+If there are no errors/issues, you're good to go. (\q or ctrl+C to exit psql)
+
+### Run Game
+
 After this is complete, change directory with the following commands in the terminal to launch a pHp web server on a local port.
 
 ```cmd
+cd ..
 cd public 
 php -S localhost:4000
 ```
