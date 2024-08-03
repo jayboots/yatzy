@@ -28,5 +28,5 @@ Admin:
 - Change First Name		--> DONE :)
 - Change Last Name		--> DONE :)
 - Change Region			--> DONE :)
-- "Manage Users" (Delete Specific User Account)
-- "Manage Scores" (Delete Specific Records)
+- "Manage Users" (Delete Specific User Account) --> Delete account by ID
+- "Manage Scores" (Delete Specific Records)  -- Delete score by record ID

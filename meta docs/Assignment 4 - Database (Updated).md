@@ -1,7 +1,6 @@
 # Assignment 4: Web Application
 
-Students will build their own web application
-using the approaches learned in class. In the assignment, a database [Postgres (or similar)] will be created and accessed.
+Students will build their own web application using the approaches learned in class. In the assignment, a database [Postgres (or similar)] will be created and accessed.
 
 ## Objectives
 
@@ -21,10 +20,8 @@ skills learned in this course including:
 
 "Add this to your web application ( from A1 to A3)"
 
-
-
  * use one of these two options :
-  1. Hospital application : The Hospital Triage application helps staff and patients better understand wait times while in the emergency room.  The application will be administered by the triage staff based on two dimensions: severity of injuries and the length of time already in the queue.  Administrator’s will see the full list of patients.
+  1. Hospital application : The Hospital Triage application helps staff and patients better understand wait times while in the emergency room. The application will be administered by the triage staff based on two dimensions: severity of injuries and the length of time already in the queue.  Administrator’s will see the full list of patients.
   1. Or you can improve your project by adding a database instead of adding the hospital triage application, add users and their information, like their names, usernames and locations. (Not not add users authentification)
  
 ## Deliverables

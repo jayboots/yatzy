@@ -18,18 +18,18 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-DROP DATABASE IF EXISTS yatzy;
+DROP DATABASE IF EXISTS yatzy2;
 --
 -- TOC entry 4872 (class 1262 OID 16398)
--- Name: yatzy; Type: DATABASE; Schema: -; Owner: postgres
+-- Name: yatzy2; Type: DATABASE; Schema: -; Owner: postgres
 --
 
-CREATE DATABASE yatzy WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'English_Canada.1252';
+CREATE DATABASE yatzy2 WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'English_Canada.1252';
 
 
-ALTER DATABASE yatzy OWNER TO postgres;
+ALTER DATABASE yatzy2 OWNER TO postgres;
 
-\connect yatzy
+\connect yatzy2
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -45,10 +45,10 @@ SET row_security = off;
 --
 -- TOC entry 4873 (class 0 OID 0)
 -- Dependencies: 4872
--- Name: DATABASE yatzy; Type: COMMENT; Schema: -; Owner: postgres
+-- Name: DATABASE yatzy2; Type: COMMENT; Schema: -; Owner: postgres
 --
 
-COMMENT ON DATABASE yatzy IS 'Database for Yatzy web app project';
+COMMENT ON DATABASE yatzy2 IS 'Database for yatzy2 web app project';
 
 
 --
@@ -286,7 +286,7 @@ INSERT INTO public.scores VALUES (13, 384, '2024-07-24 20:08:14.717115', 2);
 
 INSERT INTO public.users VALUES (1, 'yatzia', 'julia', 'bootsma', '12345', 1, 9);
 INSERT INTO public.users VALUES (2, 'toriwu', 'tori', NULL, '54321', 1, 9);
-INSERT INTO public.users VALUES (3, 'superyatzy', 'John', 'Hasbro', 'yahtzee', 2, 5);
+INSERT INTO public.users VALUES (3, 'superyatzy2', 'John', 'Hasbro', 'yahtzee', 2, 5);
 INSERT INTO public.users VALUES (4, 'diceguy', 'Milton', 'Bradley', 'dice', 2, 8);
 
 

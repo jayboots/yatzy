@@ -9,8 +9,8 @@ use App\Database;
 class Leaderboard {
 
     public function __construct(private Database $database){}
-    public function getTop10(): array
-    {
+
+    public function getTop10(): array {
 
         $connection = $this->database->getConnection();
 
@@ -37,8 +37,7 @@ class Leaderboard {
         }
     }
 
-    public function getAllScores(): array
-    {
+    public function getAllScores(): array {
         $connection = $this->database->getConnection();
 
         // SQL statement to return the top 10 scores
@@ -62,8 +61,11 @@ class Leaderboard {
             }
         }
     }
-    public function getUserScoreHistory($id): array|bool
-    {
+
+    /**
+     * Returns all scores associated with a given user id
+    */
+    public function getUserScoreHistory($id): array|bool {
         $connection = $this->database->getConnection();
 
         // Parameterized to prevent against SQL-injection
@@ -72,15 +74,13 @@ class Leaderboard {
         LEFT JOIN public.users ON public.scores.user_id = public.users.user_id
         WHERE users.user_id = $1 ORDER BY score DESC";
 
-        $qname = "user_history";
-        $sql = pg_prepare($connection, $qname, $query);
-
         if (!$connection){
             // 502 Bad Gateway
             return http_response_code(502);
         }
         else {
-            $query_result = pg_execute($connection, $qname, array($id));
+            $query_result = pg_query_params($connection, $query, array($id));
+
             if (!$query_result){
                 // 404 - Resource Not Found
                 return http_response_code(404);
@@ -95,23 +95,23 @@ class Leaderboard {
         }
     }
 
-    // Adds a new score to the scores table
-    // Payload example: {"user_id":2, "score":120}
+    /**
+     * Adds a new score to the scores table
+     * Payload example: {"user_id":2, "score":120}
+     */
     public function addNewScore(array $data) {
         $connection = $this->database->getConnection();
 
         $query = "INSERT INTO public.scores (score, user_id)
         VALUES ($1, $2)";
 
-        $qname = "add_score";
-        $sql = pg_prepare($connection, $qname, $query);
-
         if (!$connection){
             return http_response_code(502);
         }
         else {
-            $statement = pg_execute($connection, $qname, array($data['score'], $data['user_id']));
-            
+
+            $statement = pg_query_params($connection, $query, array($data['score'], $data['user_id']));
+
             //Return the newly created record
             $new_entry = pg_fetch_all(pg_query($connection, "SELECT * FROM public.scores
             ORDER BY id DESC LIMIT 1"));
@@ -119,8 +119,22 @@ class Leaderboard {
         }
     }
 
-    // Admin functionality only. To prevent admins modifying somebody's play history maliciously, admins can only remove things that are suspect, not modify.
-    public function removeScore(){
-    // TODO: Implement
+    /**
+     * Removes an instance of a score record with a given id
+     * from the scores table.
+     */
+    public function deleteScore($id) {
+    
+        $connection = $this->database->getConnection();
+        $query = "DELETE FROM public.scores
+        WHERE scores.id = $1";
+
+        if (!$connection){
+            return http_response_code(502);
+        }
+        else {
+            $statement = pg_query_params($connection, $query, array($id));
+        }
     }
+
 }

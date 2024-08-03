@@ -54,7 +54,15 @@ class ScoresIndex{
         return $response->withStatus(201);
     }
 
-    public function deleteRecord(){
-        // TO IMPLEMENT
+    public function deleteScore(Request $request, Response $response, string $id): Response
+    {
+        $deletedScore = $this->leaderboard->deleteScore($id);
+        $body = json_encode([
+            'message' => 'Deleted recorded score entry ' . $id
+        ]);
+
+        $response->getBody()->write($body);
+        
+        return $response->withStatus(200);
     }
 }

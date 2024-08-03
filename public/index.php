@@ -52,7 +52,7 @@ $error_handler = $error_middleware->getDefaultErrorHandler();
 $error_handler->forceContentType('application/json'); //make error reports into json instead of displaying a trace or HTML garble
 
 /**
- * Establish the app root.
+ * Establish the route for the app root.
  */
 $app->get('/', function (Request $request, Response $response) {
     $view = file_get_contents("index.html");
@@ -68,22 +68,30 @@ $app->get('/', function (Request $request, Response $response) {
 // TODO: Logout
 
 /**
- * Endpoint for the top 10 leaderboard data.
- * See .\src\App\Controllers\ScoresIndex.php for more info.
+ * Endpoint for retrieving the top 10 leaderboard data.
  */
 $app->get('/api/scores/top10', App\Controllers\ScoresIndex::class . ':getTop10');
 
 /**
- * Endpoint for all scores, for admin purposes
- * See .\src\App\Controllers\ScoresIndex.php for more info.
+ * Endpoint for retrieving all scores
  */
 $app->get('/api/scores', App\Controllers\ScoresIndex::class . ':getAllScores');
 
 /**
- * Endpoint for a specific user's score history, for user profile play history
- * See .\src\App\Controllers\ScoresIndex.php for more info.
+ * Endpoint for a retrieving a specific user's score history
  */
 $app->get('/api/scores/{user_id:[0-9]+}', App\Controllers\ScoresIndex::class . ':getUserScores')->add(App\Middleware\GetUserScores::class);
+
+/**
+ * Endpoint for inserting a new score into the score records.
+ */
+$app->post('/api/scores', [App\Controllers\ScoresIndex::class, 'addNewScore']);
+
+/**
+ * Endpoint for deleting a score from the score records.
+ */
+$app->delete('/api/scores/{id:[0-9]+}', App\Controllers\ScoresIndex::class . ':deleteScore')->add(App\Middleware\GetScore::class);
+;
 
 /**
  * Endpoint for retrieving all user data.
@@ -97,6 +105,9 @@ $app->get('/api/users', App\Controllers\UserIndex::class . ':getAllUsers');
  */
 $app->get('/api/users/{user_id:[0-9]+}', App\Controllers\UserIndex::class . ':getUser')->add(App\Middleware\GetUser::class);
 
+// Update some of the fields associated with a user account.
+$app->patch('/api/users/{user_id:[0-9]+}', [App\Controllers\UserIndex::class, 'updateUser'])->add(App\Middleware\GetUser::class);
+
 /**
  * Endpoint for getting a list of all the possible geographic location categories
  * a player can assign to themselves / their account info.
@@ -104,16 +115,14 @@ $app->get('/api/users/{user_id:[0-9]+}', App\Controllers\UserIndex::class . ':ge
  */
 $app->get('/api/regions', App\Controllers\RegionIndex::class);
 
-// Add a new score with a payload of user_id and score
-$app->post('/api/scores', [App\Controllers\ScoresIndex::class, 'addNewScore']);
-
 // Create a new user account with all the associated information (some of it optional)
 $app->post('/api/signup', [App\Controllers\UserIndex::class, 'addNewUser']);
 
-// Update some of the fields associated with a user account.
-$app->patch('/api/users/{user_id:[0-9]+}', [App\Controllers\UserIndex::class, 'updateUser'])->add(App\Middleware\GetUser::class);
 
-// First endpoint created for Assignment 3 remains below
+
+
+
+// First endpoint created for Assignment 3 remains below. We will need to remove this and replace where it is called with the add new score item above, but only when logged in and when there is a user ID
 /**
  * URL: /score
  * saves player name and score to session variable and returns the top 10 scores
