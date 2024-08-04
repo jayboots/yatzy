@@ -12,7 +12,7 @@ use App\Repositories\UserRegistry;
 use Slim\Exception\HttpNotFoundException;
 
 class DeleteUser {
-
+    
     public function __construct(private UserRegistry $userList){
         // See UserRegistry class for associated SQL queries and functions on this endpoint
     }
@@ -22,7 +22,7 @@ class DeleteUser {
         $route = $context->getRoute();
         $id = $route->getArgument('user_id');
 
-        $result = $this->userList->deleteUser((string) $id);
+        $result = $this->userList->deleteUser((int) $id);
     
         if ($result === false){
             throw new HttpNotFoundException($request, message: 'Could not find such a user.');

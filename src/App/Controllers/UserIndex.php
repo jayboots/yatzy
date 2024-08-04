@@ -112,7 +112,7 @@ class UserIndex{
 
     public function deleteUser(Request $request, Response $response, string $id): Response
     {
-        $deletedUser = $this->userList->deleteUser($id);
+        $deletedUser = $this->userList->deleteUser((int) $id);
         $body = json_encode([
             'message' => 'Deleted any user matching id=' . $id
         ]);

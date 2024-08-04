@@ -162,14 +162,6 @@ class UserRegistry {
                 $last_name = ucfirst(strtolower($data["last_name"]));
             }
 
-            // No password changing... email the administrator. >:)
-            // if (empty($data["password"])){
-            //     $password = $oldInfo["password"];
-            // }
-            // else{
-            //     $password = $data["password"];
-            // }
-
             if (empty($data["region_id"])){
                 $region_id = null;
             }
@@ -189,14 +181,10 @@ class UserRegistry {
         }
     }
 
-    /**
-     * Delete a user account (and all associated scores)
-     * Note: this feature is locked to users of the admin type via the UI.
-     * @param string $id
-     */
-    public function deleteUser($id) {
+    public function deleteUser(int $id) {
     
         $connection = $this->database->getConnection();
+
         $query = "DELETE FROM public.users
         WHERE users.user_id = $1";
 
@@ -204,6 +192,7 @@ class UserRegistry {
             return http_response_code(502);
         }
         else {
+
             $statement = pg_query_params($connection, $query, array($id));
         }
     }
