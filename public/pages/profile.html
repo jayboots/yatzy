@@ -20,9 +20,9 @@
 
     <div id="userProfile">
         <p id="username">Username: </p>
-        <p id="fname">First Name: </p>
-        <p id="lname">Last Name: </p>
-        <p id="rname">Region: </p>
+        <p id="fname" contenteditable="true">First Name: </p><button>Edit</button>
+        <p id="lname" contenteditable="true">Last Name: </p><button>Edit</button>
+        <p id="rname" contenteditable="true">Region: </p><button>Edit</button>
     </div>
 
     <label for="regionsList">My Region:</label>
@@ -33,8 +33,21 @@
     </select>
 
     <h3>My Scores (# Games)</h3>
-    <div id="scoreHistory">
-        <p></p>
+    <!-- Hide this if the array has results -->
+    <div id="scores-container"></div>
+    <div id="msg-no-scores">
+        <p>You have No Scores!</p>
+    </div>
+    <div id="score-table">
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Score</th>
+            </tr>
+            <tbody id="score-body">
+                
+            </tbody>
+        </table>
     </div>
 
 
