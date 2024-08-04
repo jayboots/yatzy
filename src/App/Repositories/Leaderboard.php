@@ -15,7 +15,7 @@ class Leaderboard {
         $connection = $this->database->getConnection();
 
         // SQL statement to return the top 10 scores
-        $query = "SELECT score, users.username, users.first_name, users.last_name, regions.region_name FROM public.scores
+        $query = "SELECT date, scores.user_id, score, users.username, users.first_name, users.last_name, regions.region_name FROM public.scores
         LEFT JOIN public.users ON public.scores.user_id = public.users.user_id
         LEFT JOIN public.regions ON public.users.region_id = public.regions.region_id
         ORDER BY score DESC

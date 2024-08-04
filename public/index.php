@@ -65,7 +65,7 @@ $app->group('/api/session', function (RouteCollectorProxy $group){
         
         $_SESSION["loggedIn"] = true;
         $_SESSION["isAdmin"] = true;
-        $_SESSION["userID"] = 25;
+        $_SESSION["userID"] = 2;
 
         $vars = stateVars();
         $response->getBody()->write($vars);

@@ -7,14 +7,30 @@
 	<meta name="author" content="Julia & Tori">
 	<meta name="description" content="Julia and Tori - Assignment 4">
 	<link rel="shortcut icon" href="#" />
-	<!-- <link rel="stylesheet" href="../css/styles.css"> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
     <script type="text/javascript" src="../assets/leaderboard.js" defer></script>
 	<title>Yatzy Leaderboard</title>
 </head>
 
 <body>
-
-    <h2 id="leaderboard-heading">Leaderboard</h2>
-
+    <h2 id="leaderboard-heading">🏆 Yatzy Top 10 Leaderboard 🏆</h2>
+    <div id="scores-container">
+        <table id="score-table">
+            <tr>
+                <th>Rank</th>
+                <th>Score</th>
+                <th>Player</th>
+                <th>Region</th>
+                <th>Date</th>
+            </tr>
+            <tbody id="score-body">
+                
+            </tbody>
+        </table>
+        <div id="user-analysis-msg"></div>
+    </div>
+    <div id="msg-no-scores" style="display:none;">
+        <h3>The leaderboard sits empty... 😔</h3>
+        <p>Would you consider <a href="/">playing a game of yatzy?</a></p>
+    </div>
 </body>
