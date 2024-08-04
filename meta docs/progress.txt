@@ -19,13 +19,10 @@ Logged-In Users:
 - Change Region			--> DONE :)
 - Play Yatzy			--> DONE :)
 - Submit Scores to Leaderboard
-- View Top 10
+- View Top 10           --> DONE :)
 - View Personal Score History	--> DONE :)
 
 Admin:
-- View All Users		--> DONE :)
-- Change First Name		--> DONE :)
-- Change Last Name		--> DONE :)
-- Change Region			--> DONE :)
+- View All Users		
 - "Manage Users" (Delete Specific User Account) --> Delete account by ID
 - "Manage Scores" (Delete Specific Records)  -- Delete score by record ID

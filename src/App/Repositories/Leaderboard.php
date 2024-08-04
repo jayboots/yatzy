@@ -43,7 +43,7 @@ class Leaderboard {
         // SQL statement to return the top 10 scores
         $query = "SELECT id, score, users.username, users.user_id, date FROM public.scores
         LEFT JOIN public.users ON public.scores.user_id = public.users.user_id
-        ORDER BY id DESC";
+        ORDER BY score DESC, date DESC";
         //Changed sort order to DESC so you can see the most recently-created "plays" first in this dataset
 
         if (!$connection){

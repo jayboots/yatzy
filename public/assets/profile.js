@@ -20,17 +20,12 @@ window.onload=function(){
 
 
     const regionSelector = document.getElementById("regionSelector");
-    regionSelector.addEventListener("click", regionSelect, true);
-    regionSelector.addEventListener("click", regionSelect, true);
+    // regionSelector.addEventListener("click", regionSelect, true);
+    // regionSelector.addEventListener("click", regionSelect, true);
 
     // Load the profile data when the page starts...
     getUserID();
     toggleFormElements();
-}
-
-// Possibly Unecessary?
-function regionSelect(){
-    // console.log(this.value)
 }
 
 function editForm(){
@@ -89,11 +84,11 @@ async function saveDetails(){
             }
 
             let data = await response.json();
-            // console.log("Updated user info!")
-            // console.log(data);
+            console.log("Updated user info!")
+            console.log(data);
             loadUserInfo(data["entry"]["user_id"]);
             // loadProfileScores(userID)
-            // getRegions();
+            getRegions();
     
         } catch (error) {
             console.error(error.message);
@@ -146,7 +141,6 @@ function toggleFormElements(){
         saveBtn.style.display='none';
         cancelBtn.style.display='none';
     }
-
 }
 
 // Function to resolve the region IDs to names
@@ -161,6 +155,7 @@ async function getRegions(){
         const data = await response.json();
 
         var regionSelector = document.getElementById("regionSelector");
+        regionSelector.innerHTML = "";
 
         for (let key in data) {
 
