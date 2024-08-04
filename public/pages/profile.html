@@ -8,6 +8,7 @@
 	<meta name="description" content="Julia and Tori - Assignment 4">
 	<link rel="shortcut icon" href="#" />
 	<!-- <link rel="stylesheet" href="../css/styles.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
 	<!-- Material lock icons from google -->
 	<script type="text/javascript" src="../assets/profile.js" defer></script>
 	
@@ -16,13 +17,29 @@
 
 <body>
 
-    <h3>My Info</h3>
+    <h2 id="username">My Info</h2>
 
     <div id="userProfile">
-        <p id="username">Username: </p>
-        <p id="fname" contenteditable="true">First Name: </p><button>Edit</button>
-        <p id="lname" contenteditable="true">Last Name: </p><button>Edit</button>
-        <p id="rname" contenteditable="true">Region: </p><button>Edit</button>
+        <div class="profile-entry" id="p1">
+            <p id="fname">First Name: </p>
+            <button>Edit</button>
+            <button>Save</button>
+            <button>Clear</button>
+        </div>
+
+        <div class="profile-entry" id="p2">
+            <p id="lname">Last Name: </p>
+            <button>Edit</button>
+            <button>Save</button>
+            <button>Clear</button>
+        </div>
+
+        <div class="profile-entry" id="p3">
+            <p id="rname">Region: </p>
+            <button>Edit</button>
+            <button>Save</button>
+            <button>Clear</button>
+        </div>
     </div>
 
     <label for="regionsList">My Region:</label>
@@ -35,11 +52,8 @@
     <h3>My Scores (# Games)</h3>
     <!-- Hide this if the array has results -->
     <div id="scores-container"></div>
-    <div id="msg-no-scores">
-        <p>You have No Scores!</p>
-    </div>
-    <div id="score-table">
-        <table>
+    <div>
+        <table id="score-table">
             <tr>
                 <th>Date</th>
                 <th>Score</th>
@@ -49,6 +63,8 @@
             </tbody>
         </table>
     </div>
-
+    <div id="msg-no-scores">
+        <p>You have no scores!</p>
+    </div>
 
 </body>

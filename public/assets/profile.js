@@ -1,4 +1,5 @@
-var userID = 2;
+// var userID = 2;
+var userID = 25;
 
 window.onload=function(){
     const username = document.getElementById("username");
@@ -14,6 +15,10 @@ window.onload=function(){
     getRegions();
 }
 
+async function getUserID(){
+    
+}
+
 async function loadUserInfo(userID){
     const url = "../api/users/" + userID;
     try {
@@ -23,11 +28,7 @@ async function loadUserInfo(userID){
         }
     
         let data = await response.json();
-        // console.log(data);
-        username.innerText = "Username: " + data['username'];
-        fname.innerText = "First Name: " + data['first_name'];
-        lname.innerText = "Last Name: " + data['last_name'];
-        rname.innerText = "Region: " + data['region_name'];
+        renderProfile(data)
 
     } catch (error) {
         console.error(error.message);
@@ -35,6 +36,10 @@ async function loadUserInfo(userID){
 }
 
 async function loadProfileScores(userID){
+
+    var noScores = document.getElementById("msg-no-scores");
+    var scoreTable = document.getElementById("score-table")
+
     const url = "../api/scores/" + userID;
     try {
         const response = await fetch(url);
@@ -43,9 +48,62 @@ async function loadProfileScores(userID){
         }
     
         let data = await response.json();
+
+        console.log("Has scores!")
         drawMyScores(data);
+        noScores.style.display='none';
+        scoreTable.style.display = 'block';
+
     } catch (error) {
+        // No scores!
+
+        console.log("No score data found!")
+        noScores.style.display = 'block';
+        scoreTable.style.display='none';
+
         console.error(error.message);
+    }
+}
+
+function renderProfile(data){
+    var blurb
+    if (data['username'].slice(-1) == "s"){
+        blurb = "' profile page"
+    }
+    else {
+        blurb = "'s profile page"
+    }
+    username.innerText = data['username'] + blurb;
+
+    fname.innerHTML = "<strong>First Name:</strong> " + data['first_name'];
+
+    if (data['last_name'] == null){
+        lname.innerHTML = "<strong>Last Name:</strong> <em>None provided.</em>";
+    }
+    else{
+        lname.innerHTML = "<strong>Last Name:</strong> " + data['last_name'];
+    }
+
+    if (data['region_name'] == null){
+        rname.innerHTML = "<strong>Region:</strong> <em>None selected.</em>";
+    }
+    else{
+        rname.innerHTML = "<strong>Region:</strong> " + data['region_name'];
+    }
+}
+
+function drawMyScores(data){
+
+    var scoreRows = document.getElementById("score-body");
+
+    for (const key in data) {
+        let row = scoreRows.insertRow(0)
+
+        let date = row.insertCell(0);
+        date.innerHTML = (new Date(data[key][2])).toLocaleDateString('en-CA')
+
+        let score = row.insertCell(1);
+        score.innerHTML = data[key][0];
     }
 }
 
@@ -62,36 +120,5 @@ async function getRegions(){
         console.log(json);
     } catch (error) {
         console.error(error.message);
-    }
-}
-
-function drawMyScores(data){
-
-    var noScores = document.getElementById("msg-no-scores");
-    var scoreTable = document.getElementById("score-table")
-    var scoreRows = document.getElementById("score-body");
-
-    console.log(data.length);
-    // If we have scores
-    if (data.length > 0){
-        console.log("Has scores!")
-        //Set some visibility things
-        noScores.style.display='none';
-        scoreTable.style.display = 'block';
-
-        for (const key in data) {
-            let row = scoreRows.insertRow(0)
-    
-            let date = row.insertCell(0);
-            date.innerHTML = (new Date(data[key][2])).toLocaleDateString('en-CA')
-    
-            let score = row.insertCell(1);
-            score.innerHTML = data[key][0];
-        }
-    }
-    else {
-        console.log("No score data found!")
-        noScores.style.display = 'block';
-        scoreTable.style.display='none';
     }
 }
