@@ -27,7 +27,9 @@ AppFactory::setContainer($container);
 
 session_start();
 
-
+$_SESSION["loggedIn"];
+$_SESSION["isAdmin"];
+$_SESSION["userID"];
 
 // Static method
 $app = AppFactory::create();
@@ -55,9 +57,55 @@ $app->get('/', function (Request $request, Response $response) {
     return $response->withHeader('Content-Type', 'text/html');
 });
 
-// TODO: Login
+$app->group('/api/session', function (RouteCollectorProxy $group){
 
-// TODO: Logout
+    // Login
+    $group->get('/login', function (Request $request, Response $response) {
+        
+        $_SESSION["loggedIn"] = true;
+        $_SESSION["isAdmin"] = true;
+        $_SESSION["userID"] = 1;
+
+        $vars = stateVars();
+        $response->getBody()->write($vars);
+
+        // If header unassigned here, it would default to JSON and cause rendering errors
+        return $response;
+    });
+
+    // Logout
+    $group->get('/logout', function (Request $request, Response $response) {
+        
+        $_SESSION["loggedIn"] = false;
+        $_SESSION["isAdmin"] = false;
+        $_SESSION["userID"] = null;
+
+        $vars = stateVars();
+        $response->getBody()->write($vars);
+
+        // If header unassigned here, it would default to JSON and cause rendering errors
+        return $response;
+    });
+
+    $group->get('', function (Request $request, Response $response) {
+        $vars = stateVars();
+        $response->getBody()->write($vars);
+        // If header unassigned here, it would default to JSON and cause rendering errors
+        return $response;
+    });
+
+});
+
+function stateVars(){
+
+    $vars = array(
+        array('loggedIn' => $_SESSION["loggedIn"]),
+        array('isAdmin' => $_SESSION["isAdmin"]),
+        array('userID' => $_SESSION["userID"])
+    );
+
+    return json_encode($vars);
+}
 
 $app->group('/api/scores', function (RouteCollectorProxy $group){
 

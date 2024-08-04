@@ -1,6 +1,3 @@
-// var userID = 2;
-var userID = 25;
-
 window.onload=function(){
     const username = document.getElementById("username");
     const fname = document.getElementById("fname");
@@ -10,13 +7,32 @@ window.onload=function(){
     // Load user scores into this table, or display a message if there is no history... (i.e. a fresh account or all scores deleted)
 
     // Load the profile data when the page starts...
-    loadUserInfo(userID);
-    loadProfileScores(userID)
+    getUserID();
     getRegions();
 }
 
 async function getUserID(){
     
+}
+
+async function getUserID(){
+    const url = "../api/session";
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+        }
+    
+        let data = await response.json();
+        console.log(data);
+        let userID = data[2]["userID"];
+        // console.log(userID)
+        loadUserInfo(userID);
+        loadProfileScores(userID)
+
+    } catch (error) {
+        console.error(error.message);
+    }
 }
 
 async function loadUserInfo(userID){
