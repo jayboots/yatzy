@@ -17,7 +17,7 @@ class UserRegistry {
         $connection = $this->database->getConnection();
 
         // SQL statement to return the top 10 scores
-        $query = "SELECT user_id, username, first_name, last_name, regions.region_name, account_types.type_desc FROM public.users
+        $query = "SELECT user_id, username, first_name, last_name, regions.region_name, account_types.type_id, account_types.type_desc FROM public.users
         LEFT JOIN public.regions ON public.users.region_id = public.regions.region_id
         LEFT JOIN public.account_types ON public.users.type_id = public.account_types.type_id
         ORDER BY user_id ASC";

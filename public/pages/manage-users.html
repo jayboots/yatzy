@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0">
+    <meta name="author" content="Julia & Tori">
+    <meta name="description" content="Julia and Tori - Assignment 4">
+    <link rel="shortcut icon" href="#" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
+    <script type="text/javascript" src="../assets/manage-users.js" defer></script>
+    <title>👮 Manage Users</title>
+</head>
+<body>
+    <div id="welcome-msg"></div>
+    <div id="admin-restricted" style="display:none">
+        <p>Use this page to review and delete user accounts (but not ⚡administrators⚡!).</p>
+        <p>Looking for more information? Review the <a href="../admin/manage-scores">score logs</a>.</p>
+        <div id="scores-container">
+            <table id="user-table">
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Region</th>
+                    <th>Action</th>
+                </tr>
+                <tbody id="user-body">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

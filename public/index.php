@@ -44,17 +44,42 @@ $error_middleware = $app->addErrorMiddleware(true, true, true);
 $error_handler = $error_middleware->getDefaultErrorHandler();
 $error_handler->forceContentType('application/json'); //make error reports into json instead of displaying a trace or HTML garble
 
-//Main page loading route for the app root.
+// Page Routing
 $app->get('/', function (Request $request, Response $response) {
 
-    $_SESSION["loggedIn"];
-    $_SESSION["isAdmin"];
-    $_SESSION["userID"];
+    // Always check to see if these have been set or not.
+    checkForSessionVars();
 
     $view = file_get_contents("index.html");
     $response->getBody()->write($view);
 
     // If header unassigned here, it would default to JSON and cause rendering errors
+    return $response->withHeader('Content-Type', 'text/html');
+});
+
+$app->get('/admin/manage-scores', function (Request $request, Response $response) {
+
+    // Especially important for admin...
+    checkForSessionVars();
+
+    $view = file_get_contents("./pages/manage-scores.html");
+    $response->getBody()->write($view);
+    return $response->withHeader('Content-Type', 'text/html');
+});
+
+$app->get('/admin/manage-users', function (Request $request, Response $response) {
+
+    // Especially important for admin...
+    checkForSessionVars();
+
+    $view = file_get_contents("./pages/manage-users.html");
+    $response->getBody()->write($view);
+    return $response->withHeader('Content-Type', 'text/html');
+});
+
+$app->get('/leaderboard', function (Request $request, Response $response) {
+    $view = file_get_contents("./pages/leaderboard.html");
+    $response->getBody()->write($view);
     return $response->withHeader('Content-Type', 'text/html');
 });
 
@@ -97,6 +122,18 @@ $app->group('/api/session', function (RouteCollectorProxy $group){
     });
 
 });
+
+function checkForSessionVars(){
+    if(!isset($_SESSION["loggedIn"])){
+        $_SESSION["loggedIn"] = false;
+    };
+    if(!isset($_SESSION["isAdmin"])){
+        $_SESSION["isAdmin"] = false;
+    };
+    if(!isset($_SESSION["userID"])){
+        $_SESSION["userID"] = null;
+    };
+}
 function stateVars(){
     $vars = array(
         array('loggedIn' => $_SESSION["loggedIn"]),
