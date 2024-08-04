@@ -27,10 +27,6 @@ AppFactory::setContainer($container);
 
 session_start();
 
-$_SESSION["loggedIn"];
-$_SESSION["isAdmin"];
-$_SESSION["userID"];
-
 // Static method
 $app = AppFactory::create();
 
@@ -50,6 +46,11 @@ $error_handler->forceContentType('application/json'); //make error reports into 
 
 //Main page loading route for the app root.
 $app->get('/', function (Request $request, Response $response) {
+
+    $_SESSION["loggedIn"];
+    $_SESSION["isAdmin"];
+    $_SESSION["userID"];
+
     $view = file_get_contents("index.html");
     $response->getBody()->write($view);
 
@@ -64,7 +65,7 @@ $app->group('/api/session', function (RouteCollectorProxy $group){
         
         $_SESSION["loggedIn"] = true;
         $_SESSION["isAdmin"] = true;
-        $_SESSION["userID"] = 1;
+        $_SESSION["userID"] = 25;
 
         $vars = stateVars();
         $response->getBody()->write($vars);
@@ -87,6 +88,7 @@ $app->group('/api/session', function (RouteCollectorProxy $group){
         return $response;
     });
 
+    // Generic Status Return
     $group->get('', function (Request $request, Response $response) {
         $vars = stateVars();
         $response->getBody()->write($vars);
@@ -95,15 +97,12 @@ $app->group('/api/session', function (RouteCollectorProxy $group){
     });
 
 });
-
 function stateVars(){
-
     $vars = array(
         array('loggedIn' => $_SESSION["loggedIn"]),
         array('isAdmin' => $_SESSION["isAdmin"]),
         array('userID' => $_SESSION["userID"])
     );
-
     return json_encode($vars);
 }
 
@@ -140,6 +139,7 @@ $app->group('/api/users', function (RouteCollectorProxy $group){
     $group->delete('/{id:[0-9]+}', UserIndex::class . ':deleteUser')->add(DeleteUser::class);
 
     // Create a new user account with all the associated information (some of it optional)
+    // TODO: Log-in once signed up automatically.
     $group->post('/signup', [UserIndex::class, 'addNewUser']);
 });
 

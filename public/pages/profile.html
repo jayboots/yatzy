@@ -7,7 +7,7 @@
 	<meta name="author" content="Julia & Tori">
 	<meta name="description" content="Julia and Tori - Assignment 4">
 	<link rel="shortcut icon" href="#" />
-	<!-- <link rel="stylesheet" href="../css/styles.css"> -->
+	<link rel="stylesheet" href="../css/profile.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
 	<!-- Material lock icons from google -->
 	<script type="text/javascript" src="../assets/profile.js" defer></script>
@@ -17,42 +17,46 @@
 
 <body>
 
-    <h2 id="username">My Info</h2>
+    <h2 id="username">placeholder profile page</h2>
+    <div id="profile-form-container">
+        <form id="profile" action="/" method="GET">
+            <fieldset id="fields" disabled="disabled">
 
-    <div id="userProfile">
-        <div class="profile-entry" id="p1">
-            <p id="fname">First Name: </p>
-            <button>Edit</button>
-            <button>Save</button>
-            <button>Clear</button>
-        </div>
+                <label for="editFirstName">
+                    <strong>First Name</strong>
+                </label>
+                <input id="editFirstName"
+                name="editFirstName"
+                type="text"
+                required
+                minlength="1"
+                maxlength="20">
+                <div id="error"></div>
 
-        <div class="profile-entry" id="p2">
-            <p id="lname">Last Name: </p>
-            <button>Edit</button>
-            <button>Save</button>
-            <button>Clear</button>
-        </div>
+                <label for="editLastName">
+                    <strong>Last Name</strong>
+                </label>
+                <input id="editLastName"
+                name="editLastName"
+                type="text"
+                minlength="1"
+                maxlength="20">
 
-        <div class="profile-entry" id="p3">
-            <p id="rname">Region: </p>
-            <button>Edit</button>
-            <button>Save</button>
-            <button>Clear</button>
-        </div>
+                <label for="regionsList">
+                    <strong>Region Name</strong>
+                </label>
+                <select name="regionsList" id="regionSelector">
+                </select>
+            </fieldset>
+        </form>
+        <button id="btn-edit">Edit</button>
+        <button id="btn-cancel">Cancel</button>
+        <button id="btn-save">Save</button>
     </div>
 
-    <label for="regionsList">My Region:</label>
-    <select name="regionsList" id="regionsList">
-      <option value="1">Region 1</option>
-      <option value="2">Region 2</option>
-      <option value="3">Region 3</option>
-    </select>
 
-    <h3>My Scores (# Games)</h3>
-    <!-- Hide this if the array has results -->
-    <div id="scores-container"></div>
-    <div>
+    <div id="scores-container">
+        <h3 id="scores-header">My Scores (# Games)</h3>
         <table id="score-table">
             <tr>
                 <th>Date</th>
@@ -64,7 +68,8 @@
         </table>
     </div>
     <div id="msg-no-scores">
-        <p>You have no scores!</p>
+        <h3>Profile Score History</h3>
+        <p>No scores found! Would you consider <a href="/">playing a game of yatzy?</a></p>
     </div>
 
 </body>

@@ -18,10 +18,9 @@ Logged-In Users:
 - Change Last Name		--> DONE :)
 - Change Region			--> DONE :)
 - Play Yatzy			--> DONE :)
-- Submit Scores to Leaderboard  --> DONE :)
-- View Top 10			--> DONE :)
+- Submit Scores to Leaderboard
+- View Top 10
 - View Personal Score History	--> DONE :)
-- Delete Account (--> and then force Log-Out / variable reset)
 
 Admin:
 - View All Users		--> DONE :)
