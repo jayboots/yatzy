@@ -62,12 +62,6 @@ async function saveDetails(){
     console.log(url);
     // For validation
     if (canSubmit){
-        
-        let newValues = JSON.stringify({
-            "first_name": document.querySelector("#editFirstName").value,
-            "last_name": actualLastName,
-            "region_id": actualRegion
-        })
     
         let url = "../api/users/" + tempUserID;
 

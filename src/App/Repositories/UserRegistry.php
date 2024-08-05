@@ -119,7 +119,13 @@ class UserRegistry {
                 //Return the newly created record
                 $new_user = pg_fetch_all(pg_query($connection, "SELECT * FROM public.users
                 ORDER BY user_id DESC LIMIT 1"));
-                return $new_user[0];
+
+                // Update Session Variables
+                $_SESSION["loggedIn"] = true;
+                $_SESSION["isAdmin"] = false; 
+                $_SESSION["userID"] = (int) $new_user[0]["user_id"];
+                // header("Location: /");
+                exit;
             }
             else{
                 return $statement;

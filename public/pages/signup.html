@@ -1,66 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width-device-width, initial-scale=1.0">
-	<meta name="author" content="Julia & Tori">
-	<meta name="description" content="Sign-Up">
-	<link rel="shortcut icon" href="#" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
-	<!-- Material lock icons from google -->
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<script type="text/javascript" src="../assets/signup.js" defer></script>
-	
-	<title>Sign Up for an Account</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0">
+    <meta name="author" content="Julia & Tori">
+    <meta name="description" content="Sign-Up">
+    <link rel="shortcut icon" href="#" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
+    <!-- Material lock icons from google -->
+    <script type="text/javascript" src="../assets/signup.js" defer></script>
+    
+    <title>Sign Up</title>
 </head>
 
 <body>
+    <h1>Create an Account</h1>
+    <p>Sign up today to save your play history and have a chance at appearing in the top 10 rankings!</p>
+    <div id="profile-form-container">
+        <form id="profile">
+            <fieldset id="details">
+                <div>
+                    <label for="userName">
+                        <strong>Username</strong>
+                    </label>
+                    <input id="userName"
+                    name="userName"
+                    type="text"
+                    required
+                    minlength="1"
+                    maxlength="20">
+                </div>
 
-     <!-- Button to open the modal -->
-<button onclick="document.getElementById('id01').style.display='block'">Sign Up</button>
+                <div>
+                    <label for="psw"><strong>Password</strong></label>
+                    <input id="psw"
+                    name="psw"
+                    type="password"
+                    required
+                    minlength="8"
+                    maxlength="20">
+                </div>
 
-<!-- The Modal (contains the Sign Up form) -->
-<div id="id01" class="modal">
-  <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-  <form class="modal-content" action="/action_page.php">
-    <div class="container">
-      <h1>Create an account</h1>
-      <p>Register to save your scores and show up on  our leaderboard.</p>
-      <hr>
+                <div>
+                    <label for="firstName"><strong>Your First Name</strong></label>
+                    <input id="firstName"
+                    name="firstName"
+                    type="text"
+                    required
+                    minlength="1"
+                    maxlength="20">
+                </div>
 
-      <div>
-        <label for="psw"><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="username" required>
-      </div>
+                <div>
+                    <label for="lastName"><strong>Your Last Name (Optional)</strong></label>
+                    <input id="lastName"
+                    name="lastName"
+                    type="text"
+                    minlength="1"
+                    maxlength="20">
+                </div>
 
-      <div>
-        <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" required>
-      </div>
-
-      <div>
-        <label for="fname"><b>Your First Name</b></label>
-        <input type="text" placeholder="First Name" name="fname" required>
-      </div>
-
-      <div>
-        <label for="lname"><b>Your Last Name (Optional)</b></label>
-        <input type="text" placeholder="Last Name" name="lname">
-      </div>
-
-      <div>
-        <label for="region"><b>Region (Optional)</b></label>
-        <input type="text" placeholder="Select a Region" name="region">
-      <div>
-
-      <div class="clearfix">
-        <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-        <button type="submit" class="signup">Sign Up</button>
-      </div>
+                <div>
+                    <label for="regionsList">
+                        <strong>Region Name</strong>
+                    </label>
+                    <select name="regionsList" id="regionSelector">
+                    </select>
+                </div>
+            </fieldset>
+        </form>
+        <button id="btn-cancel">Cancel</button>
+        <button id="btn-submit">Submit</button>
     </div>
-  </form>
-</div> 
-
 </body>
 </html>
