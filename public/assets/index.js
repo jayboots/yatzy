@@ -302,7 +302,7 @@ function toggleLock(){
 function endGame(){
     console.log("Game over, man. Game over!");
 
-    let name = window.prompt('Enter your name');
+    let name = userID;
     let score = document.getElementById("total-score").innerText;
     submitScore(name, score)
     
@@ -443,7 +443,6 @@ function clearSelectedRows(){
     }
 }
 
-
 /**
  * Gets leaderboard scores and names 
  *
@@ -452,10 +451,10 @@ function clearSelectedRows(){
  * @param {*} score
  * @returns {*}
  */
-async function submitScore(name, score) {
+async function submitScore(userID, score) {
   //request setup
-  const url = '/score';
-  const jsonData = { name, score };
+  const url = 'api/score';
+  const jsonData = { userID, score };
   const options = {
       method: 'POST',
       headers: {

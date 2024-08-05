@@ -167,7 +167,32 @@ The player's name is solicited by a pop-up that occurs when the game ends and th
 
 
 ## Database Design
+
 ![image](schema.png)
 
 
 The full database design document can be found [here](db.md)
+
+### Admin Functionalities
+
+#### Manage Users
+
+![image](admin_users.jpg)
+
+#### Manage Scores
+
+![image](admin_scores.jpg)
+
+### Player Functionalities
+
+![image](profile_page.jpg)
+
+![image](edit_profile.jpg)
+
+### Create Account
+
+![image](create_account.jpg)
+
+### New Leaderboard
+
+![image](new_leaderboard.jpg)

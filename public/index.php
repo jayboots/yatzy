@@ -27,9 +27,9 @@ AppFactory::setContainer($container);
 
 session_start();
 
-$_SESSION["loggedIn"] = true;
-$_SESSION["isAdmin"] = true;
-$_SESSION["userID"] = 2;
+$_SESSION["loggedIn"];
+$_SESSION["isAdmin"];
+$_SESSION["userID"];
 
 // Static method
 $app = AppFactory::create();
@@ -112,19 +112,19 @@ $app->get('/leaderboard', function (Request $request, Response $response) {
 
 $app->group('/api/session', function (RouteCollectorProxy $group){
 
-    // // Login
-    // $group->get('/login', function (Request $request, Response $response) {
+    // Login
+    $group->get('/login', function (Request $request, Response $response) {
         
-    //     $_SESSION["loggedIn"] = true;
-    //     $_SESSION["isAdmin"] = true;
-    //     $_SESSION["userID"] = 2;
+        $_SESSION["loggedIn"] = true;
+        $_SESSION["isAdmin"] = true;
+        $_SESSION["userID"] = 2;
 
-    //     $vars = stateVars();
-    //     $response->getBody()->write($vars);
+        $vars = stateVars();
+        $response->getBody()->write($vars);
 
-    //     // If header unassigned here, it would default to JSON and cause rendering errors
-    //     return $response;
-    // });
+        // If header unassigned here, it would default to JSON and cause rendering errors
+        return $response;
+    });
 
     // Logout
     $group->get('/logout', function (Request $request, Response $response) {
