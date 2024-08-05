@@ -312,6 +312,31 @@ div.button-container{
     }
 }
 
+.btn-navbar {
+    font-weight: bold;
+    background-color: var(--white);
+    height: 3rem;
+    border: 1px solid var(--secondary-shadow);
+    border-radius: 0;
+    color: var(--secondary-shadow);
+    box-shadow: 0.25rem 0.25rem 1px var(--secondary-shadow);
+    cursor: pointer;
+
+    &:hover{
+        color: var(--secondary);
+        border: 0;
+        box-shadow: 0.25rem 0.25rem 1px var(--secondary);
+    }
+    
+    &:disabled{
+        background-color: lightgrey;
+        box-shadow: 0 0 0 var(--primary-shadow);
+        border: 1px darkgrey solid;
+        color: darkgrey;
+        cursor: not-allowed;
+    }
+}
+
 div.leaderboard-container{
     justify-content: center;
     padding: 0.5rem;

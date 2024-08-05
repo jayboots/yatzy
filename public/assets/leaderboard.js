@@ -58,7 +58,7 @@ function drawScores(data){
 
     for (const key in data) {
 
-        console.log(data[key])
+        // console.log(data[key])
 
         let row = scoreRows.insertRow(0)
 
@@ -94,14 +94,19 @@ function drawScores(data){
     }
 
     let analysisMsg = document.getElementById("user-analysis-msg");
-    if (involvement == 0){
-        analysisMsg.innerHTML = '<h4>You can do it! 💪</h4>' + '<p>Why not <a href="/>play again</a> and try for a higher score?</p>'
-    }
-    else if (involvement >= 8){
-        analysisMsg.innerHTML = '<h4>Are you for real? 👀</h4>' + '<p> You\'re dominating the leaderboard!</p>'
+
+    if (tempUserID == null){
+        analysisMsg.innerHTML = '<h4>Join the Fun! 🎲</h4>' + '<p>To save your scores and play against others, make sure to <a href="/log-in">log in</a>! No account? You can <a href="/sign-up">make one here</a> for free!</p>'
     }
     else{
-        analysisMsg.innerHTML = '<h4>Congratulations! ⭐</h4>' + '<p>You\'ve managed to place in <strong>' + involvement + ' out of 10</strong> leaderboard slots! Keep it up!</p>'
+        if (involvement == 0){
+            analysisMsg.innerHTML = '<h4>You can do it! 💪</h4>' + '<p>Why not <a href="/">start a new game</a> and try for a higher score?</p>'
+        }
+        else if (involvement >= 8){
+            analysisMsg.innerHTML = '<h4>Are you for real? 👀</h4>' + '<p> You\'re dominating the leaderboard!</p>'
+        }
+        else{
+            analysisMsg.innerHTML = '<h4>Congratulations! ⭐</h4>' + '<p>You\'ve managed to place in <strong>' + involvement + ' out of 10</strong> leaderboard slots! Keep it up!</p>'
+        }
     }
-
 }

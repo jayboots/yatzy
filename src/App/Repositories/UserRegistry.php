@@ -63,12 +63,7 @@ class UserRegistry {
         }
     }
 
-    public function login(string $username, string $password): array|bool
-    {
-        // TODO: Just for testing right now, no DB validation yet.
-        return [$username, $password];
-    }
-    
+
     /** Adds a new user to the users table
      * Payload example:
      * {
@@ -129,6 +124,31 @@ class UserRegistry {
             }
             else{
                 return $statement;
+            }
+        }
+    }
+
+    // Checks to see if a user exists
+    public function validateUser(array $data) {
+        $connection = $this->database->getConnection();
+
+        $query = "SELECT *
+        FROM public.users
+        WHERE users.username = $1 AND users.password = $2";
+
+        if (!$connection){
+            return http_response_code(502);
+        }
+        else {
+            $query_result = pg_query_params($connection, $query, array(
+                $data['username'],
+                $data['password']
+            ));
+            if (!$query_result){
+                return http_response_code(404);
+            }
+            else {
+                return pg_fetch_all($query_result);
             }
         }
     }

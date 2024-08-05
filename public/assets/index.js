@@ -1,5 +1,8 @@
 const modelsRoot = '/app/models/';
-// const apiRoot = '/api/';
+
+var loggedIn = false;
+var isAdmin = false;
+var userID = null;
 
 // UI Variables are used to handle drawing actions or UI behaviours only
 var targetChoice = null;
@@ -63,6 +66,10 @@ window.onload=function(){
     }
 
     resetBtn.disabled = false;
+
+    // Check for Account Session Variables!
+    getSessionInfo();
+
 }
 
 // ================== UI FUNCTIONS ==================
@@ -531,11 +538,144 @@ function getGameState(data, verbose=false){
     }
 }
 
-function updateNavBar(){
-    // TODO: Implement
-    // Update the navbar to show/hide (enable/disable) certain buttons in the navbar in certain contexts, such as:
-    // Login
-    // Logout
-    // Page Navigation
-    // User Class...
+async function getSessionInfo(){
+    var url = "../api/session";
+
+    var sectionHeading = document.getElementById("username");
+
+    try {
+        let response = await fetch(url);
+        if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+        }
+    
+        let data = await response.json();
+        updateNavBar(data);
+
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+function updateNavBar(data){
+    loggedIn = data[0]["loggedIn"];
+    isAdmin = data[1]["isAdmin"];
+    userID = data[2]["userID"]
+
+    console.log(data[0])
+    console.log(data[1])
+    console.log(data[2])
+
+    var navContents = document.getElementById("navbar")
+    navContents.innerHTML = "";
+
+    let collection = ["Leaderboard", "Sign Up", "Log In", "My Profile", "Manage Scores", "Manage Users", "Log Out"]
+
+    // Always load the leaderboard button...
+    let btn_lb = document.createElement("button")
+    btn_lb.id = collection[0].toLowerCase().trim().split(' ').join('-')
+    btn_lb.innerHTML = collection[0];
+    btn_lb.className = "btn-navbar";
+    btn_lb.addEventListener("click", goToLeaderboard, true)
+    navContents.appendChild(btn_lb)
+
+    if (loggedIn){
+        // Add My Profile button
+        let btn_mp = document.createElement("button")
+        btn_mp.id = collection[3].toLowerCase().trim().split(' ').join('-')
+        btn_mp.innerHTML = collection[3];
+        btn_mp.className = "btn-navbar";
+        btn_mp.addEventListener("click", goToProfile, true)
+        navContents.appendChild(btn_mp)
+
+        if (isAdmin){
+
+            // Manage Scores button
+            let btn_ms = document.createElement("button")
+            btn_ms.id = collection[4].toLowerCase().trim().split(' ').join('-')
+            btn_ms.innerHTML = collection[4];
+            btn_ms.className = "btn-navbar";
+            btn_ms.addEventListener("click", manageScores, true)
+            navContents.appendChild(btn_ms)
+            
+            // Manage Users button
+            let btn_mu = document.createElement("button")
+            btn_mu.id = collection[5].toLowerCase().trim().split(' ').join('-')
+            btn_mu.innerHTML = collection[5];
+            btn_mu.className = "btn-navbar";
+            btn_mu.addEventListener("click", manageUsers, true)
+            navContents.appendChild(btn_mu)
+        }
+
+        // Add Log Out button
+        let btn_lo = document.createElement("button")
+        btn_lo.className = "btn-navbar";
+        btn_lo.id = collection[6].toLowerCase().trim().split(' ').join('-')
+        btn_lo.innerHTML = collection[6];
+        btn_lo.addEventListener("click", logOut, true)
+        navContents.appendChild(btn_lo)
+    }
+    else{
+        // Add sign-up Button
+        let btn_su = document.createElement("button")
+        btn_su.id = collection[1].toLowerCase().trim().split(' ').join('-')
+        btn_su.innerHTML = collection[1];
+        btn_su.className = "btn-navbar";
+        btn_su.addEventListener("click", goToSignup, true)
+        navContents.appendChild(btn_su)
+
+        // Add log-in Button
+        // let btn_li = document.createElement("button")
+        // btn_li.id = collection[2].toLowerCase().trim().split(' ').join('-')
+        // btn_li.innerHTML = collection[2];
+        // btn_li.addEventListener("click", goToLogin, true)
+        // navContents.appendChild(btn_li)
+    }
+}
+
+function goToLeaderboard(){
+    window.location='./leaderboard';
+}
+
+function goToSignup(){
+    window.location='./sign-up';
+}
+
+// function goToLogin(){
+//     window.location='./log-in';
+// }
+
+function goToProfile(){
+    window.location='./profile';
+}
+
+function manageUsers(){
+    window.location='./admin/manage-users';
+}
+
+function manageScores(){
+    window.location='./admin/manage-scores';
+}
+
+async function logOut(){
+    var url = "./api/session/logout";
+
+    try {
+        let response = await fetch(url);
+        if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+        }
+    
+        let data = await response.json();
+        console.log(data)
+        // Process the result on the main page...
+        // Note: accessing log-out logs the player out.
+        getSessionInfo()
+
+        // Also erase any ongoing games...
+        resetGame()
+
+    } catch (error) {
+        console.error(error.message);
+    }
 }

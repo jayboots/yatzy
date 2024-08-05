@@ -77,6 +77,29 @@ $app->get('/admin/manage-users', function (Request $request, Response $response)
     return $response->withHeader('Content-Type', 'text/html');
 });
 
+$app->get('/profile', function (Request $request, Response $response) {
+
+    checkForSessionVars();
+
+    $view = file_get_contents("./pages/profile.html");
+    $response->getBody()->write($view);
+    return $response->withHeader('Content-Type', 'text/html');
+});
+
+$app->get('/sign-up', function (Request $request, Response $response) {
+
+    $view = file_get_contents("./pages/signup.html");
+    $response->getBody()->write($view);
+    return $response->withHeader('Content-Type', 'text/html');
+});
+
+$app->get('/log-in', function (Request $request, Response $response) {
+
+    $view = file_get_contents("./pages/login.html");
+    $response->getBody()->write($view);
+    return $response->withHeader('Content-Type', 'text/html');
+});
+
 $app->get('/leaderboard', function (Request $request, Response $response) {
     $view = file_get_contents("./pages/leaderboard.html");
     $response->getBody()->write($view);
@@ -85,19 +108,19 @@ $app->get('/leaderboard', function (Request $request, Response $response) {
 
 $app->group('/api/session', function (RouteCollectorProxy $group){
 
-    // Login
-    $group->get('/login', function (Request $request, Response $response) {
+    // // Login
+    // $group->get('/login', function (Request $request, Response $response) {
         
-        $_SESSION["loggedIn"] = true;
-        $_SESSION["isAdmin"] = true;
-        $_SESSION["userID"] = 2;
+    //     $_SESSION["loggedIn"] = true;
+    //     $_SESSION["isAdmin"] = true;
+    //     $_SESSION["userID"] = 2;
 
-        $vars = stateVars();
-        $response->getBody()->write($vars);
+    //     $vars = stateVars();
+    //     $response->getBody()->write($vars);
 
-        // If header unassigned here, it would default to JSON and cause rendering errors
-        return $response;
-    });
+    //     // If header unassigned here, it would default to JSON and cause rendering errors
+    //     return $response;
+    // });
 
     // Logout
     $group->get('/logout', function (Request $request, Response $response) {
@@ -176,105 +199,14 @@ $app->group('/api/users', function (RouteCollectorProxy $group){
     $group->delete('/{id:[0-9]+}', UserIndex::class . ':deleteUser')->add(DeleteUser::class);
 
     // Create a new user account with all the associated information (some of it optional)
-    // TODO: Log-in once signed up automatically.
     $group->post('/signup', [UserIndex::class, 'addNewUser']);
+
+    // Log into an account
+    $group->post('/login', [UserIndex::class, 'validateUser']);
 });
 
 //Endpoint for getting all geographic location categories a player can assign to themselves.
 $app->get('/api/regions', RegionIndex::class);
-
-//==========Integrating this code==========
-
-// function jsonReply(Response $response, $data)
-// {
-//     $payload = json_encode($data);
-//     $response->getBody()->write($payload);
-//     return $response->withHeader('Content-Type', 'application/json');
-// }
-
-/**
- * URL: /score
- * saves player name and score to session variable
- */
-// $app->post('/score', function(Request $request, Response $response, array $args) {
-//     $userId = $request->getParsedBody()['userId'];
-//     $score = $request->getParsedBody()['score'];
-
-//     //temp user id
-//     $userId = 1;
-
-//     if (!$GLOBALS['connection']){
-//         return http_response_code(502);
-//     }
-//     else {
-//         $query = "INSERT INTO scores ( score, user_id ) VALUES ('{$score}', '{$userId}');";
-                
-//         $query_result = pg_query($GLOBALS['connection'], $query);
-
-//         if ($query_result) {
-//             $query = "SELECT username, score
-//                     FROM scores left join users on scores.user_id = users.user_id
-//                     ORDER BY score DESC 
-//                     limit 10";
-        
-//             $query_result = pg_query($GLOBALS['connection'], $query);
-//             $results = pg_fetch_all($query_result);
-//             jsonReply($response, $results);
-//         }
-//     }
-    
-//     return $response; 
-// });
-
-// /**
-//  * URL: /getleaderboard
-//  * no parameters
-//  * gets the top 10 global leaderboard without entering a score
-//  */
-// $app->get('/leaderboard', function(Request $request, Response $response, array $args) {
-//     if (!$GLOBALS['connection']){
-//         return http_response_code(502);
-//     }
-//     else {
-//         $query = "SELECT username, score
-//                     FROM scores left join users on scores.user_id = users.user_id
-//                     ORDER BY score DESC 
-//                     limit 10";
-                
-//         $query_result = pg_query($GLOBALS['connection'], $query);
-//         $results = pg_fetch_all($query_result);
-//         jsonReply($response, $results);
-//     }
-    
-//     return $response; 
-// });
-
-// /**
-//  * URL: /leaderboard/{id}
-//  * params: user id
-//  * gets all of the user's scores
-//  */
-// $app->get('/leaderboard/{id}', function(Request $request, Response $response, array $args) {
-//     $userId = $request->getQueryParams()['id'];
-
-//     //temp user id
-//     $userId = 1;
-
-//     if (!$GLOBALS['connection']){
-//         return http_response_code(502);
-//     }
-//     else {
-//         $query = "SELECT username, score
-//                     FROM scores left join users on scores.user_id = users.user_id
-//                     WHERE scores.user_id = '{$userId}'";
-                
-//         $query_result = pg_query($GLOBALS['connection'], $query);
-//         $results = pg_fetch_all($query_result);
-//         jsonReply($response, $results);
-//     }
-    
-//     return $response; 
-// });
 
 // Run app
 $app->run();

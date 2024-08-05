@@ -22,7 +22,7 @@ async function getUserID(){
             console.log("Session shows admin priviledges and logged in. Proceed.")
             let secure = document.getElementById("admin-restricted")
             secure.style.display = "block"
-            welcomeMsg.innerHTML = "<h2>Administrator Panel</h2>" + "<h3>Welcome to the Score Management Utility Page</h3>"
+            welcomeMsg.innerHTML = "<h1>Administrator Panel</h1> <hr />" + "<h3>Welcome to the User Management Utility Page 🔧</h3>"
             loadUsers();
         }
         else{

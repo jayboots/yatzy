@@ -74,6 +74,38 @@ class UserIndex{
         }
     }
 
+
+    public function validateUser(Request $request, Response $response): Response
+    {
+
+        $body = $request->getParsedBody();
+
+        $newUser = $this->userList->validateUser($body);
+
+        if ($newUser == false){
+            $body = json_encode([
+                'message' => 'Could not validate user.'
+            ]);
+
+            $_SESSION["loggedIn"] = false;
+            $_SESSION["isAdmin"] = false;
+            $_SESSION["userID"] = 5;
+        }
+        else{
+            $body = json_encode([
+                'message' => 'Validated user.',
+                'entry' => $newUser
+            ]);
+
+            $_SESSION["loggedIn"] = true;
+            $_SESSION["isAdmin"] = true;
+            $_SESSION["userID"] = 1;
+        }
+        $response->getBody()->write($body);
+        return $response->withStatus(201);
+    }
+
+
     public function updateUser(Request $request, Response $response, string $id): Response
     {
         $this->validator->mapFieldsRules([

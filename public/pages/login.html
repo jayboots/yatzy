@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0">
+    <meta name="author" content="Julia & Tori">
+    <meta name="description" content="Sign-Up">
+    <link rel="shortcut icon" href="#" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
+    <!-- Material lock icons from google -->
+    <script type="text/javascript" src="../assets/login.js" defer></script>
+    
+    <title>Log In</title>
+</head>
+
+<body>
+    <nav class="navbar"><a href="./">
+        <button>Back to Main Page</button></a></nav>
+    <h1>🔑Log in to Your Account</h1>
+    <p>Track and save your game sessions and compete against other players!</p>
+    <div id="profile-form-container">
+        <form id="profile">
+            <fieldset id="details">
+                <div>
+                    <label for="userName">
+                        <strong>Username</strong>
+                    </label>
+                    <input id="userName"
+                    name="userName"
+                    type="text"
+                    required
+                    minlength="1"
+                    maxlength="20">
+                </div>
+
+                <div>
+                    <label for="psw"><strong>Password</strong></label>
+                    <input id="psw"
+                    name="psw"
+                    type="password"
+                    required
+                    minlength="8"
+                    maxlength="20">
+                </div>
+            </fieldset>
+        </form>
+        <button id="btn-cancel">Cancel</button>
+        <button id="btn-submit">Log In</button>
+    </div>
+</body>
+</html>
