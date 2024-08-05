@@ -177,22 +177,22 @@ The full database design document can be found [here](db.md)
 
 #### Manage Users
 
-![image](admin_users.jpg)
+![image](assets/design_system/admin_users.jpg)
 
 #### Manage Scores
 
-![image](admin_scores.jpg)
+![image](assets/design_system/admin_scores.jpg)
 
 ### Player Functionalities
 
-![image](profile_page.jpg)
+![image](assets/design_system/profile_page.jpg)
 
-![image](edit_profile.jpg)
+![image](assets/design_system/edit_profile.jpg)
 
 ### Create Account
 
-![image](create_account.jpg)
+![image](assets/design_system/create_account.jpg)
 
 ### New Leaderboard
 
-![image](new_leaderboard.jpg)
+![image](assets/design_system/new_leaderboard.jpg)
