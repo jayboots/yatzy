@@ -27,9 +27,7 @@ AppFactory::setContainer($container);
 
 session_start();
 
-$_SESSION["loggedIn"];
-$_SESSION["isAdmin"];
-$_SESSION["userID"];
+checkForSessionVars();
 
 // Static method
 $app = AppFactory::create();
@@ -61,7 +59,7 @@ $app->get('/', function (Request $request, Response $response) {
     return $response->withHeader('Content-Type', 'text/html');
 });
 
-$app->get('/admin/manage-scores', function (Request $request, Response $response) {
+$app->get('/manage-scores', function (Request $request, Response $response) {
 
     // Especially important for admin...
     checkForSessionVars();
@@ -71,7 +69,7 @@ $app->get('/admin/manage-scores', function (Request $request, Response $response
     return $response->withHeader('Content-Type', 'text/html');
 });
 
-$app->get('/admin/manage-users', function (Request $request, Response $response) {
+$app->get('/manage-users', function (Request $request, Response $response) {
 
     // Especially important for admin...
     checkForSessionVars();

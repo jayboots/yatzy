@@ -45,9 +45,9 @@
 
 ### SQL Schema Excerpt
 
-**Note:** see [schema](/db/schema.sql) for a full schema with primary keys and foreign keys.
+**Note:** see [schema](/db/schema.sql) for a full schema with primary keys, foreign keys, and required constraints.
 
-The below excerpt is just for demonstration purposes.
+The below excerpt is just for demonstration purposes and is significantly less verbose.
 
 ```sql
 -- Table structure for table `account_types`

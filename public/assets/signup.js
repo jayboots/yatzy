@@ -64,7 +64,7 @@ async function getRegions(){
 
 async function register(){
 
-    console.log("Clicked me")
+    // console.log("Clicked me")
     var url = "../api/users/signup"
 
     if (canSubmit){

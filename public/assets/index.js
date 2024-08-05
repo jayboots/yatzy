@@ -69,6 +69,7 @@ window.onload=function(){
 
     // Check for Account Session Variables!
     getSessionInfo();
+    
 
 }
 
@@ -96,10 +97,12 @@ function resetGame(){
                 drawDice(_activeHand=data["game"]["activeHand"], _lockRoster=data["game"]["lockRoster"])
                 drawLocks(data["game"]["lockRoster"])
                 deselectDice()
+                
+                // // set leaderboard to hidden
+                // const leaderboard = document.getElementById("leaderboard");
+                // leaderboard.style.display = "none";
 
-                // set leaderboard to hidden
-                const leaderboard = document.getElementById("leaderboard");
-                leaderboard.style.display = "none";
+                getSessionInfo()
 
             }
             else if (xhr.status == 404){ //if resoure not found
@@ -301,14 +304,17 @@ function toggleLock(){
  */
 function endGame(){
     console.log("Game over, man. Game over!");
-
-    let name = userID;
     let score = document.getElementById("total-score").innerText;
-    submitScore(name, score)
-    
-    //show leaderboard
-    let leaderboard = document.getElementById("leaderboard");
-    leaderboard.style.display = "inline";
+    if(userID != null || loggedIn == false){
+        submitScore(userID, score)
+        window.alert("Game over! Check your profile for a new play entry");
+        goToProfile()
+    }
+    else{
+        // If you're not logged in
+        window.alert("Game over! Sign up to save your score.");
+        goToSignup()
+    }
 }
 
 /**
@@ -407,9 +413,7 @@ function toggleRowSelect(){
  * @param {*} data - passed from GET request
  */
 function drawScoreCard(data){
-    // console.log("Drawing the scorecard")
 
-    // Remove any selected rows when re-drawing the scorecard
     clearSelectedRows()
 
     let scoreTable = document.getElementsByClassName("table-row");
@@ -451,48 +455,86 @@ function clearSelectedRows(){
  * @param {*} score
  * @returns {*}
  */
-async function submitScore(userID, score) {
-  //request setup
-  const url = 'api/score';
-  const jsonData = { userID, score };
-  const options = {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json' 
-      },
-      body: JSON.stringify(jsonData) 
-  };
+// async function submitScore(userID, score) {
+//   //request setup
+//   const url = 'api/score';
+//   const jsonData = { userID, score };
+//   const options = {
+//       method: 'POST',
+//       headers: {
+//           'Content-Type': 'application/json' 
+//       },
+//       body: JSON.stringify(jsonData) 
+//   };
 
-  //get data from api and update html page
-  fetch(url, options).then(response => {
-        if (!response.ok) {
-            throw new Error("failed with: "+ response.status);
+//   //get data from api and update html page
+//   fetch(url, options).then(response => {
+//         if (!response.ok) {
+//             throw new Error("failed with: "+ response.status);
+//         }
+//         return response.json();
+
+//   }).then(data => {
+//         let scoreData = JSON.parse(JSON.stringify(data));
+//         let scoreboard = document.getElementById("scores");
+//         //delete current scoreboard
+//         scoreboard.innerHTML = '';
+
+//       //update scoreboard with new scores
+//       console.log(scoreData);
+//       scoreData.map((score, index) => {
+//         let row = scoreboard.insertRow(-1);
+//         let rank = row.insertCell(0);
+//         let name = row.insertCell(1);
+//         let result = row.insertCell(2);
+//         rank.innerHTML = index+1;
+//         name.innerHTML = score.username;
+//         result.innerHTML = score.score;
+//       })
+
+//   }).catch(error => {
+//         console.error("fetch error: ", error);
+//   });
+// }
+
+async function submitScore(userID, score){
+
+    console.log("Clicked me")
+    var url = "../api/scores"
+
+    canSubmit = true;
+
+    if (canSubmit){
+
+        let newValues = JSON.stringify({
+            "user_id" :  userID,
+            "score": score,
+        })
+
+        console.log(newValues);
+
+        try {
+            let response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: newValues,
+                });
+            if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+            }
+
+            let data = await response.json();
+            console.log("Registered new score.")
+            console.log(data);
+            
+
+        } catch (error) {
+            console.error(error.message);
         }
-        return response.json();
-
-  }).then(data => {
-        let scoreData = JSON.parse(JSON.stringify(data));
-        let scoreboard = document.getElementById("scores");
-        //delete current scoreboard
-        scoreboard.innerHTML = '';
-
-      //update scoreboard with new scores
-      console.log(scoreData);
-      scoreData.map((score, index) => {
-        let row = scoreboard.insertRow(-1);
-        let rank = row.insertCell(0);
-        let name = row.insertCell(1);
-        let result = row.insertCell(2);
-        rank.innerHTML = index+1;
-        name.innerHTML = score.username;
-        result.innerHTML = score.score;
-      })
-
-  }).catch(error => {
-        console.error("fetch error: ", error);
-  });
+    }
 }
-
 
 /**
  * Handles information about the game state and optionally writes state information to the console.
@@ -650,11 +692,11 @@ function goToProfile(){
 }
 
 function manageUsers(){
-    window.location='./admin/manage-users';
+    window.location='./manage-users';
 }
 
 function manageScores(){
-    window.location='./admin/manage-scores';
+    window.location='./manage-scores';
 }
 
 async function logOut(){

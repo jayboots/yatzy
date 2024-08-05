@@ -2,14 +2,16 @@
 
 This document outlines the design system for the project.
 
-## Fonts
+## Yatzy Implementation
 
-This project uses two web fonts provided for free use by Google.
+### Fonts
+
+The Yatzy portion of this project uses two web fonts provided for free use by Google.
 
 - **Primary Font:** Open Sans, sans-serif
 - **Logo Font:** Playwrite Polska, cursive
 
-## Colours
+### Colours
 
 - **Primary Colour:** #eb3349 (Munsell Red)
 - **Primary Accent:** #f45c43 (Tomato Red)
@@ -18,6 +20,10 @@ This project uses two web fonts provided for free use by Google.
 - **Secondary Dark:** #4a7e92 (Air Force Blue)
 - **Tertiary Colour:** #ffffff (White)
 - **Tertiary Accent:** #000000 (Black)
+
+## Database Implementation Styles
+
+The additions to this project that leverage the database make use of [Water.css](https://watercss.kognise.dev/). This classless CSS package is intended for backend-driven development.
 
 ## Designing the Dice
 
@@ -110,13 +116,30 @@ Unlike a paper scorecard, the category row directly under the cursor will change
 ### End of the game
 
 - The game ends when the score card has been completed and all 15 turns.
-- A pop-up appears upon submitting the final score, prompting the player to input their name.
-- Upon inputting their name, the leaderboard will appear below the scoreboard.
-- If the player's score is within the top 10 scores, their name, score, and rank will be displayed alongside any other entries.
-- The player can begin a new game by clicking the "Start a New Game" button found next to thet logo. This will start a new game and hide the leaderboard.
+- A pop-up appears upon submitting the final score. If not logged in, the player's score will not be saved to the leaderboard. The player will be redirected to the sign-up page.
+- If a player is logged in, they will be re-directed to their profile where they will see the latest record of their game.
+
+![image](assets/design_system/profile_page.jpg)
+
+- If the player's score is within the top 10 scores, their name, score, and rank will be displayed alongside any other entries on the actual leaderboard. The revised leaderboard design is discussed later.
+- The player can begin a new game by clicking the "Start a New Game" button on the main game page. This will start a new game and hide the leaderboard.
 - To quit the game, the player closes the browser.
 
-![image](assets/design_system/gameover.gif)
+### Menu Bar (**NEW**)
+
+The menu bar appears at the top of the yatzy page and displays different elements depending on the permissions and session states of the player / account.
+
+#### Non-logged in user
+
+![image](assets/design_system/menu_1.jpg)
+
+#### Logged in player
+
+![image](assets/design_system/menu_2.jpg)
+
+#### Logged in administrator
+
+![image](assets/design_system/menu_3.jpg)
 
 ### Header
 
@@ -151,7 +174,9 @@ The cursor will change to reflect components that are interactive, or to signify
 - The **default** cursor shows in all other instances.
 - The **hourglass** cursor will appear when an AJAX request is processing (i.e. for ready states 1, 2, and 3), provided the cursor is not currently showing as **forbidden**.
 
-## Designing the Leaderboard
+## Designing the Leaderboard (Obsolete)
+
+**NOTE:** *The following describes the original leaderboard design prior to implementing a database*.
 
 The original leaderboard functions and features were designed in a prototype (see 'submitScore.html') and connected to a JSON API. Names were solicited via a form and 'scores" were simulated via a random number generator.
 
@@ -173,26 +198,90 @@ The player's name is solicited by a pop-up that occurs when the game ends and th
 
 The full database design document can be found [here](db.md)
 
-### Admin Functionalities
+## Database Functionalities
 
-#### Manage Users
+### All Users
 
-![image](assets/design_system/admin_users.jpg)
+#### Leaderboard
 
-#### Manage Scores
+All players, even those logged out, are able to view the leaderboard via clicking on the navbar menu item. However, a different message will appear depending on whether or not the player is logged-in or not.
 
-![image](assets/design_system/admin_scores.jpg)
+![image](assets/design_system/leaderboard_new.gif)
 
-### Player Functionalities
+ Players not logged in will be encouraged to register for accounts.
 
-![image](assets/design_system/profile_page.jpg)
+If the player is logged in, they will recieve different messages depending on if they have ranked in the leaderboard or not.
 
-![image](assets/design_system/edit_profile.jpg)
+![image](assets/design_system/leaderboard_player.gif)
 
-### Create Account
+#### Log-in Page
 
-![image](assets/design_system/create_account.jpg)
+Players with existing accounts can log in using their credentials on the login page.
 
-### New Leaderboard
+![image](assets/design_system/logging_in.gif)
 
-![image](assets/design_system/new_leaderboard.jpg)
+#### Sign-up Page
+
+Players without accounts can choose to register a new account. After registering, players will be logged-in automatically to the new account.
+
+#### Access Restrictions
+
+Players who try to access administrator parts of the website without permission (via api manipulation) will recieve this notice when a page loads.
+
+![image](assets/design_system/trespassing.jpg)
+
+### Logged-In Players
+
+To evaluate player functions, the following regular-access account has been included in both schema export and seed data.
+  
+  - username: diceguy, password: dice
+  - username: yatzia, password: 12345
+
+You may review all available account information in the database with the following query (the export has more than the seed data):
+
+```sql
+SELECT * FROM public.users
+ORDER BY user_id ASC
+```
+
+#### User Profiles
+
+Logged-in users can see their own profiles, play history, and edit their name and region information.
+
+![image](assets/design_system/profile_page.gif)
+
+#### Leaderboard Highlighting
+
+Players are able to see their position in the leaderboard and recieve specialized commentary depending on how many ranks they occupy.
+
+![image](assets/design_system/leaderboard_player_2.jpg)
+
+### Administrators
+
+To evaluate administrator functions, the following administrator accounts included in the schema export.
+  
+  - username: toriwu, password: 12345
+  - username: yatzia, password: 12345
+
+You may review all account information in the database with the following query:
+
+```sql
+SELECT * FROM public.users
+ORDER BY user_id ASC
+```
+
+#### Score Management
+
+Administrators have access to all scores and can delete score entries that are suspicious. Suspicious scores are flagged with an emoji.
+
+![image](assets/design_system/score_management.gif)
+
+#### User Management
+
+For quicker results, administrators can delete the accounts of repeat offenders via the User Management panel.
+
+![image](assets/design_system/user_management.gif)
+
+In this way, administrators can fairly maintain the integrity of the leaderboard...
+
+![image](assets/design_system/leaderboard_result.jpg)
