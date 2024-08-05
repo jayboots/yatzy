@@ -87,9 +87,6 @@ class UserIndex{
                 'message' => 'Could not validate user.'
             ]);
 
-            $_SESSION["loggedIn"] = false;
-            $_SESSION["isAdmin"] = false;
-            $_SESSION["userID"] = 5;
         }
         else{
             $body = json_encode([
@@ -98,8 +95,13 @@ class UserIndex{
             ]);
 
             $_SESSION["loggedIn"] = true;
-            $_SESSION["isAdmin"] = true;
-            $_SESSION["userID"] = 1;
+            if ($newUser[0]["type_id"] == "1" || $newUser[0]["type_id"] == 1){
+                $_SESSION["isAdmin"] = true;
+            }
+            else{
+                $_SESSION["isAdmin"] = false;
+            }
+            $_SESSION["userID"] = $newUser[0]["user_id"];
         }
         $response->getBody()->write($body);
         return $response->withStatus(201);

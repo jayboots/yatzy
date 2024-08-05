@@ -565,7 +565,7 @@ function updateNavBar(data){
     console.log(data[1])
     console.log(data[2])
 
-    var navContents = document.getElementById("navbar")
+    var navContents = document.getElementById("menubar")
     navContents.innerHTML = "";
 
     let collection = ["Leaderboard", "Sign Up", "Log In", "My Profile", "Manage Scores", "Manage Users", "Log Out"]
@@ -624,11 +624,12 @@ function updateNavBar(data){
         navContents.appendChild(btn_su)
 
         // Add log-in Button
-        // let btn_li = document.createElement("button")
-        // btn_li.id = collection[2].toLowerCase().trim().split(' ').join('-')
-        // btn_li.innerHTML = collection[2];
-        // btn_li.addEventListener("click", goToLogin, true)
-        // navContents.appendChild(btn_li)
+        let btn_li = document.createElement("button")
+        btn_li.id = collection[2].toLowerCase().trim().split(' ').join('-')
+        btn_li.innerHTML = collection[2];
+        btn_li.className = "btn-navbar";
+        btn_li.addEventListener("click", goToLogin, true)
+        navContents.appendChild(btn_li)
     }
 }
 
@@ -640,9 +641,9 @@ function goToSignup(){
     window.location='./sign-up';
 }
 
-// function goToLogin(){
-//     window.location='./log-in';
-// }
+function goToLogin(){
+    window.location='./log-in';
+}
 
 function goToProfile(){
     window.location='./profile';

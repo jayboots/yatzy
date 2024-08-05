@@ -1,8 +1,6 @@
 canSubmit = true;
 
 window.onload=function(){
-    console.log("Hello World")
-
     const submitBtn = document.getElementById("btn-submit");
     const cancelBtn = document.getElementById("btn-cancel");
 
@@ -15,6 +13,41 @@ function cancelRegistration(){
     window.location.replace("/");
 }
 
-function login(){
-    console.log("Logging in lol")
+async function login(){
+    // console.log("Clicked me")
+    var url = "./api/users/login"
+
+    if (canSubmit){
+
+        let credentials = JSON.stringify({
+            "username" :  document.querySelector("#userName").value,
+            "password" :  document.querySelector("#psw").value
+        })
+
+        console.log(credentials);
+
+        try {
+            let response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: credentials,
+                });
+            if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+            }
+
+            let data = await response.json();
+            // console.log("Logged in")
+            // console.log(data);
+            // console.log(data["entry"][0]["type_id"])
+            // Simulate an HTTP redirect:
+            window.location.replace("/");
+        } catch (error) {
+            console.error(error.message);
+
+            // clear form if error
+        }
+    }
 }
