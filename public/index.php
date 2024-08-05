@@ -27,6 +27,10 @@ AppFactory::setContainer($container);
 
 session_start();
 
+$_SESSION["loggedIn"] = true;
+$_SESSION["isAdmin"] = true;
+$_SESSION["userID"] = 2;
+
 // Static method
 $app = AppFactory::create();
 
